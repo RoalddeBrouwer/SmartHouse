@@ -1,0 +1,11 @@
+# SPG30 sensor sources
+C_SOURCES += $(wildcard $(SHIELDS_DIR)/SPG30/src/*.c)
+
+# SPG30 sensor includes
+C_INCLUDES += -I$(SHIELDS_DIR)/SPG30/inc
+
+ifeq ($(origin SPG30_CONNECTOR), undefined)
+$(error SPG30_CONNECTOR undefined in makefile, please specify a connector in the application makefile)
+endif
+
+SHIELD_DEFINES += -DSPG30_CONNECTOR=$(SPG30_CONNECTOR)
