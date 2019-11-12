@@ -71,7 +71,6 @@
 /* USER CODE BEGIN PD */
 #define HAL_EXTI_MODULE_ENABLED
 #define temp_hum_timer    3
-#define LOW_POWER
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -177,7 +176,7 @@ int main(void)
     HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin); 
     }
 
-    printf("RUNNING!!!\r\n");
+    //printf("RUNNING!!!\r\n");
 
   HAL_PWR_EnterSTOPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
   }
@@ -243,7 +242,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
   if (GPIO_Pin==GPIO_Pin_13) {
   temperatureflag = 1; 
-  printf("IM AWAKE NOW :D \r\n");
+  printf("IM AWAKE NOW :D \r\n"); //waarom niet afgeprint? 
   // we work with a flag so as to make sure that we don't stay in the callback for too long. 
   // the flag will call the measurement function 
   } 

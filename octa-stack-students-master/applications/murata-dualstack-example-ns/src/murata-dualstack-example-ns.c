@@ -67,7 +67,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define IWDG_INTERVAL           5    //seconds
-#define LORAWAN_INTERVAL        60   //seconds
+#define LORAWAN_INTERVAL        300   //seconds
 #define DASH7_INTERVAL          20  //seconds
 #define MODULE_CHECK_INTERVAL   3600 //seconds
 
@@ -176,11 +176,13 @@ int main(void)
   uint8_t counter = 0;
   uint8_t use_lora = 1;
   /* USER CODE BEGIN WHILE */
-  temperatureflag=1; 
+  temperatureflag=1;  //measure the temperature once and blink red led. 
   while (1)
   { 
     IWDG_feed(NULL);
-
+    HAL_GPIO_TogglePin(OCTA_RLED_GPIO_Port, OCTA_RLED_Pin);
+    HAL_Delay(1000);
+    HAL_GPIO_TogglePin(OCTA_RLED_GPIO_Port, OCTA_RLED_Pin);
     if (temperatureflag==1) {
     temp_hum_measurement();
     temperatureflag=0; 
@@ -197,7 +199,8 @@ int main(void)
     
     // SEND 5 D7 messages, every 10 sec.
     // Afterwards, send 3 LoRaWAN messages, every minute
-    if(DASH7_Counter<5)
+    DASH7_Counter=6;
+     if(DASH7_Counter<5)
     {
       if(counter==DASH7_INTERVAL)
       {
@@ -207,8 +210,10 @@ int main(void)
     }
     else
     { 
-      if(LoRaWAN_Counter == 0)
+      if(LoRaWAN_Counter == 0){
         Murata_LoRaWAN_Join();
+        LoRaWAN_Counter++; //Adding one to the lora counter to make sure we dont join this loop again.
+      }
       if(LoRaWAN_Counter<3)
       {
         if (counter == LORAWAN_INTERVAL)
@@ -226,13 +231,13 @@ int main(void)
     }
    
     counter++;
-    HAL_Delay(1000);
+    HAL_Delay(1000); 
     
 
     /* USER CODE END WHILE */
     
     /* USER CODE BEGIN 3 */
-   // HAL_PWR_EnterSTOPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+    HAL_PWR_EnterSTOPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
   }
   /* USER CODE END 3 */
 }
