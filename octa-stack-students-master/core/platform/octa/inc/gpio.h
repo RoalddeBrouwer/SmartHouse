@@ -94,6 +94,8 @@ struct OCTA_GPIO P3_DIO6;
 #define BLE_Reset_GPIO_Port         GPIOA
 
 // NUCLEO GPIO
+#define GPIO_Pin_13                 GPIO_PIN_13
+#define Pin_13_GPIO_Port            GPIOB
 #define B1_Pin                      GPIO_PIN_13
 #define B1_GPIO_Port                GPIOC
 #define LD2_Pin                     GPIO_PIN_7

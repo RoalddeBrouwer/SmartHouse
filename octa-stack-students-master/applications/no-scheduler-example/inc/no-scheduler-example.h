@@ -59,9 +59,27 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "platform.h"
+osTimerId iwdgTimId;
 
+/* Private variables ---------------------------------------------------------*/
+osThreadId defaultTaskHandle;
+osThreadId murata_rx_processing_handle;
+/* USER CODE BEGIN PV */
+osTimerId iwdgTimId;
+osTimerId loraWANTimId;
+osTimerId moduleCheckTimId;
+
+osMutexId txMutexId;
+osMutexId murata_rx_process_mutex_id;
+
+/* USER CODE END PV */
 /* USER CODE BEGIN PFP */
 void printWelcome(void);
+void temp_hum_measurement(void); 
+void print_temp_hum(void); 
+void LoRaWAN_send_self(void);
+void murata_process_rx_response(void);
+
 
 /* USER CODE END PFP */
 

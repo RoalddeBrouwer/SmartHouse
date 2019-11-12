@@ -19,6 +19,8 @@ void OCTA_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
   HAL_PWREx_EnableVddIO2();
 
+ 
+
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, P2_DIO1_Pin|P2_DIO6_Pin|P2_DIO2_Pin|P2_DIO4_Pin 
                           |P2_DIO3_Pin|P3_DIO1_Pin|P3_DIO4_Pin|P3_DIO5_Pin 
@@ -68,6 +70,12 @@ void OCTA_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : B13_Pin */
+  GPIO_InitStruct.Pin = GPIO_Pin_13;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(Pin_13_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : P1_DIO3_Pin P1_DIO5_Pin P2_DIO5_Pin OCTA_STEPUP_Pin 
                            P3_DIO3_Pin */
@@ -171,4 +179,7 @@ void OCTA_GPIO_Init(void)
   P3_DIO6.PORT = P3_DIO6_GPIO_Port;
   P3_DIO6.PIN = P3_DIO6_Pin;
 
+
+ HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 }

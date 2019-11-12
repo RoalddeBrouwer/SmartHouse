@@ -8,7 +8,8 @@ PLATFORM ?= octa
 # Murata
 SHIELDS += Murata-dualstack
 MURATA_CONNECTOR = 1
-LORAWAN_APPLICATION = lpiot
+LORAWAN_APPLICATION = labProject
+PRINT_FLOATS = 1
 
 # Path to the octa-stack base directory:
 STACKBASE ?= ../..

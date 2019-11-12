@@ -53,6 +53,16 @@
             "interface": "swd",
         },
         {
+            "cwd": "${workspaceRoot}/applications/SPG30-sensor-example",
+            "executable": "./build/SPG30-sensor-example.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "jlink",
+            "name": "SPG30-sensor-example",
+            "device": "STM32L496ZG",
+            "interface": "swd",
+        },
+        {
             "cwd": "${workspaceRoot}/applications/lorawan-example",
             "executable": "./build/lorawan-example.elf",
             "request": "launch",

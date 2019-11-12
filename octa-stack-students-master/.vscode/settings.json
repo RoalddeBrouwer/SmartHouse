@@ -29,7 +29,11 @@
         "gps-firefly-example.h": "c",
         "nova_PM_sensor.h": "c",
         "spi.h": "c",
-        "s25fl256.h": "c"
+        "s25fl256.h": "c",
+        "sht31.h": "c",
+        "SPG30.h": "c",
+        "SPG30-sensor-example.h": "c",
+        "lsm303agrsensor.h": "c"
     }
     
 }

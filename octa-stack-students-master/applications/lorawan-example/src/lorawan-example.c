@@ -118,7 +118,7 @@ int main(void)
   printWelcome();
   
   // LORAWAN
-  lora_init = Murata_Initialize(short_UID);
+  lora_init = Murata_Initialize(short_UID); //Should only happen once! 
 
   if (lora_init)
   {

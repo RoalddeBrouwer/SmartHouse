@@ -107,6 +107,7 @@ uint8_t Murata_SetProcessingThread(osThreadId aThreadId)
 
 uint8_t Murata_LoRaWAN_Send(uint8_t *buffer, uint8_t length)
 {
+    //murata_reinit();
     uint8_t status = 0;
     status = modem_send_unsolicited_response(0x40, 0, length, (uint8_t *)buffer, &session_config);
     printf("Sending LoRaWAN message with payload size %d\r\n", length);

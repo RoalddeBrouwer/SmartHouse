@@ -80,23 +80,69 @@ HAL_StatusTypeDef LSM303AGR_writeRegister(uint8_t LSM303AGR_reg,
  */
 void LSM303AGR_init() {
 
-	LSM303AGR_setting = LSM303AGR_ACC_ODR_100Hz | LSM303AGR_ACC_X_EN
-			| LSM303AGR_ACC_Y_EN | LSM303AGR_ACC_Z_EN;
-	LSM303AGR_writeRegister(LSM303AGR_ACC_CTRL_REG1, LSM303AGR_setting, 0);
+/* 	//ga naar de application node op de site en daar staat alle registers die je moet instellen voor interrupts
 
-	LSM303AGR_setting = LSM303AGR_ACC_BDU_EN;
-	LSM303AGR_writeRegister(LSM303AGR_ACC_CTRL_REG4, LSM303AGR_setting, 0);
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CTRL_REG1, 0x2F, 0);  //enable/turn on xyz, ODR = 25Hz (gegokt, normal mode)
 
-	LSM303AGR_setting = LSM303AGR_MAG_COMP_TEMP_EN | LSM303AGR_MAG_LP_EN
-			| LSM303AGR_MAG_ODR_10HZ;
-	LSM303AGR_writeRegister(LSM303AGR_MAG_CFG_REG_A, LSM303AGR_setting, 1);
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CTRL_REG2, 0x00 , 0); //highpass filter disable (got undesired effects otherwise)
 
-	LSM303AGR_setting = LSM303AGR_MAG_OFF_CANC | LSM303AGR_MAG_LPF;
-	LSM303AGR_writeRegister(LSM303AGR_MAG_CFG_REG_B, LSM303AGR_setting, 1);
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CTRL_REG3, 0x40 , 0); //interrupt to int1 and choose AOI. je hebt ook DataReady en dan kun je pollen naar accelerometer bv om te zien of data klaarstaat, maar gebruiken wij niet.
 
-	LSM303AGR_setting = LSM303AGR_MAG_BDU;
-	LSM303AGR_writeRegister(LSM303AGR_MAG_CFG_REG_C, LSM303AGR_setting, 1);
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CTRL_REG4, 0x00 , 0); //FS=2G, wil zeggen laagste treshold, alles voor derest disablen. 
 
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CTRL_REG5, 0x00 , 0); //no latching, alles disablen
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_INT1_THS, 0x50 , 0);	//set treshold to 250mg, is voor hoe hard je stoot. 
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_INT1_DUR, 0x3F , 0);  //duration=0, duration van de interrupt. 
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_INT1_CFG, 0x0A , 0);  //INT1_CFG_A enable xh & yH interrupt
+ */
+
+ //Click interrupt! 
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CTRL_REG1, 0x1F, 0);  //enable/turn on xyz, ODR = 1Hz (LP Mode)
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CTRL_REG2, 0x00 , 0); //highpass filter disable (got undesired effects otherwise)
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CTRL_REG3, 0x80 , 0); //We use a click interrupt because we want to generate an interrupt when the person stops walking. 
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CTRL_REG4, 0x00 , 0); //FS=2G, wil zeggen laagste treshold, alles voor derest disablen. 
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CTRL_REG5, 0x00 , 0); //no latching, alles disablen
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CLICK_CFG_A, 0x15 , 0);  //Enable all single click interrupts! 
+
+	//LSM303AGR_writeRegister(LSM303AGR_ACC_CLICK_SRC_A, 0x10 , 0);  //enable interrupt Sclick
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CLICK_THS_A, 0x07, 0);  //set an appriorate treshold over which we have to go for a certain time limit! 
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_TIME_LIMIT_A, 0x7F , 0);  //Time limit = value*1/ODR (ODR = 1).. 127*0.1= 127s 
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_TIME_LATENCY_A, 0x00, 0); //Time latency on zero  
+
+	/* //click double interrupt
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CTRL_REG1, 0x1F, 0);  //enable/turn on xyz, ODR = 10Hz (normal mode), zodanig dat time limit groot genoeg kan worden gezet (zie verder)
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CTRL_REG2, 0x00 , 0); //highpass filter disable (got undesired effects otherwise)
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CTRL_REG3, 0x80 , 0); //put de click interrupt on int line 1
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CTRL_REG4, 0x00 , 0); //FS=2G, wil zeggen laagste treshold, alles voor derest disablen. 
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CTRL_REG5, 0x00 , 0); //no latching, alles disablen
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CLICK_CFG_A, 0x02 , 0); //enablen double click on x-axis
+
+	//LSM303AGR_writeRegister(LSM303AGR_ACC_CLICK_SRC_A, 0x20 , 0); //double click enable
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CLICK_THS_A, 0x20 , 0);	//set treshold  
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_TIME_LATENCY_A, 0x00 , 0);  //set how long the interrupt lasts, we set minimum duration. 
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_TIME_LIMIT_A, 0x7F , 0);  	 //time limiit = value * 1/ODR so maximum time limit = 127*0.1 = +/- 10 s = time to do rep
+
+	LSM303AGR_writeRegister(LSM303AGR_ACC_CLICK_WINDOW, 0x0A , 0);  	 //max time in between 2 clicks. If the second click is later than the time window the interrupt won't be generated.  */
 }
 
 /**

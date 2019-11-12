@@ -276,5 +276,11 @@ void SPI3_IRQHandler(void)
 
   /* USER CODE END SPI3_IRQn 1 */
 }
+
+//we gebruiken hier de vaste functie voor het opvangen van interrupts op pinnen 10 tot 15 op poorten B,C,D
+void EXTI15_10_IRQHandler(void) {
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
+  //we zeggen hier dat als interrupt zich op een van de pinnen voordoet, dan roepen we onze handler op en geven we de pin 13 (B13 is de interruptpin van de accelerometer)
+}
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
