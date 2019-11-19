@@ -1,0 +1,964 @@
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"temperature-humidity.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.StartDefaultTask,"ax",%progbits
+  18              		.align	1
+  19              		.global	StartDefaultTask
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	StartDefaultTask:
+  27              	.LFB132:
+  28              		.file 1 "../../applications/temperature-humidity/src/temperature-humidity.c"
+   1:../../applications/temperature-humidity/src/temperature-humidity.c **** /* USER CODE BEGIN Header */
+   2:../../applications/temperature-humidity/src/temperature-humidity.c **** /**
+   3:../../applications/temperature-humidity/src/temperature-humidity.c ****   ******************************************************************************
+   4:../../applications/temperature-humidity/src/temperature-humidity.c ****   * @file           : main.c
+   5:../../applications/temperature-humidity/src/temperature-humidity.c ****   * @brief          : Main program body
+   6:../../applications/temperature-humidity/src/temperature-humidity.c ****   ******************************************************************************
+   7:../../applications/temperature-humidity/src/temperature-humidity.c ****   * This notice applies to any and all portions of this file
+   8:../../applications/temperature-humidity/src/temperature-humidity.c ****   * that are not between comment pairs USER CODE BEGIN and
+   9:../../applications/temperature-humidity/src/temperature-humidity.c ****   * USER CODE END. Other portions of this file, whether 
+  10:../../applications/temperature-humidity/src/temperature-humidity.c ****   * inserted by the user or by software development tools
+  11:../../applications/temperature-humidity/src/temperature-humidity.c ****   * are owned by their respective copyright owners.
+  12:../../applications/temperature-humidity/src/temperature-humidity.c ****   *
+  13:../../applications/temperature-humidity/src/temperature-humidity.c ****   * Copyright (c) 2019 STMicroelectronics International N.V. 
+  14:../../applications/temperature-humidity/src/temperature-humidity.c ****   * All rights reserved.
+  15:../../applications/temperature-humidity/src/temperature-humidity.c ****   *
+  16:../../applications/temperature-humidity/src/temperature-humidity.c ****   * Redistribution and use in source and binary forms, with or without 
+  17:../../applications/temperature-humidity/src/temperature-humidity.c ****   * modification, are permitted, provided that the following conditions are met:
+  18:../../applications/temperature-humidity/src/temperature-humidity.c ****   *
+  19:../../applications/temperature-humidity/src/temperature-humidity.c ****   * 1. Redistribution of source code must retain the above copyright notice, 
+  20:../../applications/temperature-humidity/src/temperature-humidity.c ****   *    this list of conditions and the following disclaimer.
+  21:../../applications/temperature-humidity/src/temperature-humidity.c ****   * 2. Redistributions in binary form must reproduce the above copyright notice,
+  22:../../applications/temperature-humidity/src/temperature-humidity.c ****   *    this list of conditions and the following disclaimer in the documentation
+  23:../../applications/temperature-humidity/src/temperature-humidity.c ****   *    and/or other materials provided with the distribution.
+  24:../../applications/temperature-humidity/src/temperature-humidity.c ****   * 3. Neither the name of STMicroelectronics nor the names of other 
+  25:../../applications/temperature-humidity/src/temperature-humidity.c ****   *    contributors to this software may be used to endorse or promote products 
+  26:../../applications/temperature-humidity/src/temperature-humidity.c ****   *    derived from this software without specific written permission.
+  27:../../applications/temperature-humidity/src/temperature-humidity.c ****   * 4. This software, including modifications and/or derivative works of this 
+  28:../../applications/temperature-humidity/src/temperature-humidity.c ****   *    software, must execute solely and exclusively on microcontroller or
+  29:../../applications/temperature-humidity/src/temperature-humidity.c ****   *    microprocessor devices manufactured by or for STMicroelectronics.
+  30:../../applications/temperature-humidity/src/temperature-humidity.c ****   * 5. Redistribution and use of this software other than as permitted under 
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s 			page 2
+
+
+  31:../../applications/temperature-humidity/src/temperature-humidity.c ****   *    this license is void and will automatically terminate your rights under 
+  32:../../applications/temperature-humidity/src/temperature-humidity.c ****   *    this license. 
+  33:../../applications/temperature-humidity/src/temperature-humidity.c ****   *
+  34:../../applications/temperature-humidity/src/temperature-humidity.c ****   * THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS IS" 
+  35:../../applications/temperature-humidity/src/temperature-humidity.c ****   * AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT 
+  36:../../applications/temperature-humidity/src/temperature-humidity.c ****   * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+  37:../../applications/temperature-humidity/src/temperature-humidity.c ****   * PARTICULAR PURPOSE AND NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY
+  38:../../applications/temperature-humidity/src/temperature-humidity.c ****   * RIGHTS ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT 
+  39:../../applications/temperature-humidity/src/temperature-humidity.c ****   * SHALL STMICROELECTRONICS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+  40:../../applications/temperature-humidity/src/temperature-humidity.c ****   * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  41:../../applications/temperature-humidity/src/temperature-humidity.c ****   * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
+  42:../../applications/temperature-humidity/src/temperature-humidity.c ****   * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+  43:../../applications/temperature-humidity/src/temperature-humidity.c ****   * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+  44:../../applications/temperature-humidity/src/temperature-humidity.c ****   * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+  45:../../applications/temperature-humidity/src/temperature-humidity.c ****   * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  46:../../applications/temperature-humidity/src/temperature-humidity.c ****   *
+  47:../../applications/temperature-humidity/src/temperature-humidity.c ****   ******************************************************************************
+  48:../../applications/temperature-humidity/src/temperature-humidity.c ****   */
+  49:../../applications/temperature-humidity/src/temperature-humidity.c **** /* USER CODE END Header */
+  50:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+  51:../../applications/temperature-humidity/src/temperature-humidity.c **** /* Includes ------------------------------------------------------------------*/
+  52:../../applications/temperature-humidity/src/temperature-humidity.c **** #include "temperature-humidity.h"
+  53:../../applications/temperature-humidity/src/temperature-humidity.c **** #include "sht31.h"
+  54:../../applications/temperature-humidity/src/temperature-humidity.c **** /* Private includes ----------------------------------------------------------*/
+  55:../../applications/temperature-humidity/src/temperature-humidity.c **** /* USER CODE BEGIN Includes */
+  56:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+  57:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+  58:../../applications/temperature-humidity/src/temperature-humidity.c **** /* USER CODE END Includes */
+  59:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+  60:../../applications/temperature-humidity/src/temperature-humidity.c **** /* Private typedef -----------------------------------------------------------*/
+  61:../../applications/temperature-humidity/src/temperature-humidity.c **** /* USER CODE BEGIN PTD */
+  62:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+  63:../../applications/temperature-humidity/src/temperature-humidity.c **** /* USER CODE END PTD */
+  64:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+  65:../../applications/temperature-humidity/src/temperature-humidity.c **** /* Private define ------------------------------------------------------------*/
+  66:../../applications/temperature-humidity/src/temperature-humidity.c **** /* USER CODE BEGIN PD */
+  67:../../applications/temperature-humidity/src/temperature-humidity.c **** #define temp_hum_timer    3
+  68:../../applications/temperature-humidity/src/temperature-humidity.c **** /* USER CODE END PD */
+  69:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+  70:../../applications/temperature-humidity/src/temperature-humidity.c **** /* Private macro -------------------------------------------------------------*/
+  71:../../applications/temperature-humidity/src/temperature-humidity.c **** /* USER CODE BEGIN PM */
+  72:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+  73:../../applications/temperature-humidity/src/temperature-humidity.c **** /* USER CODE END PM */
+  74:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+  75:../../applications/temperature-humidity/src/temperature-humidity.c **** /* Private user code ---------------------------------------------------------*/
+  76:../../applications/temperature-humidity/src/temperature-humidity.c **** /* USER CODE BEGIN 0 */
+  77:../../applications/temperature-humidity/src/temperature-humidity.c **** osTimerId temp_hum_timer_id;
+  78:../../applications/temperature-humidity/src/temperature-humidity.c **** float SHTData[2];
+  79:../../applications/temperature-humidity/src/temperature-humidity.c **** /* USER CODE END 0 */
+  80:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+  81:../../applications/temperature-humidity/src/temperature-humidity.c **** /**
+  82:../../applications/temperature-humidity/src/temperature-humidity.c ****   * @brief  The application entry point.
+  83:../../applications/temperature-humidity/src/temperature-humidity.c ****   * @retval int
+  84:../../applications/temperature-humidity/src/temperature-humidity.c ****   */
+  85:../../applications/temperature-humidity/src/temperature-humidity.c **** int main(void)
+  86:../../applications/temperature-humidity/src/temperature-humidity.c **** {
+  87:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE BEGIN 1 */
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s 			page 3
+
+
+  88:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+  89:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE END 1 */
+  90:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+  91:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* MCU Configuration--------------------------------------------------------*/
+  92:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+  93:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  94:../../applications/temperature-humidity/src/temperature-humidity.c ****   HAL_Init();
+  95:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+  96:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE BEGIN Init */
+  97:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+  98:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE END Init */
+  99:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 100:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* Configure the system clock */
+ 101:../../applications/temperature-humidity/src/temperature-humidity.c ****   SystemClock_Config();
+ 102:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 103:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE BEGIN SysInit */
+ 104:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 105:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE END SysInit */
+ 106:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 107:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* Initialize the platform */
+ 108:../../applications/temperature-humidity/src/temperature-humidity.c ****   Initialize_Platform();
+ 109:../../applications/temperature-humidity/src/temperature-humidity.c ****   
+ 110:../../applications/temperature-humidity/src/temperature-humidity.c ****   setI2CInterface_SHT31(&common_I2C);
+ 111:../../applications/temperature-humidity/src/temperature-humidity.c ****   //SHT
+ 112:../../applications/temperature-humidity/src/temperature-humidity.c ****   SHT31_begin();
+ 113:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE BEGIN 2 */
+ 114:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 115:../../applications/temperature-humidity/src/temperature-humidity.c ****   printWelcome();
+ 116:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 117:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE END 2 */
+ 118:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 119:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE BEGIN RTOS_MUTEX */
+ 120:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* add mutexes, ... */
+ 121:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("Initializing RTOS timers, threads and mutex\r\n");
+ 122:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 123:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 124:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE END RTOS_MUTEX */
+ 125:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 126:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE BEGIN RTOS_SEMAPHORES */
+ 127:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* add semaphores, ... */
+ 128:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE END RTOS_SEMAPHORES */
+ 129:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 130:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* Create the thread(s) */
+ 131:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* definition and creation of defaultTask */
+ 132:../../applications/temperature-humidity/src/temperature-humidity.c ****   osThreadDef(defaultTask, StartDefaultTask, osPriorityLow, 0, 128);
+ 133:../../applications/temperature-humidity/src/temperature-humidity.c ****   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+ 134:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 135:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE BEGIN RTOS_TIMERS */
+ 136:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* start timers, add new ones, ... */
+ 137:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 138:../../applications/temperature-humidity/src/temperature-humidity.c ****   //feed IWDG every 5 seconds
+ 139:../../applications/temperature-humidity/src/temperature-humidity.c ****   IWDG_feed(NULL);
+ 140:../../applications/temperature-humidity/src/temperature-humidity.c ****   osTimerDef(iwdgTim, IWDG_feed);
+ 141:../../applications/temperature-humidity/src/temperature-humidity.c ****   iwdgTimId = osTimerCreate(osTimer(iwdgTim), osTimerPeriodic, NULL);
+ 142:../../applications/temperature-humidity/src/temperature-humidity.c ****   osTimerStart(iwdgTimId, 5 * 1000);
+ 143:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 144:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE END RTOS_TIMERS */
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s 			page 4
+
+
+ 145:../../applications/temperature-humidity/src/temperature-humidity.c ****   osTimerDef(temp_hum_Tim, temp_hum_measurement);
+ 146:../../applications/temperature-humidity/src/temperature-humidity.c ****   temp_hum_timer_id = osTimerCreate(osTimer(temp_hum_Tim), osTimerPeriodic, NULL);
+ 147:../../applications/temperature-humidity/src/temperature-humidity.c ****   osTimerStart(temp_hum_timer_id, temp_hum_timer * 1000);
+ 148:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 149:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE BEGIN RTOS_THREADS */
+ 150:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* add threads, ... */
+ 151:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 152:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE END RTOS_THREADS */
+ 153:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 154:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE BEGIN RTOS_QUEUES */
+ 155:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* add queues, ... */
+ 156:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE END RTOS_QUEUES */
+ 157:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 158:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* Start scheduler */
+ 159:../../applications/temperature-humidity/src/temperature-humidity.c ****   osKernelStart();
+ 160:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 161:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* We should never get here as control is now taken by the scheduler */
+ 162:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 163:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* Infinite loop */
+ 164:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE BEGIN WHILE */
+ 165:../../applications/temperature-humidity/src/temperature-humidity.c ****   while (1)
+ 166:../../applications/temperature-humidity/src/temperature-humidity.c ****   {
+ 167:../../applications/temperature-humidity/src/temperature-humidity.c ****     /* USER CODE END WHILE */
+ 168:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 169:../../applications/temperature-humidity/src/temperature-humidity.c ****     /* USER CODE BEGIN 3 */
+ 170:../../applications/temperature-humidity/src/temperature-humidity.c ****   }
+ 171:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE END 3 */
+ 172:../../applications/temperature-humidity/src/temperature-humidity.c **** }
+ 173:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 174:../../applications/temperature-humidity/src/temperature-humidity.c **** void printWelcome(void)
+ 175:../../applications/temperature-humidity/src/temperature-humidity.c **** {
+ 176:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("\r\n");
+ 177:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("*****************************************\r\n");
+ 178:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("Application Temperature & Humidity \r\n");
+ 179:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("*****************************************\r\n");
+ 180:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("\r\n");
+ 181:../../applications/temperature-humidity/src/temperature-humidity.c ****   HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin);
+ 182:../../applications/temperature-humidity/src/temperature-humidity.c ****   HAL_Delay(2000);
+ 183:../../applications/temperature-humidity/src/temperature-humidity.c ****   HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin);
+ 184:../../applications/temperature-humidity/src/temperature-humidity.c **** }
+ 185:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 186:../../applications/temperature-humidity/src/temperature-humidity.c **** void temp_hum_measurement(void){
+ 187:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 188:../../applications/temperature-humidity/src/temperature-humidity.c ****   SHT31_get_temp_hum(SHTData);
+ 189:../../applications/temperature-humidity/src/temperature-humidity.c ****   print_temp_hum();
+ 190:../../applications/temperature-humidity/src/temperature-humidity.c **** }
+ 191:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 192:../../applications/temperature-humidity/src/temperature-humidity.c **** void print_temp_hum(void){
+ 193:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("\r\n");
+ 194:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("Temperature: %.2f °C  \r\n", SHTData[0]);
+ 195:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("Humidity: %.2f %% \r\n", SHTData[1]);
+ 196:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("\r\n");
+ 197:../../applications/temperature-humidity/src/temperature-humidity.c **** }
+ 198:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 199:../../applications/temperature-humidity/src/temperature-humidity.c **** /* USER CODE END 4 */
+ 200:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 201:../../applications/temperature-humidity/src/temperature-humidity.c **** /* USER CODE BEGIN Header_StartDefaultTask */
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s 			page 5
+
+
+ 202:../../applications/temperature-humidity/src/temperature-humidity.c **** /**
+ 203:../../applications/temperature-humidity/src/temperature-humidity.c ****   * @brief  Function implementing the defaultTask thread.
+ 204:../../applications/temperature-humidity/src/temperature-humidity.c ****   * @param  argument: Not used 
+ 205:../../applications/temperature-humidity/src/temperature-humidity.c ****   * @retval None
+ 206:../../applications/temperature-humidity/src/temperature-humidity.c ****   */
+ 207:../../applications/temperature-humidity/src/temperature-humidity.c **** /* USER CODE END Header_StartDefaultTask */
+ 208:../../applications/temperature-humidity/src/temperature-humidity.c **** void StartDefaultTask(void const *argument)
+ 209:../../applications/temperature-humidity/src/temperature-humidity.c **** {
+  29              		.loc 1 209 1 view -0
+  30              		.cfi_startproc
+  31              		@ Volatile: function does not return.
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              	.LVL0:
+  35              		.loc 1 209 1 is_stmt 0 view .LVU1
+  36 0000 08B5     		push	{r3, lr}
+  37              	.LCFI0:
+  38              		.cfi_def_cfa_offset 8
+  39              		.cfi_offset 3, -8
+  40              		.cfi_offset 14, -4
+  41              	.LVL1:
+  42              	.L2:
+ 210:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 211:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE BEGIN 5 */
+ 212:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* Infinite loop */
+ 213:../../applications/temperature-humidity/src/temperature-humidity.c ****   for (;;)
+  43              		.loc 1 213 3 is_stmt 1 discriminator 1 view .LVU2
+ 214:../../applications/temperature-humidity/src/temperature-humidity.c ****   {
+ 215:../../applications/temperature-humidity/src/temperature-humidity.c ****     osDelay(1);
+  44              		.loc 1 215 5 discriminator 1 view .LVU3
+  45 0002 0120     		movs	r0, #1
+  46 0004 FFF7FEFF 		bl	osDelay
+  47              	.LVL2:
+  48 0008 FBE7     		b	.L2
+  49              		.cfi_endproc
+  50              	.LFE132:
+  52              		.section	.text.printWelcome,"ax",%progbits
+  53              		.align	1
+  54              		.global	printWelcome
+  55              		.syntax unified
+  56              		.thumb
+  57              		.thumb_func
+  58              		.fpu fpv4-sp-d16
+  60              	printWelcome:
+  61              	.LFB129:
+ 175:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("\r\n");
+  62              		.loc 1 175 1 view -0
+  63              		.cfi_startproc
+  64              		@ args = 0, pretend = 0, frame = 0
+  65              		@ frame_needed = 0, uses_anonymous_args = 0
+  66 0000 38B5     		push	{r3, r4, r5, lr}
+  67              	.LCFI1:
+  68              		.cfi_def_cfa_offset 16
+  69              		.cfi_offset 3, -16
+  70              		.cfi_offset 4, -12
+  71              		.cfi_offset 5, -8
+  72              		.cfi_offset 14, -4
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s 			page 6
+
+
+ 176:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("*****************************************\r\n");
+  73              		.loc 1 176 3 view .LVU5
+  74 0002 104C     		ldr	r4, .L6
+  75 0004 2046     		mov	r0, r4
+  76 0006 FFF7FEFF 		bl	puts
+  77              	.LVL3:
+ 177:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("Application Temperature & Humidity \r\n");
+  78              		.loc 1 177 3 view .LVU6
+  79 000a 0F4D     		ldr	r5, .L6+4
+  80 000c 2846     		mov	r0, r5
+  81 000e FFF7FEFF 		bl	puts
+  82              	.LVL4:
+ 178:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("*****************************************\r\n");
+  83              		.loc 1 178 3 view .LVU7
+  84 0012 0E48     		ldr	r0, .L6+8
+  85 0014 FFF7FEFF 		bl	puts
+  86              	.LVL5:
+ 179:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("\r\n");
+  87              		.loc 1 179 3 view .LVU8
+  88 0018 2846     		mov	r0, r5
+  89 001a FFF7FEFF 		bl	puts
+  90              	.LVL6:
+ 180:../../applications/temperature-humidity/src/temperature-humidity.c ****   HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin);
+  91              		.loc 1 180 3 view .LVU9
+  92 001e 2046     		mov	r0, r4
+  93 0020 FFF7FEFF 		bl	puts
+  94              	.LVL7:
+ 181:../../applications/temperature-humidity/src/temperature-humidity.c ****   HAL_Delay(2000);
+  95              		.loc 1 181 3 view .LVU10
+  96 0024 0A4C     		ldr	r4, .L6+12
+  97 0026 4FF40041 		mov	r1, #32768
+  98 002a 2046     		mov	r0, r4
+  99 002c FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 100              	.LVL8:
+ 182:../../applications/temperature-humidity/src/temperature-humidity.c ****   HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin);
+ 101              		.loc 1 182 3 view .LVU11
+ 102 0030 4FF4FA60 		mov	r0, #2000
+ 103 0034 FFF7FEFF 		bl	HAL_Delay
+ 104              	.LVL9:
+ 183:../../applications/temperature-humidity/src/temperature-humidity.c **** }
+ 105              		.loc 1 183 3 view .LVU12
+ 106 0038 4FF40041 		mov	r1, #32768
+ 107 003c 2046     		mov	r0, r4
+ 108 003e FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 109              	.LVL10:
+ 184:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 110              		.loc 1 184 1 is_stmt 0 view .LVU13
+ 111 0042 38BD     		pop	{r3, r4, r5, pc}
+ 112              	.L7:
+ 113              		.align	2
+ 114              	.L6:
+ 115 0044 00000000 		.word	.LC2
+ 116 0048 04000000 		.word	.LC3
+ 117 004c 30000000 		.word	.LC4
+ 118 0050 000C0048 		.word	1207962624
+ 119              		.cfi_endproc
+ 120              	.LFE129:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s 			page 7
+
+
+ 122              		.section	.text.main,"ax",%progbits
+ 123              		.align	1
+ 124              		.global	main
+ 125              		.syntax unified
+ 126              		.thumb
+ 127              		.thumb_func
+ 128              		.fpu fpv4-sp-d16
+ 130              	main:
+ 131              	.LFB128:
+  86:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE BEGIN 1 */
+ 132              		.loc 1 86 1 is_stmt 1 view -0
+ 133              		.cfi_startproc
+ 134              		@ Volatile: function does not return.
+ 135              		@ args = 0, pretend = 0, frame = 32
+ 136              		@ frame_needed = 0, uses_anonymous_args = 0
+ 137 0000 00B5     		push	{lr}
+ 138              	.LCFI2:
+ 139              		.cfi_def_cfa_offset 4
+ 140              		.cfi_offset 14, -4
+ 141 0002 89B0     		sub	sp, sp, #36
+ 142              	.LCFI3:
+ 143              		.cfi_def_cfa_offset 40
+  94:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 144              		.loc 1 94 3 view .LVU15
+ 145 0004 FFF7FEFF 		bl	HAL_Init
+ 146              	.LVL11:
+ 101:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 147              		.loc 1 101 3 view .LVU16
+ 148 0008 FFF7FEFF 		bl	SystemClock_Config
+ 149              	.LVL12:
+ 108:../../applications/temperature-humidity/src/temperature-humidity.c ****   
+ 150              		.loc 1 108 3 view .LVU17
+ 151 000c FFF7FEFF 		bl	Initialize_Platform
+ 152              	.LVL13:
+ 110:../../applications/temperature-humidity/src/temperature-humidity.c ****   //SHT
+ 153              		.loc 1 110 3 view .LVU18
+ 154 0010 1A48     		ldr	r0, .L11
+ 155 0012 FFF7FEFF 		bl	setI2CInterface_SHT31
+ 156              	.LVL14:
+ 112:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE BEGIN 2 */
+ 157              		.loc 1 112 3 view .LVU19
+ 158 0016 FFF7FEFF 		bl	SHT31_begin
+ 159              	.LVL15:
+ 115:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 160              		.loc 1 115 3 view .LVU20
+ 161 001a FFF7FEFF 		bl	printWelcome
+ 162              	.LVL16:
+ 121:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 163              		.loc 1 121 3 view .LVU21
+ 164 001e 1848     		ldr	r0, .L11+4
+ 165 0020 FFF7FEFF 		bl	puts
+ 166              	.LVL17:
+ 132:../../applications/temperature-humidity/src/temperature-humidity.c ****   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+ 167              		.loc 1 132 3 view .LVU22
+ 168 0024 03AC     		add	r4, sp, #12
+ 169 0026 174D     		ldr	r5, .L11+8
+ 170 0028 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s 			page 8
+
+
+ 171 002a 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 172 002c 2B68     		ldr	r3, [r5]
+ 173 002e 2360     		str	r3, [r4]
+ 133:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 174              		.loc 1 133 3 view .LVU23
+ 133:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 175              		.loc 1 133 23 is_stmt 0 view .LVU24
+ 176 0030 0021     		movs	r1, #0
+ 177 0032 03A8     		add	r0, sp, #12
+ 178 0034 FFF7FEFF 		bl	osThreadCreate
+ 179              	.LVL18:
+ 133:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 180              		.loc 1 133 21 view .LVU25
+ 181 0038 134B     		ldr	r3, .L11+12
+ 182 003a 1860     		str	r0, [r3]
+ 139:../../applications/temperature-humidity/src/temperature-humidity.c ****   osTimerDef(iwdgTim, IWDG_feed);
+ 183              		.loc 1 139 3 is_stmt 1 view .LVU26
+ 184 003c 0020     		movs	r0, #0
+ 185 003e FFF7FEFF 		bl	IWDG_feed
+ 186              	.LVL19:
+ 140:../../applications/temperature-humidity/src/temperature-humidity.c ****   iwdgTimId = osTimerCreate(osTimer(iwdgTim), osTimerPeriodic, NULL);
+ 187              		.loc 1 140 3 view .LVU27
+ 188 0042 124B     		ldr	r3, .L11+16
+ 189 0044 0293     		str	r3, [sp, #8]
+ 141:../../applications/temperature-humidity/src/temperature-humidity.c ****   osTimerStart(iwdgTimId, 5 * 1000);
+ 190              		.loc 1 141 3 view .LVU28
+ 141:../../applications/temperature-humidity/src/temperature-humidity.c ****   osTimerStart(iwdgTimId, 5 * 1000);
+ 191              		.loc 1 141 15 is_stmt 0 view .LVU29
+ 192 0046 0022     		movs	r2, #0
+ 193 0048 0121     		movs	r1, #1
+ 194 004a 02A8     		add	r0, sp, #8
+ 195 004c FFF7FEFF 		bl	osTimerCreate
+ 196              	.LVL20:
+ 141:../../applications/temperature-humidity/src/temperature-humidity.c ****   osTimerStart(iwdgTimId, 5 * 1000);
+ 197              		.loc 1 141 13 view .LVU30
+ 198 0050 0F4B     		ldr	r3, .L11+20
+ 199 0052 1860     		str	r0, [r3]
+ 142:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 200              		.loc 1 142 3 is_stmt 1 view .LVU31
+ 201 0054 41F28831 		movw	r1, #5000
+ 202 0058 FFF7FEFF 		bl	osTimerStart
+ 203              	.LVL21:
+ 145:../../applications/temperature-humidity/src/temperature-humidity.c ****   temp_hum_timer_id = osTimerCreate(osTimer(temp_hum_Tim), osTimerPeriodic, NULL);
+ 204              		.loc 1 145 3 view .LVU32
+ 205 005c 0D4B     		ldr	r3, .L11+24
+ 206 005e 0193     		str	r3, [sp, #4]
+ 146:../../applications/temperature-humidity/src/temperature-humidity.c ****   osTimerStart(temp_hum_timer_id, temp_hum_timer * 1000);
+ 207              		.loc 1 146 3 view .LVU33
+ 146:../../applications/temperature-humidity/src/temperature-humidity.c ****   osTimerStart(temp_hum_timer_id, temp_hum_timer * 1000);
+ 208              		.loc 1 146 23 is_stmt 0 view .LVU34
+ 209 0060 0022     		movs	r2, #0
+ 210 0062 0121     		movs	r1, #1
+ 211 0064 01A8     		add	r0, sp, #4
+ 212 0066 FFF7FEFF 		bl	osTimerCreate
+ 213              	.LVL22:
+ 146:../../applications/temperature-humidity/src/temperature-humidity.c ****   osTimerStart(temp_hum_timer_id, temp_hum_timer * 1000);
+ 214              		.loc 1 146 21 view .LVU35
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s 			page 9
+
+
+ 215 006a 0B4B     		ldr	r3, .L11+28
+ 216 006c 1860     		str	r0, [r3]
+ 147:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 217              		.loc 1 147 3 is_stmt 1 view .LVU36
+ 218 006e 40F6B831 		movw	r1, #3000
+ 219 0072 FFF7FEFF 		bl	osTimerStart
+ 220              	.LVL23:
+ 159:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 221              		.loc 1 159 3 view .LVU37
+ 222 0076 FFF7FEFF 		bl	osKernelStart
+ 223              	.LVL24:
+ 224              	.L9:
+ 165:../../applications/temperature-humidity/src/temperature-humidity.c ****   {
+ 225              		.loc 1 165 3 discriminator 1 view .LVU38
+ 170:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE END 3 */
+ 226              		.loc 1 170 3 discriminator 1 view .LVU39
+ 227 007a FEE7     		b	.L9
+ 228              	.L12:
+ 229              		.align	2
+ 230              	.L11:
+ 231 007c 00000000 		.word	common_I2C
+ 232 0080 00000000 		.word	.LC5
+ 233 0084 00000000 		.word	.LANCHOR0
+ 234 0088 00000000 		.word	defaultTaskHandle
+ 235 008c 00000000 		.word	IWDG_feed
+ 236 0090 00000000 		.word	iwdgTimId
+ 237 0094 00000000 		.word	temp_hum_measurement
+ 238 0098 00000000 		.word	temp_hum_timer_id
+ 239              		.cfi_endproc
+ 240              	.LFE128:
+ 242              		.global	__aeabi_f2d
+ 243              		.section	.text.print_temp_hum,"ax",%progbits
+ 244              		.align	1
+ 245              		.global	print_temp_hum
+ 246              		.syntax unified
+ 247              		.thumb
+ 248              		.thumb_func
+ 249              		.fpu fpv4-sp-d16
+ 251              	print_temp_hum:
+ 252              	.LFB131:
+ 192:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("\r\n");
+ 253              		.loc 1 192 26 view -0
+ 254              		.cfi_startproc
+ 255              		@ args = 0, pretend = 0, frame = 0
+ 256              		@ frame_needed = 0, uses_anonymous_args = 0
+ 257 0000 38B5     		push	{r3, r4, r5, lr}
+ 258              	.LCFI4:
+ 259              		.cfi_def_cfa_offset 16
+ 260              		.cfi_offset 3, -16
+ 261              		.cfi_offset 4, -12
+ 262              		.cfi_offset 5, -8
+ 263              		.cfi_offset 14, -4
+ 193:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("Temperature: %.2f °C  \r\n", SHTData[0]);
+ 264              		.loc 1 193 3 view .LVU41
+ 265 0002 0C4C     		ldr	r4, .L15
+ 266 0004 2046     		mov	r0, r4
+ 267 0006 FFF7FEFF 		bl	puts
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s 			page 10
+
+
+ 268              	.LVL25:
+ 194:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("Humidity: %.2f %% \r\n", SHTData[1]);
+ 269              		.loc 1 194 3 view .LVU42
+ 194:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("Humidity: %.2f %% \r\n", SHTData[1]);
+ 270              		.loc 1 194 48 is_stmt 0 view .LVU43
+ 271 000a 0B4D     		ldr	r5, .L15+4
+ 194:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("Humidity: %.2f %% \r\n", SHTData[1]);
+ 272              		.loc 1 194 3 view .LVU44
+ 273 000c 2868     		ldr	r0, [r5]	@ float
+ 274 000e FFF7FEFF 		bl	__aeabi_f2d
+ 275              	.LVL26:
+ 276 0012 0246     		mov	r2, r0
+ 277 0014 0B46     		mov	r3, r1
+ 278 0016 0948     		ldr	r0, .L15+8
+ 279 0018 FFF7FEFF 		bl	printf
+ 280              	.LVL27:
+ 195:../../applications/temperature-humidity/src/temperature-humidity.c ****   printf("\r\n");
+ 281              		.loc 1 195 3 is_stmt 1 view .LVU45
+ 282 001c 6868     		ldr	r0, [r5, #4]	@ float
+ 283 001e FFF7FEFF 		bl	__aeabi_f2d
+ 284              	.LVL28:
+ 285 0022 0246     		mov	r2, r0
+ 286 0024 0B46     		mov	r3, r1
+ 287 0026 0648     		ldr	r0, .L15+12
+ 288 0028 FFF7FEFF 		bl	printf
+ 289              	.LVL29:
+ 196:../../applications/temperature-humidity/src/temperature-humidity.c **** }
+ 290              		.loc 1 196 3 view .LVU46
+ 291 002c 2046     		mov	r0, r4
+ 292 002e FFF7FEFF 		bl	puts
+ 293              	.LVL30:
+ 197:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 294              		.loc 1 197 1 is_stmt 0 view .LVU47
+ 295 0032 38BD     		pop	{r3, r4, r5, pc}
+ 296              	.L16:
+ 297              		.align	2
+ 298              	.L15:
+ 299 0034 00000000 		.word	.LC2
+ 300 0038 00000000 		.word	SHTData
+ 301 003c 00000000 		.word	.LC7
+ 302 0040 1C000000 		.word	.LC8
+ 303              		.cfi_endproc
+ 304              	.LFE131:
+ 306              		.section	.text.temp_hum_measurement,"ax",%progbits
+ 307              		.align	1
+ 308              		.global	temp_hum_measurement
+ 309              		.syntax unified
+ 310              		.thumb
+ 311              		.thumb_func
+ 312              		.fpu fpv4-sp-d16
+ 314              	temp_hum_measurement:
+ 315              	.LFB130:
+ 186:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 316              		.loc 1 186 32 is_stmt 1 view -0
+ 317              		.cfi_startproc
+ 318              		@ args = 0, pretend = 0, frame = 0
+ 319              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s 			page 11
+
+
+ 320 0000 08B5     		push	{r3, lr}
+ 321              	.LCFI5:
+ 322              		.cfi_def_cfa_offset 8
+ 323              		.cfi_offset 3, -8
+ 324              		.cfi_offset 14, -4
+ 188:../../applications/temperature-humidity/src/temperature-humidity.c ****   print_temp_hum();
+ 325              		.loc 1 188 3 view .LVU49
+ 326 0002 0348     		ldr	r0, .L19
+ 327 0004 FFF7FEFF 		bl	SHT31_get_temp_hum
+ 328              	.LVL31:
+ 189:../../applications/temperature-humidity/src/temperature-humidity.c **** }
+ 329              		.loc 1 189 3 view .LVU50
+ 330 0008 FFF7FEFF 		bl	print_temp_hum
+ 331              	.LVL32:
+ 190:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 332              		.loc 1 190 1 is_stmt 0 view .LVU51
+ 333 000c 08BD     		pop	{r3, pc}
+ 334              	.L20:
+ 335 000e 00BF     		.align	2
+ 336              	.L19:
+ 337 0010 00000000 		.word	SHTData
+ 338              		.cfi_endproc
+ 339              	.LFE130:
+ 341              		.section	.text.HAL_TIM_PeriodElapsedCallback,"ax",%progbits
+ 342              		.align	1
+ 343              		.global	HAL_TIM_PeriodElapsedCallback
+ 344              		.syntax unified
+ 345              		.thumb
+ 346              		.thumb_func
+ 347              		.fpu fpv4-sp-d16
+ 349              	HAL_TIM_PeriodElapsedCallback:
+ 350              	.LVL33:
+ 351              	.LFB133:
+ 216:../../applications/temperature-humidity/src/temperature-humidity.c ****   }
+ 217:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE END 5 */
+ 218:../../applications/temperature-humidity/src/temperature-humidity.c **** }
+ 219:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 220:../../applications/temperature-humidity/src/temperature-humidity.c **** /**
+ 221:../../applications/temperature-humidity/src/temperature-humidity.c ****   * @brief  Period elapsed callback in non blocking mode
+ 222:../../applications/temperature-humidity/src/temperature-humidity.c ****   * @note   This function is called  when TIM1 interrupt took place, inside
+ 223:../../applications/temperature-humidity/src/temperature-humidity.c ****   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+ 224:../../applications/temperature-humidity/src/temperature-humidity.c ****   * a global variable "uwTick" used as application time base.
+ 225:../../applications/temperature-humidity/src/temperature-humidity.c ****   * @param  htim : TIM handle
+ 226:../../applications/temperature-humidity/src/temperature-humidity.c ****   * @retval None
+ 227:../../applications/temperature-humidity/src/temperature-humidity.c ****   */
+ 228:../../applications/temperature-humidity/src/temperature-humidity.c **** void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+ 229:../../applications/temperature-humidity/src/temperature-humidity.c **** {
+ 352              		.loc 1 229 1 is_stmt 1 view -0
+ 353              		.cfi_startproc
+ 354              		@ args = 0, pretend = 0, frame = 0
+ 355              		@ frame_needed = 0, uses_anonymous_args = 0
+ 356              		.loc 1 229 1 is_stmt 0 view .LVU53
+ 357 0000 08B5     		push	{r3, lr}
+ 358              	.LCFI6:
+ 359              		.cfi_def_cfa_offset 8
+ 360              		.cfi_offset 3, -8
+ 361              		.cfi_offset 14, -4
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s 			page 12
+
+
+ 230:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE BEGIN Callback 0 */
+ 231:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 232:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE END Callback 0 */
+ 233:../../applications/temperature-humidity/src/temperature-humidity.c ****   if (htim->Instance == TIM1)
+ 362              		.loc 1 233 3 is_stmt 1 view .LVU54
+ 363              		.loc 1 233 11 is_stmt 0 view .LVU55
+ 364 0002 0268     		ldr	r2, [r0]
+ 365              		.loc 1 233 6 view .LVU56
+ 366 0004 034B     		ldr	r3, .L25
+ 367 0006 9A42     		cmp	r2, r3
+ 368 0008 00D0     		beq	.L24
+ 369              	.LVL34:
+ 370              	.L21:
+ 234:../../applications/temperature-humidity/src/temperature-humidity.c ****   {
+ 235:../../applications/temperature-humidity/src/temperature-humidity.c ****     HAL_IncTick();
+ 236:../../applications/temperature-humidity/src/temperature-humidity.c ****   }
+ 237:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE BEGIN Callback 1 */
+ 238:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 239:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE END Callback 1 */
+ 240:../../applications/temperature-humidity/src/temperature-humidity.c **** }
+ 371              		.loc 1 240 1 view .LVU57
+ 372 000a 08BD     		pop	{r3, pc}
+ 373              	.LVL35:
+ 374              	.L24:
+ 235:../../applications/temperature-humidity/src/temperature-humidity.c ****   }
+ 375              		.loc 1 235 5 is_stmt 1 view .LVU58
+ 376 000c FFF7FEFF 		bl	HAL_IncTick
+ 377              	.LVL36:
+ 378              		.loc 1 240 1 is_stmt 0 view .LVU59
+ 379 0010 FBE7     		b	.L21
+ 380              	.L26:
+ 381 0012 00BF     		.align	2
+ 382              	.L25:
+ 383 0014 002C0140 		.word	1073818624
+ 384              		.cfi_endproc
+ 385              	.LFE133:
+ 387              		.section	.text.Error_Handler,"ax",%progbits
+ 388              		.align	1
+ 389              		.global	Error_Handler
+ 390              		.syntax unified
+ 391              		.thumb
+ 392              		.thumb_func
+ 393              		.fpu fpv4-sp-d16
+ 395              	Error_Handler:
+ 396              	.LFB134:
+ 241:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 242:../../applications/temperature-humidity/src/temperature-humidity.c **** /**
+ 243:../../applications/temperature-humidity/src/temperature-humidity.c ****   * @brief  This function is executed in case of error occurrence.
+ 244:../../applications/temperature-humidity/src/temperature-humidity.c ****   * @retval None
+ 245:../../applications/temperature-humidity/src/temperature-humidity.c ****   */
+ 246:../../applications/temperature-humidity/src/temperature-humidity.c **** void Error_Handler(void)
+ 247:../../applications/temperature-humidity/src/temperature-humidity.c **** {
+ 397              		.loc 1 247 1 is_stmt 1 view -0
+ 398              		.cfi_startproc
+ 399              		@ args = 0, pretend = 0, frame = 0
+ 400              		@ frame_needed = 0, uses_anonymous_args = 0
+ 401              		@ link register save eliminated.
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s 			page 13
+
+
+ 248:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE BEGIN Error_Handler_Debug */
+ 249:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* User can add his own implementation to report the HAL error return state */
+ 250:../../applications/temperature-humidity/src/temperature-humidity.c **** 
+ 251:../../applications/temperature-humidity/src/temperature-humidity.c ****   /* USER CODE END Error_Handler_Debug */
+ 252:../../applications/temperature-humidity/src/temperature-humidity.c **** }
+ 402              		.loc 1 252 1 view .LVU61
+ 403 0000 7047     		bx	lr
+ 404              		.cfi_endproc
+ 405              	.LFE134:
+ 407              		.comm	SHTData,8,4
+ 408              		.comm	temp_hum_timer_id,4,4
+ 409              		.comm	temp,4,4
+ 410              		.comm	humidity,4,4
+ 411              		.comm	_i2caddr,1,1
+ 412              		.comm	SHThi2cLib,4,4
+ 413              		.comm	iwdgTimId,4,4
+ 414              		.comm	defaultTaskHandle,4,4
+ 415              		.comm	P3_header,44,4
+ 416              		.comm	P2_header,44,4
+ 417              		.comm	P1_header,44,4
+ 418              		.comm	FLASH_SPI,100,4
+ 419              		.comm	P3_SPI,100,4
+ 420              		.comm	P2_SPI,100,4
+ 421              		.comm	P1_SPI,100,4
+ 422              		.comm	P3_I2C,76,4
+ 423              		.comm	P2_I2C,76,4
+ 424              		.comm	P1_I2C,76,4
+ 425              		.comm	common_I2C,76,4
+ 426              		.comm	P3_UART,120,4
+ 427              		.comm	P2_UART,120,4
+ 428              		.comm	P1_UART,120,4
+ 429              		.comm	BLE_UART,120,4
+ 430              		.comm	USB_UART,120,4
+ 431              		.comm	hiwdg,16,4
+ 432              		.comm	P3_DIO6,8,4
+ 433              		.comm	P3_DIO5,8,4
+ 434              		.comm	P3_DIO4,8,4
+ 435              		.comm	P3_DIO3,8,4
+ 436              		.comm	P3_DIO2,8,4
+ 437              		.comm	P3_DIO1,8,4
+ 438              		.comm	P2_DIO6,8,4
+ 439              		.comm	P2_DIO5,8,4
+ 440              		.comm	P2_DIO4,8,4
+ 441              		.comm	P2_DIO3,8,4
+ 442              		.comm	P2_DIO2,8,4
+ 443              		.comm	P2_DIO1,8,4
+ 444              		.comm	P1_DIO6,8,4
+ 445              		.comm	P1_DIO5,8,4
+ 446              		.comm	P1_DIO4,8,4
+ 447              		.comm	P1_DIO3,8,4
+ 448              		.comm	P1_DIO2,8,4
+ 449              		.comm	P1_DIO1,8,4
+ 450              		.section	.rodata
+ 451              		.align	2
+ 452              		.set	.LANCHOR0,. + 0
+ 453              	.LC6:
+ 454 0000 00000000 		.word	.LC0
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s 			page 14
+
+
+ 455 0004 00000000 		.word	StartDefaultTask
+ 456 0008 FEFF     		.short	-2
+ 457 000a 0000     		.space	2
+ 458 000c 00000000 		.word	0
+ 459 0010 80000000 		.word	128
+ 460              		.section	.rodata.main.str1.4,"aMS",%progbits,1
+ 461              		.align	2
+ 462              	.LC5:
+ 463 0000 496E6974 		.ascii	"Initializing RTOS timers, threads and mutex\015\000"
+ 463      69616C69 
+ 463      7A696E67 
+ 463      2052544F 
+ 463      53207469 
+ 464              		.section	.rodata.printWelcome.str1.4,"aMS",%progbits,1
+ 465              		.align	2
+ 466              	.LC2:
+ 467 0000 0D00     		.ascii	"\015\000"
+ 468 0002 0000     		.space	2
+ 469              	.LC3:
+ 470 0004 2A2A2A2A 		.ascii	"*****************************************\015\000"
+ 470      2A2A2A2A 
+ 470      2A2A2A2A 
+ 470      2A2A2A2A 
+ 470      2A2A2A2A 
+ 471 002f 00       		.space	1
+ 472              	.LC4:
+ 473 0030 4170706C 		.ascii	"Application Temperature & Humidity \015\000"
+ 473      69636174 
+ 473      696F6E20 
+ 473      54656D70 
+ 473      65726174 
+ 474              		.section	.rodata.print_temp_hum.str1.4,"aMS",%progbits,1
+ 475              		.align	2
+ 476              	.LC7:
+ 477 0000 54656D70 		.ascii	"Temperature: %.2f \302\260C  \015\012\000"
+ 477      65726174 
+ 477      7572653A 
+ 477      20252E32 
+ 477      6620C2B0 
+ 478 001a 0000     		.space	2
+ 479              	.LC8:
+ 480 001c 48756D69 		.ascii	"Humidity: %.2f %% \015\012\000"
+ 480      64697479 
+ 480      3A20252E 
+ 480      32662025 
+ 480      25200D0A 
+ 481              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 482              		.align	2
+ 483              	.LC0:
+ 484 0000 64656661 		.ascii	"defaultTask\000"
+ 484      756C7454 
+ 484      61736B00 
+ 485              		.weak	SystemClock_Config
+ 486              		.text
+ 487              	.Letext0:
+ 488              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 489              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s 			page 15
+
+
+ 490              		.file 4 "../../core/ST/CMSIS/Include/core_cm4.h"
+ 491              		.file 5 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/system_stm32l4xx.h"
+ 492              		.file 6 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/stm32l496xx.h"
+ 493              		.file 7 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h"
+ 494              		.file 8 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dma.h"
+ 495              		.file 9 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_i2c.h"
+ 496              		.file 10 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_iwdg.h"
+ 497              		.file 11 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h"
+ 498              		.file 12 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h"
+ 499              		.file 13 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h"
+ 500              		.file 14 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h"
+ 501              		.file 15 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
+ 502              		.file 16 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/include/timers.h"
+ 503              		.file 17 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h"
+ 504              		.file 18 "../../core/platform/octa/inc/gpio.h"
+ 505              		.file 19 "../../core/platform/octa/inc/iwdg.h"
+ 506              		.file 20 "../../core/platform/octa/inc/uart.h"
+ 507              		.file 21 "../../core/platform/octa/inc/i2c.h"
+ 508              		.file 22 "../../core/platform/octa/inc/spi.h"
+ 509              		.file 23 "../../core/platform/octa/inc/octa.h"
+ 510              		.file 24 "../../applications/temperature-humidity/inc/temperature-humidity.h"
+ 511              		.file 25 "../../core/drivers/SHT31/inc/sht31.h"
+ 512              		.file 26 "<built-in>"
+ 513              		.file 27 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio.h"
+ 514              		.file 28 "../../core/platform/octa/inc/sysclock.h"
+ 515              		.file 29 "../../core/platform/common/inc/platform.h"
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s 			page 16
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 temperature-humidity.c
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:18     .text.StartDefaultTask:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:26     .text.StartDefaultTask:00000000 StartDefaultTask
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:53     .text.printWelcome:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:60     .text.printWelcome:00000000 printWelcome
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:115    .text.printWelcome:00000044 $d
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:123    .text.main:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:130    .text.main:00000000 main
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:231    .text.main:0000007c $d
+                            *COM*:0000004c common_I2C
+                            *COM*:00000004 defaultTaskHandle
+                            *COM*:00000004 iwdgTimId
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:314    .text.temp_hum_measurement:00000000 temp_hum_measurement
+                            *COM*:00000004 temp_hum_timer_id
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:244    .text.print_temp_hum:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:251    .text.print_temp_hum:00000000 print_temp_hum
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:299    .text.print_temp_hum:00000034 $d
+                            *COM*:00000008 SHTData
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:307    .text.temp_hum_measurement:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:337    .text.temp_hum_measurement:00000010 $d
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:342    .text.HAL_TIM_PeriodElapsedCallback:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:349    .text.HAL_TIM_PeriodElapsedCallback:00000000 HAL_TIM_PeriodElapsedCallback
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:383    .text.HAL_TIM_PeriodElapsedCallback:00000014 $d
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:388    .text.Error_Handler:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:395    .text.Error_Handler:00000000 Error_Handler
+                            *COM*:00000004 temp
+                            *COM*:00000004 humidity
+                            *COM*:00000001 _i2caddr
+                            *COM*:00000004 SHThi2cLib
+                            *COM*:0000002c P3_header
+                            *COM*:0000002c P2_header
+                            *COM*:0000002c P1_header
+                            *COM*:00000064 FLASH_SPI
+                            *COM*:00000064 P3_SPI
+                            *COM*:00000064 P2_SPI
+                            *COM*:00000064 P1_SPI
+                            *COM*:0000004c P3_I2C
+                            *COM*:0000004c P2_I2C
+                            *COM*:0000004c P1_I2C
+                            *COM*:00000078 P3_UART
+                            *COM*:00000078 P2_UART
+                            *COM*:00000078 P1_UART
+                            *COM*:00000078 BLE_UART
+                            *COM*:00000078 USB_UART
+                            *COM*:00000010 hiwdg
+                            *COM*:00000008 P3_DIO6
+                            *COM*:00000008 P3_DIO5
+                            *COM*:00000008 P3_DIO4
+                            *COM*:00000008 P3_DIO3
+                            *COM*:00000008 P3_DIO2
+                            *COM*:00000008 P3_DIO1
+                            *COM*:00000008 P2_DIO6
+                            *COM*:00000008 P2_DIO5
+                            *COM*:00000008 P2_DIO4
+                            *COM*:00000008 P2_DIO3
+                            *COM*:00000008 P2_DIO2
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s 			page 17
+
+
+                            *COM*:00000008 P2_DIO1
+                            *COM*:00000008 P1_DIO6
+                            *COM*:00000008 P1_DIO5
+                            *COM*:00000008 P1_DIO4
+                            *COM*:00000008 P1_DIO3
+                            *COM*:00000008 P1_DIO2
+                            *COM*:00000008 P1_DIO1
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:451    .rodata:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:461    .rodata.main.str1.4:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:465    .rodata.printWelcome.str1.4:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:475    .rodata.print_temp_hum.str1.4:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\cc0OIAru.s:482    .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+osDelay
+puts
+HAL_GPIO_TogglePin
+HAL_Delay
+HAL_Init
+SystemClock_Config
+Initialize_Platform
+setI2CInterface_SHT31
+SHT31_begin
+osThreadCreate
+IWDG_feed
+osTimerCreate
+osTimerStart
+osKernelStart
+__aeabi_f2d
+printf
+SHT31_get_temp_hum
+HAL_IncTick

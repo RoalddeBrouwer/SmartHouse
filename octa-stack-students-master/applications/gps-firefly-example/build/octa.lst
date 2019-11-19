@@ -1,0 +1,1095 @@
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"octa.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.OCTA_Initialize_Common_Peripherals,"ax",%progbits
+  18              		.align	1
+  19              		.global	OCTA_Initialize_Common_Peripherals
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	OCTA_Initialize_Common_Peripherals:
+  27              	.LFB129:
+  28              		.file 1 "../../core/platform/octa/src/octa.c"
+   1:../../core/platform/octa/src/octa.c **** #include "octa.h"
+   2:../../core/platform/octa/src/octa.c **** 
+   3:../../core/platform/octa/src/octa.c **** void OCTA_Initialize_Platform(void)
+   4:../../core/platform/octa/src/octa.c **** {
+   5:../../core/platform/octa/src/octa.c ****     //GPIO, IWDG, USB_UART(Logging)
+   6:../../core/platform/octa/src/octa.c ****     OCTA_Initialize_Common_Peripherals();
+   7:../../core/platform/octa/src/octa.c ****     //P1 UART, I2C, SPI & GPIO handles
+   8:../../core/platform/octa/src/octa.c ****     OCTA_Initialize_P1_Peripherals();
+   9:../../core/platform/octa/src/octa.c ****     //P2 UART, I2C, SPI & GPIO handles
+  10:../../core/platform/octa/src/octa.c ****     OCTA_Initialize_P2_Peripherals();
+  11:../../core/platform/octa/src/octa.c ****     //P3 UART, I2C, SPI & GPIO handles
+  12:../../core/platform/octa/src/octa.c ****     OCTA_Initialize_P3_Peripherals();
+  13:../../core/platform/octa/src/octa.c **** }
+  14:../../core/platform/octa/src/octa.c **** 
+  15:../../core/platform/octa/src/octa.c **** void OCTA_Initialize_Common_Peripherals(void)
+  16:../../core/platform/octa/src/octa.c **** {
+  29              		.loc 1 16 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+  17:../../core/platform/octa/src/octa.c ****     OCTA_GPIO_Init();
+  38              		.loc 1 17 5 view .LVU1
+  39 0002 FFF7FEFF 		bl	OCTA_GPIO_Init
+  40              	.LVL0:
+  18:../../core/platform/octa/src/octa.c ****     OCTA_IWDG_Init();
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s 			page 2
+
+
+  41              		.loc 1 18 5 view .LVU2
+  42 0006 FFF7FEFF 		bl	OCTA_IWDG_Init
+  43              	.LVL1:
+  19:../../core/platform/octa/src/octa.c ****     FLASH_SPI_Init();
+  44              		.loc 1 19 5 view .LVU3
+  45 000a FFF7FEFF 		bl	FLASH_SPI_Init
+  46              	.LVL2:
+  20:../../core/platform/octa/src/octa.c ****     common_I2C_Init();
+  47              		.loc 1 20 5 view .LVU4
+  48 000e FFF7FEFF 		bl	common_I2C_Init
+  49              	.LVL3:
+  21:../../core/platform/octa/src/octa.c ****     USB_UART_Init(115200);
+  50              		.loc 1 21 5 view .LVU5
+  51 0012 4FF4E130 		mov	r0, #115200
+  52 0016 FFF7FEFF 		bl	USB_UART_Init
+  53              	.LVL4:
+  22:../../core/platform/octa/src/octa.c ****     #if USE_BOOTLOADER
+  23:../../core/platform/octa/src/octa.c ****         printf("\r\nusing bootloader, initializing BLE UART\r\n");
+  24:../../core/platform/octa/src/octa.c ****         BLE_UART_Init(115200); 
+  25:../../core/platform/octa/src/octa.c ****         bootloader_initialize(&BLE_UART);     
+  26:../../core/platform/octa/src/octa.c ****     #endif
+  27:../../core/platform/octa/src/octa.c **** }
+  54              		.loc 1 27 1 is_stmt 0 view .LVU6
+  55 001a 08BD     		pop	{r3, pc}
+  56              		.cfi_endproc
+  57              	.LFE129:
+  59              		.section	.text.OCTA_Initialize_P1_Peripherals,"ax",%progbits
+  60              		.align	1
+  61              		.global	OCTA_Initialize_P1_Peripherals
+  62              		.syntax unified
+  63              		.thumb
+  64              		.thumb_func
+  65              		.fpu fpv4-sp-d16
+  67              	OCTA_Initialize_P1_Peripherals:
+  68              	.LFB130:
+  28:../../core/platform/octa/src/octa.c **** 
+  29:../../core/platform/octa/src/octa.c **** void OCTA_Initialize_P1_Peripherals(void)
+  30:../../core/platform/octa/src/octa.c **** {
+  69              		.loc 1 30 1 is_stmt 1 view -0
+  70              		.cfi_startproc
+  71              		@ args = 0, pretend = 0, frame = 0
+  72              		@ frame_needed = 0, uses_anonymous_args = 0
+  73              		@ link register save eliminated.
+  31:../../core/platform/octa/src/octa.c ****     P1_header.number = 1;
+  74              		.loc 1 31 5 view .LVU8
+  75              		.loc 1 31 22 is_stmt 0 view .LVU9
+  76 0000 0A4B     		ldr	r3, .L4
+  77 0002 0122     		movs	r2, #1
+  78 0004 1A70     		strb	r2, [r3]
+  32:../../core/platform/octa/src/octa.c ****     P1_header.uartHandle = &P1_UART;
+  79              		.loc 1 32 5 is_stmt 1 view .LVU10
+  80              		.loc 1 32 26 is_stmt 0 view .LVU11
+  81 0006 0A4A     		ldr	r2, .L4+4
+  82 0008 5A60     		str	r2, [r3, #4]
+  33:../../core/platform/octa/src/octa.c ****     P1_header.i2cHandle = &P1_I2C;
+  83              		.loc 1 33 5 is_stmt 1 view .LVU12
+  84              		.loc 1 33 25 is_stmt 0 view .LVU13
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s 			page 3
+
+
+  85 000a 0A4A     		ldr	r2, .L4+8
+  86 000c 9A60     		str	r2, [r3, #8]
+  34:../../core/platform/octa/src/octa.c ****     P1_header.spiHandle = &P1_SPI;
+  87              		.loc 1 34 5 is_stmt 1 view .LVU14
+  88              		.loc 1 34 25 is_stmt 0 view .LVU15
+  89 000e 0A4A     		ldr	r2, .L4+12
+  90 0010 DA60     		str	r2, [r3, #12]
+  35:../../core/platform/octa/src/octa.c ****     P1_header.DIO1 = &P1_DIO1;
+  91              		.loc 1 35 5 is_stmt 1 view .LVU16
+  92              		.loc 1 35 20 is_stmt 0 view .LVU17
+  93 0012 0A4A     		ldr	r2, .L4+16
+  94 0014 1A61     		str	r2, [r3, #16]
+  36:../../core/platform/octa/src/octa.c ****     P1_header.DIO2 = &P1_DIO2;
+  95              		.loc 1 36 5 is_stmt 1 view .LVU18
+  96              		.loc 1 36 20 is_stmt 0 view .LVU19
+  97 0016 0A4A     		ldr	r2, .L4+20
+  98 0018 5A61     		str	r2, [r3, #20]
+  37:../../core/platform/octa/src/octa.c ****     P1_header.DIO3 = &P1_DIO3;
+  99              		.loc 1 37 5 is_stmt 1 view .LVU20
+ 100              		.loc 1 37 20 is_stmt 0 view .LVU21
+ 101 001a 0A4A     		ldr	r2, .L4+24
+ 102 001c 9A61     		str	r2, [r3, #24]
+  38:../../core/platform/octa/src/octa.c ****     P1_header.DIO4 = &P1_DIO4;
+ 103              		.loc 1 38 5 is_stmt 1 view .LVU22
+ 104              		.loc 1 38 20 is_stmt 0 view .LVU23
+ 105 001e 0A4A     		ldr	r2, .L4+28
+ 106 0020 DA61     		str	r2, [r3, #28]
+  39:../../core/platform/octa/src/octa.c ****     P1_header.DIO5 = &P1_DIO5;
+ 107              		.loc 1 39 5 is_stmt 1 view .LVU24
+ 108              		.loc 1 39 20 is_stmt 0 view .LVU25
+ 109 0022 0A4A     		ldr	r2, .L4+32
+ 110 0024 1A62     		str	r2, [r3, #32]
+  40:../../core/platform/octa/src/octa.c ****     P1_header.DIO6 = &P1_DIO6;
+ 111              		.loc 1 40 5 is_stmt 1 view .LVU26
+ 112              		.loc 1 40 20 is_stmt 0 view .LVU27
+ 113 0026 0A4A     		ldr	r2, .L4+36
+ 114 0028 5A62     		str	r2, [r3, #36]
+  41:../../core/platform/octa/src/octa.c **** }
+ 115              		.loc 1 41 1 view .LVU28
+ 116 002a 7047     		bx	lr
+ 117              	.L5:
+ 118              		.align	2
+ 119              	.L4:
+ 120 002c 00000000 		.word	P1_header
+ 121 0030 00000000 		.word	P1_UART
+ 122 0034 00000000 		.word	P1_I2C
+ 123 0038 00000000 		.word	P1_SPI
+ 124 003c 00000000 		.word	P1_DIO1
+ 125 0040 00000000 		.word	P1_DIO2
+ 126 0044 00000000 		.word	P1_DIO3
+ 127 0048 00000000 		.word	P1_DIO4
+ 128 004c 00000000 		.word	P1_DIO5
+ 129 0050 00000000 		.word	P1_DIO6
+ 130              		.cfi_endproc
+ 131              	.LFE130:
+ 133              		.section	.text.OCTA_Initialize_P2_Peripherals,"ax",%progbits
+ 134              		.align	1
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s 			page 4
+
+
+ 135              		.global	OCTA_Initialize_P2_Peripherals
+ 136              		.syntax unified
+ 137              		.thumb
+ 138              		.thumb_func
+ 139              		.fpu fpv4-sp-d16
+ 141              	OCTA_Initialize_P2_Peripherals:
+ 142              	.LFB131:
+  42:../../core/platform/octa/src/octa.c **** 
+  43:../../core/platform/octa/src/octa.c **** void OCTA_Initialize_P2_Peripherals(void)
+  44:../../core/platform/octa/src/octa.c **** {
+ 143              		.loc 1 44 1 is_stmt 1 view -0
+ 144              		.cfi_startproc
+ 145              		@ args = 0, pretend = 0, frame = 0
+ 146              		@ frame_needed = 0, uses_anonymous_args = 0
+ 147              		@ link register save eliminated.
+  45:../../core/platform/octa/src/octa.c ****     P2_header.number = 2;
+ 148              		.loc 1 45 5 view .LVU30
+ 149              		.loc 1 45 22 is_stmt 0 view .LVU31
+ 150 0000 0A4B     		ldr	r3, .L7
+ 151 0002 0222     		movs	r2, #2
+ 152 0004 1A70     		strb	r2, [r3]
+  46:../../core/platform/octa/src/octa.c ****     #if USE_BOOTLOADER
+  47:../../core/platform/octa/src/octa.c ****         printf("\r\nusing bootloader, P2 UART unavailable\r\n");
+  48:../../core/platform/octa/src/octa.c ****         P2_header.uartHandle = NULL;
+  49:../../core/platform/octa/src/octa.c ****     #else
+  50:../../core/platform/octa/src/octa.c ****         P2_header.uartHandle = &P2_UART;
+ 153              		.loc 1 50 9 is_stmt 1 view .LVU32
+ 154              		.loc 1 50 30 is_stmt 0 view .LVU33
+ 155 0006 0A4A     		ldr	r2, .L7+4
+ 156 0008 5A60     		str	r2, [r3, #4]
+  51:../../core/platform/octa/src/octa.c ****     #endif
+  52:../../core/platform/octa/src/octa.c ****     P2_header.i2cHandle = &P2_I2C;
+ 157              		.loc 1 52 5 is_stmt 1 view .LVU34
+ 158              		.loc 1 52 25 is_stmt 0 view .LVU35
+ 159 000a 0A4A     		ldr	r2, .L7+8
+ 160 000c 9A60     		str	r2, [r3, #8]
+  53:../../core/platform/octa/src/octa.c ****     P2_header.spiHandle = &P2_SPI;
+ 161              		.loc 1 53 5 is_stmt 1 view .LVU36
+ 162              		.loc 1 53 25 is_stmt 0 view .LVU37
+ 163 000e 0A4A     		ldr	r2, .L7+12
+ 164 0010 DA60     		str	r2, [r3, #12]
+  54:../../core/platform/octa/src/octa.c ****     P2_header.DIO1 = &P2_DIO1;
+ 165              		.loc 1 54 5 is_stmt 1 view .LVU38
+ 166              		.loc 1 54 20 is_stmt 0 view .LVU39
+ 167 0012 0A4A     		ldr	r2, .L7+16
+ 168 0014 1A61     		str	r2, [r3, #16]
+  55:../../core/platform/octa/src/octa.c ****     P2_header.DIO2 = &P2_DIO2;
+ 169              		.loc 1 55 5 is_stmt 1 view .LVU40
+ 170              		.loc 1 55 20 is_stmt 0 view .LVU41
+ 171 0016 0A4A     		ldr	r2, .L7+20
+ 172 0018 5A61     		str	r2, [r3, #20]
+  56:../../core/platform/octa/src/octa.c ****     P2_header.DIO3 = &P2_DIO3;
+ 173              		.loc 1 56 5 is_stmt 1 view .LVU42
+ 174              		.loc 1 56 20 is_stmt 0 view .LVU43
+ 175 001a 0A4A     		ldr	r2, .L7+24
+ 176 001c 9A61     		str	r2, [r3, #24]
+  57:../../core/platform/octa/src/octa.c ****     P2_header.DIO4 = &P2_DIO4;
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s 			page 5
+
+
+ 177              		.loc 1 57 5 is_stmt 1 view .LVU44
+ 178              		.loc 1 57 20 is_stmt 0 view .LVU45
+ 179 001e 0A4A     		ldr	r2, .L7+28
+ 180 0020 DA61     		str	r2, [r3, #28]
+  58:../../core/platform/octa/src/octa.c ****     P2_header.DIO5 = &P2_DIO5;
+ 181              		.loc 1 58 5 is_stmt 1 view .LVU46
+ 182              		.loc 1 58 20 is_stmt 0 view .LVU47
+ 183 0022 0A4A     		ldr	r2, .L7+32
+ 184 0024 1A62     		str	r2, [r3, #32]
+  59:../../core/platform/octa/src/octa.c ****     P2_header.DIO6 = &P2_DIO6;
+ 185              		.loc 1 59 5 is_stmt 1 view .LVU48
+ 186              		.loc 1 59 20 is_stmt 0 view .LVU49
+ 187 0026 0A4A     		ldr	r2, .L7+36
+ 188 0028 5A62     		str	r2, [r3, #36]
+  60:../../core/platform/octa/src/octa.c **** }
+ 189              		.loc 1 60 1 view .LVU50
+ 190 002a 7047     		bx	lr
+ 191              	.L8:
+ 192              		.align	2
+ 193              	.L7:
+ 194 002c 00000000 		.word	P2_header
+ 195 0030 00000000 		.word	P2_UART
+ 196 0034 00000000 		.word	P2_I2C
+ 197 0038 00000000 		.word	P2_SPI
+ 198 003c 00000000 		.word	P2_DIO1
+ 199 0040 00000000 		.word	P2_DIO2
+ 200 0044 00000000 		.word	P2_DIO3
+ 201 0048 00000000 		.word	P2_DIO4
+ 202 004c 00000000 		.word	P2_DIO5
+ 203 0050 00000000 		.word	P2_DIO6
+ 204              		.cfi_endproc
+ 205              	.LFE131:
+ 207              		.section	.text.OCTA_Initialize_P3_Peripherals,"ax",%progbits
+ 208              		.align	1
+ 209              		.global	OCTA_Initialize_P3_Peripherals
+ 210              		.syntax unified
+ 211              		.thumb
+ 212              		.thumb_func
+ 213              		.fpu fpv4-sp-d16
+ 215              	OCTA_Initialize_P3_Peripherals:
+ 216              	.LFB132:
+  61:../../core/platform/octa/src/octa.c **** 
+  62:../../core/platform/octa/src/octa.c **** void OCTA_Initialize_P3_Peripherals(void)
+  63:../../core/platform/octa/src/octa.c **** {
+ 217              		.loc 1 63 1 is_stmt 1 view -0
+ 218              		.cfi_startproc
+ 219              		@ args = 0, pretend = 0, frame = 0
+ 220              		@ frame_needed = 0, uses_anonymous_args = 0
+ 221              		@ link register save eliminated.
+  64:../../core/platform/octa/src/octa.c ****     P3_header.number = 3;
+ 222              		.loc 1 64 5 view .LVU52
+ 223              		.loc 1 64 22 is_stmt 0 view .LVU53
+ 224 0000 0A4B     		ldr	r3, .L10
+ 225 0002 0322     		movs	r2, #3
+ 226 0004 1A70     		strb	r2, [r3]
+  65:../../core/platform/octa/src/octa.c ****     P3_header.uartHandle = &P3_UART;
+ 227              		.loc 1 65 5 is_stmt 1 view .LVU54
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s 			page 6
+
+
+ 228              		.loc 1 65 26 is_stmt 0 view .LVU55
+ 229 0006 0A4A     		ldr	r2, .L10+4
+ 230 0008 5A60     		str	r2, [r3, #4]
+  66:../../core/platform/octa/src/octa.c ****     P3_header.i2cHandle = &P3_I2C;
+ 231              		.loc 1 66 5 is_stmt 1 view .LVU56
+ 232              		.loc 1 66 25 is_stmt 0 view .LVU57
+ 233 000a 0A4A     		ldr	r2, .L10+8
+ 234 000c 9A60     		str	r2, [r3, #8]
+  67:../../core/platform/octa/src/octa.c ****     P3_header.spiHandle = &P3_SPI;
+ 235              		.loc 1 67 5 is_stmt 1 view .LVU58
+ 236              		.loc 1 67 25 is_stmt 0 view .LVU59
+ 237 000e 0A4A     		ldr	r2, .L10+12
+ 238 0010 DA60     		str	r2, [r3, #12]
+  68:../../core/platform/octa/src/octa.c ****     P3_header.DIO1 = &P3_DIO1;
+ 239              		.loc 1 68 5 is_stmt 1 view .LVU60
+ 240              		.loc 1 68 20 is_stmt 0 view .LVU61
+ 241 0012 0A4A     		ldr	r2, .L10+16
+ 242 0014 1A61     		str	r2, [r3, #16]
+  69:../../core/platform/octa/src/octa.c ****     P3_header.DIO2 = &P3_DIO2;
+ 243              		.loc 1 69 5 is_stmt 1 view .LVU62
+ 244              		.loc 1 69 20 is_stmt 0 view .LVU63
+ 245 0016 0A4A     		ldr	r2, .L10+20
+ 246 0018 5A61     		str	r2, [r3, #20]
+  70:../../core/platform/octa/src/octa.c ****     P3_header.DIO3 = &P3_DIO3;
+ 247              		.loc 1 70 5 is_stmt 1 view .LVU64
+ 248              		.loc 1 70 20 is_stmt 0 view .LVU65
+ 249 001a 0A4A     		ldr	r2, .L10+24
+ 250 001c 9A61     		str	r2, [r3, #24]
+  71:../../core/platform/octa/src/octa.c ****     P3_header.DIO4 = &P3_DIO4;
+ 251              		.loc 1 71 5 is_stmt 1 view .LVU66
+ 252              		.loc 1 71 20 is_stmt 0 view .LVU67
+ 253 001e 0A4A     		ldr	r2, .L10+28
+ 254 0020 DA61     		str	r2, [r3, #28]
+  72:../../core/platform/octa/src/octa.c ****     P3_header.DIO5 = &P3_DIO5;
+ 255              		.loc 1 72 5 is_stmt 1 view .LVU68
+ 256              		.loc 1 72 20 is_stmt 0 view .LVU69
+ 257 0022 0A4A     		ldr	r2, .L10+32
+ 258 0024 1A62     		str	r2, [r3, #32]
+  73:../../core/platform/octa/src/octa.c ****     P3_header.DIO6 = &P3_DIO6;
+ 259              		.loc 1 73 5 is_stmt 1 view .LVU70
+ 260              		.loc 1 73 20 is_stmt 0 view .LVU71
+ 261 0026 0A4A     		ldr	r2, .L10+36
+ 262 0028 5A62     		str	r2, [r3, #36]
+  74:../../core/platform/octa/src/octa.c **** }
+ 263              		.loc 1 74 1 view .LVU72
+ 264 002a 7047     		bx	lr
+ 265              	.L11:
+ 266              		.align	2
+ 267              	.L10:
+ 268 002c 00000000 		.word	P3_header
+ 269 0030 00000000 		.word	P3_UART
+ 270 0034 00000000 		.word	P3_I2C
+ 271 0038 00000000 		.word	P3_SPI
+ 272 003c 00000000 		.word	P3_DIO1
+ 273 0040 00000000 		.word	P3_DIO2
+ 274 0044 00000000 		.word	P3_DIO3
+ 275 0048 00000000 		.word	P3_DIO4
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s 			page 7
+
+
+ 276 004c 00000000 		.word	P3_DIO5
+ 277 0050 00000000 		.word	P3_DIO6
+ 278              		.cfi_endproc
+ 279              	.LFE132:
+ 281              		.section	.text.OCTA_Initialize_Platform,"ax",%progbits
+ 282              		.align	1
+ 283              		.global	OCTA_Initialize_Platform
+ 284              		.syntax unified
+ 285              		.thumb
+ 286              		.thumb_func
+ 287              		.fpu fpv4-sp-d16
+ 289              	OCTA_Initialize_Platform:
+ 290              	.LFB128:
+   4:../../core/platform/octa/src/octa.c ****     OCTA_Initialize_Common_Peripherals();
+ 291              		.loc 1 4 1 is_stmt 1 view -0
+ 292              		.cfi_startproc
+ 293              		@ args = 0, pretend = 0, frame = 0
+ 294              		@ frame_needed = 0, uses_anonymous_args = 0
+ 295 0000 08B5     		push	{r3, lr}
+ 296              	.LCFI1:
+ 297              		.cfi_def_cfa_offset 8
+ 298              		.cfi_offset 3, -8
+ 299              		.cfi_offset 14, -4
+   6:../../core/platform/octa/src/octa.c ****     //P1 UART, I2C, SPI & GPIO handles
+ 300              		.loc 1 6 5 view .LVU74
+ 301 0002 FFF7FEFF 		bl	OCTA_Initialize_Common_Peripherals
+ 302              	.LVL5:
+   8:../../core/platform/octa/src/octa.c ****     //P2 UART, I2C, SPI & GPIO handles
+ 303              		.loc 1 8 5 view .LVU75
+ 304 0006 FFF7FEFF 		bl	OCTA_Initialize_P1_Peripherals
+ 305              	.LVL6:
+  10:../../core/platform/octa/src/octa.c ****     //P3 UART, I2C, SPI & GPIO handles
+ 306              		.loc 1 10 5 view .LVU76
+ 307 000a FFF7FEFF 		bl	OCTA_Initialize_P2_Peripherals
+ 308              	.LVL7:
+  12:../../core/platform/octa/src/octa.c **** }
+ 309              		.loc 1 12 5 view .LVU77
+ 310 000e FFF7FEFF 		bl	OCTA_Initialize_P3_Peripherals
+ 311              	.LVL8:
+  13:../../core/platform/octa/src/octa.c **** 
+ 312              		.loc 1 13 1 is_stmt 0 view .LVU78
+ 313 0012 08BD     		pop	{r3, pc}
+ 314              		.cfi_endproc
+ 315              	.LFE128:
+ 317              		.section	.text.get_UID,"ax",%progbits
+ 318              		.align	1
+ 319              		.global	get_UID
+ 320              		.syntax unified
+ 321              		.thumb
+ 322              		.thumb_func
+ 323              		.fpu fpv4-sp-d16
+ 325              	get_UID:
+ 326              	.LFB133:
+  75:../../core/platform/octa/src/octa.c **** 
+  76:../../core/platform/octa/src/octa.c **** uint64_t get_UID(void)
+  77:../../core/platform/octa/src/octa.c **** {
+ 327              		.loc 1 77 1 is_stmt 1 view -0
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s 			page 8
+
+
+ 328              		.cfi_startproc
+ 329              		@ args = 0, pretend = 0, frame = 0
+ 330              		@ frame_needed = 0, uses_anonymous_args = 0
+ 331              		@ link register save eliminated.
+ 332 0000 10B4     		push	{r4}
+ 333              	.LCFI2:
+ 334              		.cfi_def_cfa_offset 4
+ 335              		.cfi_offset 4, -4
+  78:../../core/platform/octa/src/octa.c ****     // Full 96 bits UID in an array
+  79:../../core/platform/octa/src/octa.c ****     // uint32_t *uniqueID = (uint32_t*)UID_BASE;
+  80:../../core/platform/octa/src/octa.c ****     // for(uint8_t i = 0; i < 12; i++){
+  81:../../core/platform/octa/src/octa.c ****     //   UID[i] = (uint8_t)uniqueID[i];
+  82:../../core/platform/octa/src/octa.c ****     // }
+  83:../../core/platform/octa/src/octa.c ****     //return 64 bit mac address
+  84:../../core/platform/octa/src/octa.c ****     return (*((uint64_t *)(UID_BASE)) << 32) + *((uint64_t *)(UID_BASE + 0x04U));
+ 336              		.loc 1 84 5 view .LVU80
+ 337              		.loc 1 84 39 is_stmt 0 view .LVU81
+ 338 0002 064B     		ldr	r3, .L16
+ 339 0004 1968     		ldr	r1, [r3]
+ 340 0006 0023     		movs	r3, #0
+ 341              		.loc 1 84 48 view .LVU82
+ 342 0008 054C     		ldr	r4, .L16+4
+ 343 000a 2068     		ldr	r0, [r4]
+ 344 000c 6268     		ldr	r2, [r4, #4]
+  85:../../core/platform/octa/src/octa.c **** }
+ 345              		.loc 1 85 1 view .LVU83
+ 346 000e 1818     		adds	r0, r3, r0
+ 347 0010 42EB0101 		adc	r1, r2, r1
+ 348 0014 5DF8044B 		ldr	r4, [sp], #4
+ 349              	.LCFI3:
+ 350              		.cfi_restore 4
+ 351              		.cfi_def_cfa_offset 0
+ 352 0018 7047     		bx	lr
+ 353              	.L17:
+ 354 001a 00BF     		.align	2
+ 355              	.L16:
+ 356 001c 9075FF1F 		.word	536835472
+ 357 0020 9475FF1F 		.word	536835476
+ 358              		.cfi_endproc
+ 359              	.LFE133:
+ 361              		.section	.text.platform_initialize_UART,"ax",%progbits
+ 362              		.align	1
+ 363              		.global	platform_initialize_UART
+ 364              		.syntax unified
+ 365              		.thumb
+ 366              		.thumb_func
+ 367              		.fpu fpv4-sp-d16
+ 369              	platform_initialize_UART:
+ 370              	.LVL9:
+ 371              	.LFB134:
+  86:../../core/platform/octa/src/octa.c **** 
+  87:../../core/platform/octa/src/octa.c **** void platform_initialize_UART(struct OCTA_header aHeader, uint32_t aBaudRate)
+  88:../../core/platform/octa/src/octa.c **** {
+ 372              		.loc 1 88 1 is_stmt 1 view -0
+ 373              		.cfi_startproc
+ 374              		@ args = 48, pretend = 16, frame = 0
+ 375              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s 			page 9
+
+
+ 376              		.loc 1 88 1 is_stmt 0 view .LVU85
+ 377 0000 84B0     		sub	sp, sp, #16
+ 378              	.LCFI4:
+ 379              		.cfi_def_cfa_offset 16
+ 380 0002 08B5     		push	{r3, lr}
+ 381              	.LCFI5:
+ 382              		.cfi_def_cfa_offset 24
+ 383              		.cfi_offset 3, -24
+ 384              		.cfi_offset 14, -20
+ 385 0004 0DF1080C 		add	ip, sp, #8
+ 386 0008 8CE80F00 		stm	ip, {r0, r1, r2, r3}
+  89:../../core/platform/octa/src/octa.c ****     switch(aHeader.number)
+ 387              		.loc 1 89 5 is_stmt 1 view .LVU86
+ 388              		.loc 1 89 19 is_stmt 0 view .LVU87
+ 389 000c 9DF80830 		ldrb	r3, [sp, #8]	@ zero_extendqisi2
+ 390              		.loc 1 89 5 view .LVU88
+ 391 0010 022B     		cmp	r3, #2
+ 392 0012 0BD0     		beq	.L19
+ 393 0014 032B     		cmp	r3, #3
+ 394 0016 0DD0     		beq	.L20
+ 395 0018 012B     		cmp	r3, #1
+ 396 001a 03D0     		beq	.L23
+ 397              	.L18:
+  90:../../core/platform/octa/src/octa.c ****     {
+  91:../../core/platform/octa/src/octa.c ****         case 1:
+  92:../../core/platform/octa/src/octa.c ****             P1_UART_Init(aBaudRate);
+  93:../../core/platform/octa/src/octa.c ****             break;
+  94:../../core/platform/octa/src/octa.c ****         case 2:
+  95:../../core/platform/octa/src/octa.c ****             P2_UART_Init(aBaudRate);
+  96:../../core/platform/octa/src/octa.c ****             break;
+  97:../../core/platform/octa/src/octa.c ****         case 3:
+  98:../../core/platform/octa/src/octa.c ****             P3_UART_Init(aBaudRate);
+  99:../../core/platform/octa/src/octa.c ****             break;
+ 100:../../core/platform/octa/src/octa.c ****         default:
+ 101:../../core/platform/octa/src/octa.c ****             break;
+ 102:../../core/platform/octa/src/octa.c ****     }
+ 103:../../core/platform/octa/src/octa.c **** }
+ 398              		.loc 1 103 1 view .LVU89
+ 399 001c BDE80840 		pop	{r3, lr}
+ 400              	.LCFI6:
+ 401              		.cfi_remember_state
+ 402              		.cfi_restore 14
+ 403              		.cfi_restore 3
+ 404              		.cfi_def_cfa_offset 16
+ 405 0020 04B0     		add	sp, sp, #16
+ 406              	.LCFI7:
+ 407              		.cfi_def_cfa_offset 0
+ 408 0022 7047     		bx	lr
+ 409              	.L23:
+ 410              	.LCFI8:
+ 411              		.cfi_restore_state
+  92:../../core/platform/octa/src/octa.c ****             break;
+ 412              		.loc 1 92 13 is_stmt 1 view .LVU90
+ 413 0024 0D98     		ldr	r0, [sp, #52]
+ 414 0026 FFF7FEFF 		bl	P1_UART_Init
+ 415              	.LVL10:
+  93:../../core/platform/octa/src/octa.c ****         case 2:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s 			page 10
+
+
+ 416              		.loc 1 93 13 view .LVU91
+ 417 002a F7E7     		b	.L18
+ 418              	.L19:
+  95:../../core/platform/octa/src/octa.c ****             break;
+ 419              		.loc 1 95 13 view .LVU92
+ 420 002c 0D98     		ldr	r0, [sp, #52]
+ 421 002e FFF7FEFF 		bl	P2_UART_Init
+ 422              	.LVL11:
+  96:../../core/platform/octa/src/octa.c ****         case 3:
+ 423              		.loc 1 96 13 view .LVU93
+ 424 0032 F3E7     		b	.L18
+ 425              	.L20:
+  98:../../core/platform/octa/src/octa.c ****             break;
+ 426              		.loc 1 98 13 view .LVU94
+ 427 0034 0D98     		ldr	r0, [sp, #52]
+ 428 0036 FFF7FEFF 		bl	P3_UART_Init
+ 429              	.LVL12:
+  99:../../core/platform/octa/src/octa.c ****         default:
+ 430              		.loc 1 99 13 view .LVU95
+ 431              		.loc 1 103 1 is_stmt 0 view .LVU96
+ 432 003a EFE7     		b	.L18
+ 433              		.cfi_endproc
+ 434              	.LFE134:
+ 436              		.section	.text.platform_initialize_I2C,"ax",%progbits
+ 437              		.align	1
+ 438              		.global	platform_initialize_I2C
+ 439              		.syntax unified
+ 440              		.thumb
+ 441              		.thumb_func
+ 442              		.fpu fpv4-sp-d16
+ 444              	platform_initialize_I2C:
+ 445              	.LFB135:
+ 104:../../core/platform/octa/src/octa.c **** 
+ 105:../../core/platform/octa/src/octa.c **** void platform_initialize_I2C(struct OCTA_header aHeader)
+ 106:../../core/platform/octa/src/octa.c **** {
+ 446              		.loc 1 106 1 is_stmt 1 view -0
+ 447              		.cfi_startproc
+ 448              		@ args = 44, pretend = 16, frame = 0
+ 449              		@ frame_needed = 0, uses_anonymous_args = 0
+ 450 0000 84B0     		sub	sp, sp, #16
+ 451              	.LCFI9:
+ 452              		.cfi_def_cfa_offset 16
+ 453 0002 08B5     		push	{r3, lr}
+ 454              	.LCFI10:
+ 455              		.cfi_def_cfa_offset 24
+ 456              		.cfi_offset 3, -24
+ 457              		.cfi_offset 14, -20
+ 458 0004 0DF1080C 		add	ip, sp, #8
+ 459 0008 8CE80F00 		stm	ip, {r0, r1, r2, r3}
+ 107:../../core/platform/octa/src/octa.c ****     switch(aHeader.number)
+ 460              		.loc 1 107 5 view .LVU98
+ 461              		.loc 1 107 19 is_stmt 0 view .LVU99
+ 462 000c 9DF80830 		ldrb	r3, [sp, #8]	@ zero_extendqisi2
+ 463              		.loc 1 107 5 view .LVU100
+ 464 0010 022B     		cmp	r3, #2
+ 465 0012 0AD0     		beq	.L25
+ 466 0014 032B     		cmp	r3, #3
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s 			page 11
+
+
+ 467 0016 0BD0     		beq	.L26
+ 468 0018 012B     		cmp	r3, #1
+ 469 001a 03D0     		beq	.L29
+ 470              	.L24:
+ 108:../../core/platform/octa/src/octa.c ****     {
+ 109:../../core/platform/octa/src/octa.c ****         case 1:
+ 110:../../core/platform/octa/src/octa.c ****             P1_I2C_Init();
+ 111:../../core/platform/octa/src/octa.c ****             break;
+ 112:../../core/platform/octa/src/octa.c ****         case 2:
+ 113:../../core/platform/octa/src/octa.c ****             P2_I2C_Init();
+ 114:../../core/platform/octa/src/octa.c ****             break;
+ 115:../../core/platform/octa/src/octa.c ****         case 3:
+ 116:../../core/platform/octa/src/octa.c ****             P3_I2C_Init();
+ 117:../../core/platform/octa/src/octa.c ****             break;
+ 118:../../core/platform/octa/src/octa.c ****         default:
+ 119:../../core/platform/octa/src/octa.c ****             break;
+ 120:../../core/platform/octa/src/octa.c ****     }
+ 121:../../core/platform/octa/src/octa.c **** }
+ 471              		.loc 1 121 1 view .LVU101
+ 472 001c BDE80840 		pop	{r3, lr}
+ 473              	.LCFI11:
+ 474              		.cfi_remember_state
+ 475              		.cfi_restore 14
+ 476              		.cfi_restore 3
+ 477              		.cfi_def_cfa_offset 16
+ 478 0020 04B0     		add	sp, sp, #16
+ 479              	.LCFI12:
+ 480              		.cfi_def_cfa_offset 0
+ 481 0022 7047     		bx	lr
+ 482              	.L29:
+ 483              	.LCFI13:
+ 484              		.cfi_restore_state
+ 110:../../core/platform/octa/src/octa.c ****             break;
+ 485              		.loc 1 110 13 is_stmt 1 view .LVU102
+ 486 0024 FFF7FEFF 		bl	P1_I2C_Init
+ 487              	.LVL13:
+ 111:../../core/platform/octa/src/octa.c ****         case 2:
+ 488              		.loc 1 111 13 view .LVU103
+ 489 0028 F8E7     		b	.L24
+ 490              	.L25:
+ 113:../../core/platform/octa/src/octa.c ****             break;
+ 491              		.loc 1 113 13 view .LVU104
+ 492 002a FFF7FEFF 		bl	P2_I2C_Init
+ 493              	.LVL14:
+ 114:../../core/platform/octa/src/octa.c ****         case 3:
+ 494              		.loc 1 114 13 view .LVU105
+ 495 002e F5E7     		b	.L24
+ 496              	.L26:
+ 116:../../core/platform/octa/src/octa.c ****             break;
+ 497              		.loc 1 116 13 view .LVU106
+ 498 0030 FFF7FEFF 		bl	P3_I2C_Init
+ 499              	.LVL15:
+ 117:../../core/platform/octa/src/octa.c ****         default:
+ 500              		.loc 1 117 13 view .LVU107
+ 501              		.loc 1 121 1 is_stmt 0 view .LVU108
+ 502 0034 F2E7     		b	.L24
+ 503              		.cfi_endproc
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s 			page 12
+
+
+ 504              	.LFE135:
+ 506              		.section	.text.platform_initialize_SPI,"ax",%progbits
+ 507              		.align	1
+ 508              		.global	platform_initialize_SPI
+ 509              		.syntax unified
+ 510              		.thumb
+ 511              		.thumb_func
+ 512              		.fpu fpv4-sp-d16
+ 514              	platform_initialize_SPI:
+ 515              	.LFB136:
+ 122:../../core/platform/octa/src/octa.c **** 
+ 123:../../core/platform/octa/src/octa.c **** void platform_initialize_SPI(struct OCTA_header aHeader)
+ 124:../../core/platform/octa/src/octa.c **** {
+ 516              		.loc 1 124 1 is_stmt 1 view -0
+ 517              		.cfi_startproc
+ 518              		@ args = 44, pretend = 16, frame = 0
+ 519              		@ frame_needed = 0, uses_anonymous_args = 0
+ 520 0000 84B0     		sub	sp, sp, #16
+ 521              	.LCFI14:
+ 522              		.cfi_def_cfa_offset 16
+ 523 0002 08B5     		push	{r3, lr}
+ 524              	.LCFI15:
+ 525              		.cfi_def_cfa_offset 24
+ 526              		.cfi_offset 3, -24
+ 527              		.cfi_offset 14, -20
+ 528 0004 0DF1080C 		add	ip, sp, #8
+ 529 0008 8CE80F00 		stm	ip, {r0, r1, r2, r3}
+ 125:../../core/platform/octa/src/octa.c ****     switch(aHeader.number)
+ 530              		.loc 1 125 5 view .LVU110
+ 531              		.loc 1 125 19 is_stmt 0 view .LVU111
+ 532 000c 9DF80830 		ldrb	r3, [sp, #8]	@ zero_extendqisi2
+ 533              		.loc 1 125 5 view .LVU112
+ 534 0010 022B     		cmp	r3, #2
+ 535 0012 0AD0     		beq	.L31
+ 536 0014 032B     		cmp	r3, #3
+ 537 0016 0BD0     		beq	.L32
+ 538 0018 012B     		cmp	r3, #1
+ 539 001a 03D0     		beq	.L35
+ 540              	.L30:
+ 126:../../core/platform/octa/src/octa.c ****     {
+ 127:../../core/platform/octa/src/octa.c ****         case 1:
+ 128:../../core/platform/octa/src/octa.c ****             P1_SPI_Init();
+ 129:../../core/platform/octa/src/octa.c ****             break;
+ 130:../../core/platform/octa/src/octa.c ****         case 2:
+ 131:../../core/platform/octa/src/octa.c ****             P2_SPI_Init();
+ 132:../../core/platform/octa/src/octa.c ****             break;
+ 133:../../core/platform/octa/src/octa.c ****         case 3:
+ 134:../../core/platform/octa/src/octa.c ****             P3_SPI_Init();
+ 135:../../core/platform/octa/src/octa.c ****             break;
+ 136:../../core/platform/octa/src/octa.c ****         default:
+ 137:../../core/platform/octa/src/octa.c ****             break;
+ 138:../../core/platform/octa/src/octa.c ****     }
+ 139:../../core/platform/octa/src/octa.c **** }
+ 541              		.loc 1 139 1 view .LVU113
+ 542 001c BDE80840 		pop	{r3, lr}
+ 543              	.LCFI16:
+ 544              		.cfi_remember_state
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s 			page 13
+
+
+ 545              		.cfi_restore 14
+ 546              		.cfi_restore 3
+ 547              		.cfi_def_cfa_offset 16
+ 548 0020 04B0     		add	sp, sp, #16
+ 549              	.LCFI17:
+ 550              		.cfi_def_cfa_offset 0
+ 551 0022 7047     		bx	lr
+ 552              	.L35:
+ 553              	.LCFI18:
+ 554              		.cfi_restore_state
+ 128:../../core/platform/octa/src/octa.c ****             break;
+ 555              		.loc 1 128 13 is_stmt 1 view .LVU114
+ 556 0024 FFF7FEFF 		bl	P1_SPI_Init
+ 557              	.LVL16:
+ 129:../../core/platform/octa/src/octa.c ****         case 2:
+ 558              		.loc 1 129 13 view .LVU115
+ 559 0028 F8E7     		b	.L30
+ 560              	.L31:
+ 131:../../core/platform/octa/src/octa.c ****             break;
+ 561              		.loc 1 131 13 view .LVU116
+ 562 002a FFF7FEFF 		bl	P2_SPI_Init
+ 563              	.LVL17:
+ 132:../../core/platform/octa/src/octa.c ****         case 3:
+ 564              		.loc 1 132 13 view .LVU117
+ 565 002e F5E7     		b	.L30
+ 566              	.L32:
+ 134:../../core/platform/octa/src/octa.c ****             break;
+ 567              		.loc 1 134 13 view .LVU118
+ 568 0030 FFF7FEFF 		bl	P3_SPI_Init
+ 569              	.LVL18:
+ 135:../../core/platform/octa/src/octa.c ****         default:
+ 570              		.loc 1 135 13 view .LVU119
+ 571              		.loc 1 139 1 is_stmt 0 view .LVU120
+ 572 0034 F2E7     		b	.L30
+ 573              		.cfi_endproc
+ 574              	.LFE136:
+ 576              		.section	.text.platform_getHeader,"ax",%progbits
+ 577              		.align	1
+ 578              		.global	platform_getHeader
+ 579              		.syntax unified
+ 580              		.thumb
+ 581              		.thumb_func
+ 582              		.fpu fpv4-sp-d16
+ 584              	platform_getHeader:
+ 585              	.LVL19:
+ 586              	.LFB137:
+ 140:../../core/platform/octa/src/octa.c **** 
+ 141:../../core/platform/octa/src/octa.c **** struct OCTA_header platform_getHeader(uint8_t connector)
+ 142:../../core/platform/octa/src/octa.c **** {
+ 587              		.loc 1 142 1 is_stmt 1 view -0
+ 588              		.cfi_startproc
+ 589              		@ args = 0, pretend = 0, frame = 48
+ 590              		@ frame_needed = 0, uses_anonymous_args = 0
+ 591              		.loc 1 142 1 is_stmt 0 view .LVU122
+ 592 0000 70B5     		push	{r4, r5, r6, lr}
+ 593              	.LCFI19:
+ 594              		.cfi_def_cfa_offset 16
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s 			page 14
+
+
+ 595              		.cfi_offset 4, -16
+ 596              		.cfi_offset 5, -12
+ 597              		.cfi_offset 6, -8
+ 598              		.cfi_offset 14, -4
+ 599 0002 8CB0     		sub	sp, sp, #48
+ 600              	.LCFI20:
+ 601              		.cfi_def_cfa_offset 64
+ 602 0004 0546     		mov	r5, r0
+ 143:../../core/platform/octa/src/octa.c ****     switch (connector)
+ 603              		.loc 1 143 5 is_stmt 1 view .LVU123
+ 604 0006 0229     		cmp	r1, #2
+ 605 0008 24D0     		beq	.L37
+ 606 000a 0329     		cmp	r1, #3
+ 607 000c 30D0     		beq	.L38
+ 608 000e 0129     		cmp	r1, #1
+ 609 0010 10D0     		beq	.L42
+ 610              	.LBB2:
+ 144:../../core/platform/octa/src/octa.c ****     {
+ 145:../../core/platform/octa/src/octa.c ****     case 1:
+ 146:../../core/platform/octa/src/octa.c ****         P1_header.active = 1;
+ 147:../../core/platform/octa/src/octa.c ****         return P1_header;
+ 148:../../core/platform/octa/src/octa.c ****     case 2:
+ 149:../../core/platform/octa/src/octa.c ****         P2_header.active = 1;
+ 150:../../core/platform/octa/src/octa.c ****         return P2_header;
+ 151:../../core/platform/octa/src/octa.c ****     case 3:
+ 152:../../core/platform/octa/src/octa.c ****         P3_header.active = 1;
+ 153:../../core/platform/octa/src/octa.c ****         return P3_header;
+ 154:../../core/platform/octa/src/octa.c ****     default:
+ 155:../../core/platform/octa/src/octa.c ****         //invalid connector
+ 156:../../core/platform/octa/src/octa.c ****         printf("Invalid connector\r\n");
+ 611              		.loc 1 156 9 view .LVU124
+ 612 0012 1E48     		ldr	r0, .L43
+ 613              	.LVL20:
+ 614              		.loc 1 156 9 is_stmt 0 view .LVU125
+ 615 0014 FFF7FEFF 		bl	puts
+ 616              	.LVL21:
+ 157:../../core/platform/octa/src/octa.c ****         struct OCTA_header invalid; 
+ 617              		.loc 1 157 9 is_stmt 1 view .LVU126
+ 158:../../core/platform/octa/src/octa.c ****         invalid.active = 0;
+ 618              		.loc 1 158 9 view .LVU127
+ 619              		.loc 1 158 24 is_stmt 0 view .LVU128
+ 620 0018 0023     		movs	r3, #0
+ 621 001a 8DF82C30 		strb	r3, [sp, #44]
+ 159:../../core/platform/octa/src/octa.c ****         return invalid;
+ 622              		.loc 1 159 9 is_stmt 1 view .LVU129
+ 623              		.loc 1 159 16 is_stmt 0 view .LVU130
+ 624 001e 2C46     		mov	r4, r5
+ 625 0020 01AE     		add	r6, sp, #4
+ 626 0022 0FCE     		ldmia	r6!, {r0, r1, r2, r3}
+ 627 0024 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 628 0026 0FCE     		ldmia	r6!, {r0, r1, r2, r3}
+ 629 0028 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 630 002a 96E80700 		ldm	r6, {r0, r1, r2}
+ 631 002e 84E80700 		stm	r4, {r0, r1, r2}
+ 632 0032 0CE0     		b	.L36
+ 633              	.LVL22:
+ 634              	.L42:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s 			page 15
+
+
+ 146:../../core/platform/octa/src/octa.c ****         return P1_header;
+ 635              		.loc 1 146 9 is_stmt 1 view .LVU131
+ 146:../../core/platform/octa/src/octa.c ****         return P1_header;
+ 636              		.loc 1 146 26 is_stmt 0 view .LVU132
+ 637 0034 164C     		ldr	r4, .L43+4
+ 638 0036 0123     		movs	r3, #1
+ 639 0038 84F82830 		strb	r3, [r4, #40]
+ 147:../../core/platform/octa/src/octa.c ****     case 2:
+ 640              		.loc 1 147 9 is_stmt 1 view .LVU133
+ 147:../../core/platform/octa/src/octa.c ****     case 2:
+ 641              		.loc 1 147 16 is_stmt 0 view .LVU134
+ 642 003c 0646     		mov	r6, r0
+ 643 003e 0FCC     		ldmia	r4!, {r0, r1, r2, r3}
+ 644              	.LVL23:
+ 147:../../core/platform/octa/src/octa.c ****     case 2:
+ 645              		.loc 1 147 16 view .LVU135
+ 646 0040 0FC6     		stmia	r6!, {r0, r1, r2, r3}
+ 647 0042 0FCC     		ldmia	r4!, {r0, r1, r2, r3}
+ 648 0044 0FC6     		stmia	r6!, {r0, r1, r2, r3}
+ 649 0046 94E80700 		ldm	r4, {r0, r1, r2}
+ 650 004a 86E80700 		stm	r6, {r0, r1, r2}
+ 651              	.L36:
+ 147:../../core/platform/octa/src/octa.c ****     case 2:
+ 652              		.loc 1 147 16 view .LVU136
+ 653              	.LBE2:
+ 160:../../core/platform/octa/src/octa.c ****     }
+ 161:../../core/platform/octa/src/octa.c **** }...
+ 654              		.loc 1 161 1 view .LVU137
+ 655 004e 2846     		mov	r0, r5
+ 656 0050 0CB0     		add	sp, sp, #48
+ 657              	.LCFI21:
+ 658              		.cfi_remember_state
+ 659              		.cfi_def_cfa_offset 16
+ 660              		@ sp needed
+ 661 0052 70BD     		pop	{r4, r5, r6, pc}
+ 662              	.LVL24:
+ 663              	.L37:
+ 664              	.LCFI22:
+ 665              		.cfi_restore_state
+ 666              	.LBB3:
+ 149:../../core/platform/octa/src/octa.c ****         P2_header.active = 1;
+ 667              		.loc 1 149 9 is_stmt 1 view .LVU138
+ 149:../../core/platform/octa/src/octa.c ****         P2_header.active = 1;
+ 668              		.loc 1 149 26 is_stmt 0 view .LVU139
+ 669 0054 0F4C     		ldr	r4, .L43+8
+ 670 0056 0123     		movs	r3, #1
+ 671 0058 84F82830 		strb	r3, [r4, #40]
+ 150:../../core/platform/octa/src/octa.c ****         return P2_header;
+ 672              		.loc 1 150 9 is_stmt 1 view .LVU140
+ 150:../../core/platform/octa/src/octa.c ****         return P2_header;
+ 673              		.loc 1 150 16 is_stmt 0 view .LVU141
+ 674 005c 0646     		mov	r6, r0
+ 675 005e 0FCC     		ldmia	r4!, {r0, r1, r2, r3}
+ 676              	.LVL25:
+ 150:../../core/platform/octa/src/octa.c ****         return P2_header;
+ 677              		.loc 1 150 16 view .LVU142
+ 678 0060 0FC6     		stmia	r6!, {r0, r1, r2, r3}
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s 			page 16
+
+
+ 679 0062 0FCC     		ldmia	r4!, {r0, r1, r2, r3}
+ 680 0064 0FC6     		stmia	r6!, {r0, r1, r2, r3}
+ 681 0066 94E80700 		ldm	r4, {r0, r1, r2}
+ 682 006a 86E80700 		stm	r6, {r0, r1, r2}
+ 683 006e EEE7     		b	.L36
+ 684              	.LVL26:
+ 685              	.L38:
+ 152:../../core/platform/octa/src/octa.c ****         P3_header.active = 1;
+ 686              		.loc 1 152 9 is_stmt 1 view .LVU143
+ 152:../../core/platform/octa/src/octa.c ****         P3_header.active = 1;
+ 687              		.loc 1 152 26 is_stmt 0 view .LVU144
+ 688 0070 094C     		ldr	r4, .L43+12
+ 689 0072 0123     		movs	r3, #1
+ 690 0074 84F82830 		strb	r3, [r4, #40]
+ 153:../../core/platform/octa/src/octa.c ****         return P3_header;
+ 691              		.loc 1 153 9 is_stmt 1 view .LVU145
+ 153:../../core/platform/octa/src/octa.c ****         return P3_header;
+ 692              		.loc 1 153 16 is_stmt 0 view .LVU146
+ 693 0078 0646     		mov	r6, r0
+ 694 007a 0FCC     		ldmia	r4!, {r0, r1, r2, r3}
+ 695              	.LVL27:
+ 153:../../core/platform/octa/src/octa.c ****         return P3_header;
+ 696              		.loc 1 153 16 view .LVU147
+ 697 007c 0FC6     		stmia	r6!, {r0, r1, r2, r3}
+ 698 007e 0FCC     		ldmia	r4!, {r0, r1, r2, r3}
+ 699 0080 0FC6     		stmia	r6!, {r0, r1, r2, r3}
+ 700 0082 94E80700 		ldm	r4, {r0, r1, r2}
+ 701 0086 86E80700 		stm	r6, {r0, r1, r2}
+ 702 008a E0E7     		b	.L36
+ 703              	.L44:
+ 704              		.align	2
+ 705              	.L43:
+ 706 008c 00000000 		.word	.LC0
+ 707 0090 00000000 		.word	P1_header
+ 708 0094 00000000 		.word	P2_header
+ 709 0098 00000000 		.word	P3_header
+ 710              	.LBE3:
+ 711              		.cfi_endproc
+ 712              	.LFE137:
+ 714              		.comm	P3_header,44,4
+ 715              		.comm	P2_header,44,4
+ 716              		.comm	P1_header,44,4
+ 717              		.comm	FLASH_SPI,100,4
+ 718              		.comm	P3_SPI,100,4
+ 719              		.comm	P2_SPI,100,4
+ 720              		.comm	P1_SPI,100,4
+ 721              		.comm	P3_I2C,76,4
+ 722              		.comm	P2_I2C,76,4
+ 723              		.comm	P1_I2C,76,4
+ 724              		.comm	common_I2C,76,4
+ 725              		.comm	P3_UART,120,4
+ 726              		.comm	P2_UART,120,4
+ 727              		.comm	P1_UART,120,4
+ 728              		.comm	BLE_UART,120,4
+ 729              		.comm	USB_UART,120,4
+ 730              		.comm	hiwdg,16,4
+ 731              		.comm	P3_DIO6,8,4
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s 			page 17
+
+
+ 732              		.comm	P3_DIO5,8,4
+ 733              		.comm	P3_DIO4,8,4
+ 734              		.comm	P3_DIO3,8,4
+ 735              		.comm	P3_DIO2,8,4
+ 736              		.comm	P3_DIO1,8,4
+ 737              		.comm	P2_DIO6,8,4
+ 738              		.comm	P2_DIO5,8,4
+ 739              		.comm	P2_DIO4,8,4
+ 740              		.comm	P2_DIO3,8,4
+ 741              		.comm	P2_DIO2,8,4
+ 742              		.comm	P2_DIO1,8,4
+ 743              		.comm	P1_DIO6,8,4
+ 744              		.comm	P1_DIO5,8,4
+ 745              		.comm	P1_DIO4,8,4
+ 746              		.comm	P1_DIO3,8,4
+ 747              		.comm	P1_DIO2,8,4
+ 748              		.comm	P1_DIO1,8,4
+ 749              		.section	.rodata.platform_getHeader.str1.4,"aMS",%progbits,1
+ 750              		.align	2
+ 751              	.LC0:
+ 752 0000 496E7661 		.ascii	"Invalid connector\015\000"
+ 752      6C696420 
+ 752      636F6E6E 
+ 752      6563746F 
+ 752      720D00
+ 753              		.text
+ 754              	.Letext0:
+ 755              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 756              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 757              		.file 4 "../../core/ST/CMSIS/Include/core_cm4.h"
+ 758              		.file 5 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/system_stm32l4xx.h"
+ 759              		.file 6 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/stm32l496xx.h"
+ 760              		.file 7 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h"
+ 761              		.file 8 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dma.h"
+ 762              		.file 9 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_i2c.h"
+ 763              		.file 10 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_iwdg.h"
+ 764              		.file 11 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h"
+ 765              		.file 12 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h"
+ 766              		.file 13 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h"
+ 767              		.file 14 "../../core/platform/octa/inc/gpio.h"
+ 768              		.file 15 "../../core/platform/octa/inc/iwdg.h"
+ 769              		.file 16 "../../core/platform/octa/inc/uart.h"
+ 770              		.file 17 "../../core/platform/octa/inc/i2c.h"
+ 771              		.file 18 "../../core/platform/octa/inc/spi.h"
+ 772              		.file 19 "../../core/platform/octa/inc/octa.h"
+ 773              		.file 20 "<built-in>"
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s 			page 18
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 octa.c
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:18     .text.OCTA_Initialize_Common_Peripherals:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:26     .text.OCTA_Initialize_Common_Peripherals:00000000 OCTA_Initialize_Common_Peripherals
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:60     .text.OCTA_Initialize_P1_Peripherals:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:67     .text.OCTA_Initialize_P1_Peripherals:00000000 OCTA_Initialize_P1_Peripherals
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:120    .text.OCTA_Initialize_P1_Peripherals:0000002c $d
+                            *COM*:0000002c P1_header
+                            *COM*:00000078 P1_UART
+                            *COM*:0000004c P1_I2C
+                            *COM*:00000064 P1_SPI
+                            *COM*:00000008 P1_DIO1
+                            *COM*:00000008 P1_DIO2
+                            *COM*:00000008 P1_DIO3
+                            *COM*:00000008 P1_DIO4
+                            *COM*:00000008 P1_DIO5
+                            *COM*:00000008 P1_DIO6
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:134    .text.OCTA_Initialize_P2_Peripherals:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:141    .text.OCTA_Initialize_P2_Peripherals:00000000 OCTA_Initialize_P2_Peripherals
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:194    .text.OCTA_Initialize_P2_Peripherals:0000002c $d
+                            *COM*:0000002c P2_header
+                            *COM*:00000078 P2_UART
+                            *COM*:0000004c P2_I2C
+                            *COM*:00000064 P2_SPI
+                            *COM*:00000008 P2_DIO1
+                            *COM*:00000008 P2_DIO2
+                            *COM*:00000008 P2_DIO3
+                            *COM*:00000008 P2_DIO4
+                            *COM*:00000008 P2_DIO5
+                            *COM*:00000008 P2_DIO6
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:208    .text.OCTA_Initialize_P3_Peripherals:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:215    .text.OCTA_Initialize_P3_Peripherals:00000000 OCTA_Initialize_P3_Peripherals
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:268    .text.OCTA_Initialize_P3_Peripherals:0000002c $d
+                            *COM*:0000002c P3_header
+                            *COM*:00000078 P3_UART
+                            *COM*:0000004c P3_I2C
+                            *COM*:00000064 P3_SPI
+                            *COM*:00000008 P3_DIO1
+                            *COM*:00000008 P3_DIO2
+                            *COM*:00000008 P3_DIO3
+                            *COM*:00000008 P3_DIO4
+                            *COM*:00000008 P3_DIO5
+                            *COM*:00000008 P3_DIO6
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:282    .text.OCTA_Initialize_Platform:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:289    .text.OCTA_Initialize_Platform:00000000 OCTA_Initialize_Platform
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:318    .text.get_UID:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:325    .text.get_UID:00000000 get_UID
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:356    .text.get_UID:0000001c $d
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:362    .text.platform_initialize_UART:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:369    .text.platform_initialize_UART:00000000 platform_initialize_UART
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:437    .text.platform_initialize_I2C:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:444    .text.platform_initialize_I2C:00000000 platform_initialize_I2C
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:507    .text.platform_initialize_SPI:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:514    .text.platform_initialize_SPI:00000000 platform_initialize_SPI
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:577    .text.platform_getHeader:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:584    .text.platform_getHeader:00000000 platform_getHeader
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:706    .text.platform_getHeader:0000008c $d
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s 			page 19
+
+
+                            *COM*:00000064 FLASH_SPI
+                            *COM*:0000004c common_I2C
+                            *COM*:00000078 BLE_UART
+                            *COM*:00000078 USB_UART
+                            *COM*:00000010 hiwdg
+C:\Users\yvesk\AppData\Local\Temp\ccgcwM1Q.s:750    .rodata.platform_getHeader.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+OCTA_GPIO_Init
+OCTA_IWDG_Init
+FLASH_SPI_Init
+common_I2C_Init
+USB_UART_Init
+P1_UART_Init
+P2_UART_Init
+P3_UART_Init
+P1_I2C_Init
+P2_I2C_Init
+P3_I2C_Init
+P1_SPI_Init
+P2_SPI_Init
+P3_SPI_Init
+puts

@@ -1,0 +1,1204 @@
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"acc-mag-sensor.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.StartDefaultTask,"ax",%progbits
+  18              		.align	1
+  19              		.global	StartDefaultTask
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	StartDefaultTask:
+  27              	.LFB134:
+  28              		.file 1 "../../applications/acc-mag-sensor/src/acc-mag-sensor.c"
+   1:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* USER CODE BEGIN Header */
+   2:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /**
+   3:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   ******************************************************************************
+   4:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * @file           : main.c
+   5:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * @brief          : Main program body
+   6:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   ******************************************************************************
+   7:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * This notice applies to any and all portions of this file
+   8:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * that are not between comment pairs USER CODE BEGIN and
+   9:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * USER CODE END. Other portions of this file, whether 
+  10:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * inserted by the user or by software development tools
+  11:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * are owned by their respective copyright owners.
+  12:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   *
+  13:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * Copyright (c) 2019 STMicroelectronics International N.V. 
+  14:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * All rights reserved.
+  15:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   *
+  16:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * Redistribution and use in source and binary forms, with or without 
+  17:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * modification, are permitted, provided that the following conditions are met:
+  18:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   *
+  19:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * 1. Redistribution of source code must retain the above copyright notice, 
+  20:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   *    this list of conditions and the following disclaimer.
+  21:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * 2. Redistributions in binary form must reproduce the above copyright notice,
+  22:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   *    this list of conditions and the following disclaimer in the documentation
+  23:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   *    and/or other materials provided with the distribution.
+  24:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * 3. Neither the name of STMicroelectronics nor the names of other 
+  25:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   *    contributors to this software may be used to endorse or promote products 
+  26:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   *    derived from this software without specific written permission.
+  27:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * 4. This software, including modifications and/or derivative works of this 
+  28:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   *    software, must execute solely and exclusively on microcontroller or
+  29:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   *    microprocessor devices manufactured by or for STMicroelectronics.
+  30:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * 5. Redistribution and use of this software other than as permitted under 
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 2
+
+
+  31:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   *    this license is void and will automatically terminate your rights under 
+  32:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   *    this license. 
+  33:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   *
+  34:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS IS" 
+  35:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT 
+  36:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+  37:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * PARTICULAR PURPOSE AND NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY
+  38:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * RIGHTS ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT 
+  39:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * SHALL STMICROELECTRONICS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+  40:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  41:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
+  42:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+  43:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+  44:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+  45:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  46:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   *
+  47:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   ******************************************************************************
+  48:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   */
+  49:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* USER CODE END Header */
+  50:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+  51:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* Includes ------------------------------------------------------------------*/
+  52:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** #include "acc-mag-sensor.h"
+  53:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** #include "LSM303AGRSensor.h"
+  54:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* Private includes ----------------------------------------------------------*/
+  55:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* USER CODE BEGIN Includes */
+  56:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+  57:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+  58:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* USER CODE END Includes */
+  59:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+  60:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* Private typedef -----------------------------------------------------------*/
+  61:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* USER CODE BEGIN PTD */
+  62:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** #define accelerometer_timer    3
+  63:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** #define magnetometer_timer    3
+  64:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+  65:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* USER CODE END PTD */
+  66:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+  67:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* Private define ------------------------------------------------------------*/
+  68:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* USER CODE BEGIN PD */
+  69:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+  70:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* USER CODE END PD */
+  71:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+  72:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* Private macro -------------------------------------------------------------*/
+  73:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* USER CODE BEGIN PM */
+  74:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+  75:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* USER CODE END PM */
+  76:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+  77:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* Private user code ---------------------------------------------------------*/
+  78:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* USER CODE BEGIN 0 */
+  79:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** osTimerId accelerometer_timer_id;
+  80:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** osTimerId magnetometer_timer_id;
+  81:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* USER CODE END 0 */
+  82:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+  83:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /**
+  84:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * @brief  The application entry point.
+  85:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * @retval int
+  86:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   */
+  87:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** int main(void)
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 3
+
+
+  88:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** {
+  89:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE BEGIN 1 */
+  90:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+  91:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE END 1 */
+  92:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+  93:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* MCU Configuration--------------------------------------------------------*/
+  94:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+  95:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  96:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   HAL_Init();
+  97:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+  98:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE BEGIN Init */
+  99:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 100:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE END Init */
+ 101:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 102:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* Configure the system clock */
+ 103:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   SystemClock_Config();
+ 104:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 105:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE BEGIN SysInit */
+ 106:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 107:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE END SysInit */
+ 108:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 109:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* Initialize theplatform */
+ 110:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   Initialize_Platform();
+ 111:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osMutexDef(txMutex);
+ 112:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   i2cMutexId = osMutexCreate(osMutex(txMutex));
+ 113:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 114:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE BEGIN 2 */
+ 115:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   LSM303AGR_setI2CInterface(&common_I2C);
+ 116:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   LSM303AGR_ACC_reset();
+ 117:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 	LSM303AGR_MAG_reset();
+ 118:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   HAL_Delay(100);
+ 119:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 	LSM303AGR_init();
+ 120:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 121:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printWelcome();
+ 122:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   
+ 123:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   
+ 124:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE END 2 */
+ 125:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 126:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE BEGIN RTOS_MUTEX */
+ 127:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* add mutexes, ... */
+ 128:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("Initializing RTOS timers, threads and mutex\r\n");
+ 129:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 130:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 131:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE END RTOS_MUTEX */
+ 132:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 133:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE BEGIN RTOS_SEMAPHORES */
+ 134:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* add semaphores, ... */
+ 135:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE END RTOS_SEMAPHORES */
+ 136:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 137:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* Create the thread(s) */
+ 138:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* definition and creation of defaultTask */
+ 139:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osThreadDef(defaultTask, StartDefaultTask, osPriorityLow, 0, 128);
+ 140:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+ 141:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 142:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE BEGIN RTOS_TIMERS */
+ 143:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* start timers, add new ones, ... */
+ 144:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 4
+
+
+ 145:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   //feed IWDG every 5 seconds
+ 146:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   IWDG_feed(NULL);
+ 147:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osTimerDef(iwdgTim, IWDG_feed);
+ 148:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   iwdgTimId = osTimerCreate(osTimer(iwdgTim), osTimerPeriodic, NULL);
+ 149:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osTimerStart(iwdgTimId, 5 * 1000);
+ 150:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 151:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE END RTOS_TIMERS */
+ 152:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osTimerDef(accsensor_Tim, accelerometer_measurement);
+ 153:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   accelerometer_timer_id = osTimerCreate(osTimer(accsensor_Tim), osTimerPeriodic, NULL);
+ 154:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osTimerStart(accelerometer_timer_id, accelerometer_timer * 1000);
+ 155:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 156:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osTimerDef(magsensor_Tim, magnetometer_measurement);
+ 157:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   magnetometer_timer_id = osTimerCreate(osTimer(magsensor_Tim), osTimerPeriodic, NULL);
+ 158:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osTimerStart(magnetometer_timer_id, magnetometer_timer * 1000);
+ 159:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE BEGIN RTOS_THREADS */
+ 160:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* add threads, ... */
+ 161:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 162:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE END RTOS_THREADS */
+ 163:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 164:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE BEGIN RTOS_QUEUES */
+ 165:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* add queues, ... */
+ 166:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE END RTOS_QUEUES */
+ 167:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 168:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* Start scheduler */
+ 169:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osKernelStart();
+ 170:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 171:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* We should never get here as control is now taken by the scheduler */
+ 172:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 173:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* Infinite loop */
+ 174:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE BEGIN WHILE */
+ 175:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   while (1)
+ 176:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   {
+ 177:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****     /* USER CODE END WHILE */
+ 178:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 179:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****     /* USER CODE BEGIN 3 */
+ 180:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   }
+ 181:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE END 3 */
+ 182:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** }
+ 183:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 184:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** void printWelcome(void)
+ 185:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** {
+ 186:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("\r\n");
+ 187:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("*****************************************\r\n");
+ 188:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("Application accelerometer and magnetometer \r\n");
+ 189:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("*****************************************\r\n");
+ 190:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("\r\n");
+ 191:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin);
+ 192:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   HAL_Delay(2000);
+ 193:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin);
+ 194:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** }
+ 195:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 196:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** void accelerometer_measurement(void){
+ 197:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 	uint16_t accDataRaw[3];
+ 198:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osMutexWait(i2cMutexId, osWaitForever);
+ 199:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   LSM303AGR_ACC_readAccelerationRawData(accDataRaw);
+ 200:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osMutexRelease(i2cMutexId);
+ 201:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   print_accelerometer(accDataRaw);
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 5
+
+
+ 202:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** }
+ 203:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 204:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** void magnetometer_measurement(void){
+ 205:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   uint16_t magDataRaw[3];
+ 206:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osMutexWait(i2cMutexId, osWaitForever);
+ 207:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   LSM303AGR_MAG_readMagneticRawData(magDataRaw);
+ 208:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osMutexRelease(i2cMutexId);
+ 209:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   print_magnetometer(magDataRaw);
+ 210:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** }
+ 211:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 212:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** void print_accelerometer(uint16_t data[]){
+ 213:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("\r\n");
+ 214:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("Accelerometer data: X: %d Y: %d Z: %d \r\n", data[0], data[1], data[2]);
+ 215:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("\r\n");
+ 216:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** }
+ 217:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** void print_magnetometer(uint16_t data[]){
+ 218:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("\r\n");
+ 219:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("Magnetometer data: X: %d Y: %d Z: %d \r\n", data[0], data[1], data[2]);
+ 220:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("\r\n");
+ 221:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** }
+ 222:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* USER CODE END 4 */
+ 223:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 224:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* USER CODE BEGIN Header_StartDefaultTask */
+ 225:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /**
+ 226:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * @brief  Function implementing the defaultTask thread.
+ 227:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * @param  argument: Not used 
+ 228:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * @retval None
+ 229:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   */
+ 230:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* USER CODE END Header_StartDefaultTask */
+ 231:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** void StartDefaultTask(void const *argument)
+ 232:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** {
+  29              		.loc 1 232 1 view -0
+  30              		.cfi_startproc
+  31              		@ Volatile: function does not return.
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              	.LVL0:
+  35              		.loc 1 232 1 is_stmt 0 view .LVU1
+  36 0000 08B5     		push	{r3, lr}
+  37              	.LCFI0:
+  38              		.cfi_def_cfa_offset 8
+  39              		.cfi_offset 3, -8
+  40              		.cfi_offset 14, -4
+  41              	.LVL1:
+  42              	.L2:
+ 233:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 234:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE BEGIN 5 */
+ 235:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* Infinite loop */
+ 236:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   for (;;)
+  43              		.loc 1 236 3 is_stmt 1 discriminator 1 view .LVU2
+ 237:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   {
+ 238:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****     osDelay(1);
+  44              		.loc 1 238 5 discriminator 1 view .LVU3
+  45 0002 0120     		movs	r0, #1
+  46 0004 FFF7FEFF 		bl	osDelay
+  47              	.LVL2:
+  48 0008 FBE7     		b	.L2
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 6
+
+
+  49              		.cfi_endproc
+  50              	.LFE134:
+  52              		.section	.text.printWelcome,"ax",%progbits
+  53              		.align	1
+  54              		.global	printWelcome
+  55              		.syntax unified
+  56              		.thumb
+  57              		.thumb_func
+  58              		.fpu fpv4-sp-d16
+  60              	printWelcome:
+  61              	.LFB129:
+ 185:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("\r\n");
+  62              		.loc 1 185 1 view -0
+  63              		.cfi_startproc
+  64              		@ args = 0, pretend = 0, frame = 0
+  65              		@ frame_needed = 0, uses_anonymous_args = 0
+  66 0000 38B5     		push	{r3, r4, r5, lr}
+  67              	.LCFI1:
+  68              		.cfi_def_cfa_offset 16
+  69              		.cfi_offset 3, -16
+  70              		.cfi_offset 4, -12
+  71              		.cfi_offset 5, -8
+  72              		.cfi_offset 14, -4
+ 186:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("*****************************************\r\n");
+  73              		.loc 1 186 3 view .LVU5
+  74 0002 104C     		ldr	r4, .L6
+  75 0004 2046     		mov	r0, r4
+  76 0006 FFF7FEFF 		bl	puts
+  77              	.LVL3:
+ 187:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("Application accelerometer and magnetometer \r\n");
+  78              		.loc 1 187 3 view .LVU6
+  79 000a 0F4D     		ldr	r5, .L6+4
+  80 000c 2846     		mov	r0, r5
+  81 000e FFF7FEFF 		bl	puts
+  82              	.LVL4:
+ 188:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("*****************************************\r\n");
+  83              		.loc 1 188 3 view .LVU7
+  84 0012 0E48     		ldr	r0, .L6+8
+  85 0014 FFF7FEFF 		bl	puts
+  86              	.LVL5:
+ 189:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("\r\n");
+  87              		.loc 1 189 3 view .LVU8
+  88 0018 2846     		mov	r0, r5
+  89 001a FFF7FEFF 		bl	puts
+  90              	.LVL6:
+ 190:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin);
+  91              		.loc 1 190 3 view .LVU9
+  92 001e 2046     		mov	r0, r4
+  93 0020 FFF7FEFF 		bl	puts
+  94              	.LVL7:
+ 191:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   HAL_Delay(2000);
+  95              		.loc 1 191 3 view .LVU10
+  96 0024 0A4C     		ldr	r4, .L6+12
+  97 0026 4FF40041 		mov	r1, #32768
+  98 002a 2046     		mov	r0, r4
+  99 002c FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 100              	.LVL8:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 7
+
+
+ 192:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin);
+ 101              		.loc 1 192 3 view .LVU11
+ 102 0030 4FF4FA60 		mov	r0, #2000
+ 103 0034 FFF7FEFF 		bl	HAL_Delay
+ 104              	.LVL9:
+ 193:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** }
+ 105              		.loc 1 193 3 view .LVU12
+ 106 0038 4FF40041 		mov	r1, #32768
+ 107 003c 2046     		mov	r0, r4
+ 108 003e FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 109              	.LVL10:
+ 194:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 110              		.loc 1 194 1 is_stmt 0 view .LVU13
+ 111 0042 38BD     		pop	{r3, r4, r5, pc}
+ 112              	.L7:
+ 113              		.align	2
+ 114              	.L6:
+ 115 0044 00000000 		.word	.LC2
+ 116 0048 04000000 		.word	.LC3
+ 117 004c 30000000 		.word	.LC4
+ 118 0050 000C0048 		.word	1207962624
+ 119              		.cfi_endproc
+ 120              	.LFE129:
+ 122              		.section	.text.main,"ax",%progbits
+ 123              		.align	1
+ 124              		.global	main
+ 125              		.syntax unified
+ 126              		.thumb
+ 127              		.thumb_func
+ 128              		.fpu fpv4-sp-d16
+ 130              	main:
+ 131              	.LFB128:
+  88:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE BEGIN 1 */
+ 132              		.loc 1 88 1 is_stmt 1 view -0
+ 133              		.cfi_startproc
+ 134              		@ Volatile: function does not return.
+ 135              		@ args = 0, pretend = 0, frame = 40
+ 136              		@ frame_needed = 0, uses_anonymous_args = 0
+ 137 0000 00B5     		push	{lr}
+ 138              	.LCFI2:
+ 139              		.cfi_def_cfa_offset 4
+ 140              		.cfi_offset 14, -4
+ 141 0002 8BB0     		sub	sp, sp, #44
+ 142              	.LCFI3:
+ 143              		.cfi_def_cfa_offset 48
+  96:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 144              		.loc 1 96 3 view .LVU15
+ 145 0004 FFF7FEFF 		bl	HAL_Init
+ 146              	.LVL11:
+ 103:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 147              		.loc 1 103 3 view .LVU16
+ 148 0008 FFF7FEFF 		bl	SystemClock_Config
+ 149              	.LVL12:
+ 110:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osMutexDef(txMutex);
+ 150              		.loc 1 110 3 view .LVU17
+ 151 000c FFF7FEFF 		bl	Initialize_Platform
+ 152              	.LVL13:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 8
+
+
+ 111:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   i2cMutexId = osMutexCreate(osMutex(txMutex));
+ 153              		.loc 1 111 3 view .LVU18
+ 154 0010 0026     		movs	r6, #0
+ 155 0012 0996     		str	r6, [sp, #36]
+ 112:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 156              		.loc 1 112 3 view .LVU19
+ 112:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 157              		.loc 1 112 16 is_stmt 0 view .LVU20
+ 158 0014 09A8     		add	r0, sp, #36
+ 159 0016 FFF7FEFF 		bl	osMutexCreate
+ 160              	.LVL14:
+ 112:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 161              		.loc 1 112 14 view .LVU21
+ 162 001a 264B     		ldr	r3, .L11
+ 163 001c 1860     		str	r0, [r3]
+ 115:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   LSM303AGR_ACC_reset();
+ 164              		.loc 1 115 3 is_stmt 1 view .LVU22
+ 165 001e 2648     		ldr	r0, .L11+4
+ 166 0020 FFF7FEFF 		bl	LSM303AGR_setI2CInterface
+ 167              	.LVL15:
+ 116:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 	LSM303AGR_MAG_reset();
+ 168              		.loc 1 116 3 view .LVU23
+ 169 0024 FFF7FEFF 		bl	LSM303AGR_ACC_reset
+ 170              	.LVL16:
+ 117:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   HAL_Delay(100);
+ 171              		.loc 1 117 2 view .LVU24
+ 172 0028 FFF7FEFF 		bl	LSM303AGR_MAG_reset
+ 173              	.LVL17:
+ 118:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 	LSM303AGR_init();
+ 174              		.loc 1 118 3 view .LVU25
+ 175 002c 6420     		movs	r0, #100
+ 176 002e FFF7FEFF 		bl	HAL_Delay
+ 177              	.LVL18:
+ 119:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 178              		.loc 1 119 2 view .LVU26
+ 179 0032 FFF7FEFF 		bl	LSM303AGR_init
+ 180              	.LVL19:
+ 121:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   
+ 181              		.loc 1 121 3 view .LVU27
+ 182 0036 FFF7FEFF 		bl	printWelcome
+ 183              	.LVL20:
+ 128:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 184              		.loc 1 128 3 view .LVU28
+ 185 003a 2048     		ldr	r0, .L11+8
+ 186 003c FFF7FEFF 		bl	puts
+ 187              	.LVL21:
+ 139:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+ 188              		.loc 1 139 3 view .LVU29
+ 189 0040 04AC     		add	r4, sp, #16
+ 190 0042 1F4D     		ldr	r5, .L11+12
+ 191 0044 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 192 0046 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 193 0048 2B68     		ldr	r3, [r5]
+ 194 004a 2360     		str	r3, [r4]
+ 140:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 195              		.loc 1 140 3 view .LVU30
+ 140:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 9
+
+
+ 196              		.loc 1 140 23 is_stmt 0 view .LVU31
+ 197 004c 3146     		mov	r1, r6
+ 198 004e 04A8     		add	r0, sp, #16
+ 199 0050 FFF7FEFF 		bl	osThreadCreate
+ 200              	.LVL22:
+ 140:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 201              		.loc 1 140 21 view .LVU32
+ 202 0054 1B4B     		ldr	r3, .L11+16
+ 203 0056 1860     		str	r0, [r3]
+ 146:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osTimerDef(iwdgTim, IWDG_feed);
+ 204              		.loc 1 146 3 is_stmt 1 view .LVU33
+ 205 0058 3046     		mov	r0, r6
+ 206 005a FFF7FEFF 		bl	IWDG_feed
+ 207              	.LVL23:
+ 147:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   iwdgTimId = osTimerCreate(osTimer(iwdgTim), osTimerPeriodic, NULL);
+ 208              		.loc 1 147 3 view .LVU34
+ 209 005e 1A4B     		ldr	r3, .L11+20
+ 210 0060 0393     		str	r3, [sp, #12]
+ 148:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osTimerStart(iwdgTimId, 5 * 1000);
+ 211              		.loc 1 148 3 view .LVU35
+ 148:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osTimerStart(iwdgTimId, 5 * 1000);
+ 212              		.loc 1 148 15 is_stmt 0 view .LVU36
+ 213 0062 3246     		mov	r2, r6
+ 214 0064 0121     		movs	r1, #1
+ 215 0066 03A8     		add	r0, sp, #12
+ 216 0068 FFF7FEFF 		bl	osTimerCreate
+ 217              	.LVL24:
+ 148:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osTimerStart(iwdgTimId, 5 * 1000);
+ 218              		.loc 1 148 13 view .LVU37
+ 219 006c 174B     		ldr	r3, .L11+24
+ 220 006e 1860     		str	r0, [r3]
+ 149:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 221              		.loc 1 149 3 is_stmt 1 view .LVU38
+ 222 0070 41F28831 		movw	r1, #5000
+ 223 0074 FFF7FEFF 		bl	osTimerStart
+ 224              	.LVL25:
+ 152:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   accelerometer_timer_id = osTimerCreate(osTimer(accsensor_Tim), osTimerPeriodic, NULL);
+ 225              		.loc 1 152 3 view .LVU39
+ 226 0078 154B     		ldr	r3, .L11+28
+ 227 007a 0293     		str	r3, [sp, #8]
+ 153:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osTimerStart(accelerometer_timer_id, accelerometer_timer * 1000);
+ 228              		.loc 1 153 3 view .LVU40
+ 153:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osTimerStart(accelerometer_timer_id, accelerometer_timer * 1000);
+ 229              		.loc 1 153 28 is_stmt 0 view .LVU41
+ 230 007c 3246     		mov	r2, r6
+ 231 007e 0121     		movs	r1, #1
+ 232 0080 02A8     		add	r0, sp, #8
+ 233 0082 FFF7FEFF 		bl	osTimerCreate
+ 234              	.LVL26:
+ 153:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osTimerStart(accelerometer_timer_id, accelerometer_timer * 1000);
+ 235              		.loc 1 153 26 view .LVU42
+ 236 0086 134B     		ldr	r3, .L11+32
+ 237 0088 1860     		str	r0, [r3]
+ 154:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 238              		.loc 1 154 3 is_stmt 1 view .LVU43
+ 239 008a 40F6B831 		movw	r1, #3000
+ 240 008e FFF7FEFF 		bl	osTimerStart
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 10
+
+
+ 241              	.LVL27:
+ 156:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   magnetometer_timer_id = osTimerCreate(osTimer(magsensor_Tim), osTimerPeriodic, NULL);
+ 242              		.loc 1 156 3 view .LVU44
+ 243 0092 114B     		ldr	r3, .L11+36
+ 244 0094 0193     		str	r3, [sp, #4]
+ 157:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osTimerStart(magnetometer_timer_id, magnetometer_timer * 1000);
+ 245              		.loc 1 157 3 view .LVU45
+ 157:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osTimerStart(magnetometer_timer_id, magnetometer_timer * 1000);
+ 246              		.loc 1 157 27 is_stmt 0 view .LVU46
+ 247 0096 3246     		mov	r2, r6
+ 248 0098 0121     		movs	r1, #1
+ 249 009a 01A8     		add	r0, sp, #4
+ 250 009c FFF7FEFF 		bl	osTimerCreate
+ 251              	.LVL28:
+ 157:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osTimerStart(magnetometer_timer_id, magnetometer_timer * 1000);
+ 252              		.loc 1 157 25 view .LVU47
+ 253 00a0 0E4B     		ldr	r3, .L11+40
+ 254 00a2 1860     		str	r0, [r3]
+ 158:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE BEGIN RTOS_THREADS */
+ 255              		.loc 1 158 3 is_stmt 1 view .LVU48
+ 256 00a4 40F6B831 		movw	r1, #3000
+ 257 00a8 FFF7FEFF 		bl	osTimerStart
+ 258              	.LVL29:
+ 169:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 259              		.loc 1 169 3 view .LVU49
+ 260 00ac FFF7FEFF 		bl	osKernelStart
+ 261              	.LVL30:
+ 262              	.L9:
+ 175:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   {
+ 263              		.loc 1 175 3 discriminator 1 view .LVU50
+ 180:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE END 3 */
+ 264              		.loc 1 180 3 discriminator 1 view .LVU51
+ 265 00b0 FEE7     		b	.L9
+ 266              	.L12:
+ 267 00b2 00BF     		.align	2
+ 268              	.L11:
+ 269 00b4 00000000 		.word	i2cMutexId
+ 270 00b8 00000000 		.word	common_I2C
+ 271 00bc 00000000 		.word	.LC5
+ 272 00c0 00000000 		.word	.LANCHOR0
+ 273 00c4 00000000 		.word	defaultTaskHandle
+ 274 00c8 00000000 		.word	IWDG_feed
+ 275 00cc 00000000 		.word	iwdgTimId
+ 276 00d0 00000000 		.word	accelerometer_measurement
+ 277 00d4 00000000 		.word	accelerometer_timer_id
+ 278 00d8 00000000 		.word	magnetometer_measurement
+ 279 00dc 00000000 		.word	magnetometer_timer_id
+ 280              		.cfi_endproc
+ 281              	.LFE128:
+ 283              		.section	.text.print_accelerometer,"ax",%progbits
+ 284              		.align	1
+ 285              		.global	print_accelerometer
+ 286              		.syntax unified
+ 287              		.thumb
+ 288              		.thumb_func
+ 289              		.fpu fpv4-sp-d16
+ 291              	print_accelerometer:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 11
+
+
+ 292              	.LVL31:
+ 293              	.LFB132:
+ 212:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("\r\n");
+ 294              		.loc 1 212 42 view -0
+ 295              		.cfi_startproc
+ 296              		@ args = 0, pretend = 0, frame = 0
+ 297              		@ frame_needed = 0, uses_anonymous_args = 0
+ 212:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("\r\n");
+ 298              		.loc 1 212 42 is_stmt 0 view .LVU53
+ 299 0000 38B5     		push	{r3, r4, r5, lr}
+ 300              	.LCFI4:
+ 301              		.cfi_def_cfa_offset 16
+ 302              		.cfi_offset 3, -16
+ 303              		.cfi_offset 4, -12
+ 304              		.cfi_offset 5, -8
+ 305              		.cfi_offset 14, -4
+ 306 0002 0446     		mov	r4, r0
+ 213:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("Accelerometer data: X: %d Y: %d Z: %d \r\n", data[0], data[1], data[2]);
+ 307              		.loc 1 213 3 is_stmt 1 view .LVU54
+ 308 0004 064D     		ldr	r5, .L15
+ 309 0006 2846     		mov	r0, r5
+ 310              	.LVL32:
+ 213:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("Accelerometer data: X: %d Y: %d Z: %d \r\n", data[0], data[1], data[2]);
+ 311              		.loc 1 213 3 is_stmt 0 view .LVU55
+ 312 0008 FFF7FEFF 		bl	puts
+ 313              	.LVL33:
+ 214:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("\r\n");
+ 314              		.loc 1 214 3 is_stmt 1 view .LVU56
+ 315 000c A388     		ldrh	r3, [r4, #4]
+ 316 000e 6288     		ldrh	r2, [r4, #2]
+ 317 0010 2188     		ldrh	r1, [r4]
+ 318 0012 0448     		ldr	r0, .L15+4
+ 319 0014 FFF7FEFF 		bl	printf
+ 320              	.LVL34:
+ 215:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** }
+ 321              		.loc 1 215 3 view .LVU57
+ 322 0018 2846     		mov	r0, r5
+ 323 001a FFF7FEFF 		bl	puts
+ 324              	.LVL35:
+ 216:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** void print_magnetometer(uint16_t data[]){
+ 325              		.loc 1 216 1 is_stmt 0 view .LVU58
+ 326 001e 38BD     		pop	{r3, r4, r5, pc}
+ 327              	.LVL36:
+ 328              	.L16:
+ 216:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** void print_magnetometer(uint16_t data[]){
+ 329              		.loc 1 216 1 view .LVU59
+ 330              		.align	2
+ 331              	.L15:
+ 332 0020 00000000 		.word	.LC2
+ 333 0024 00000000 		.word	.LC7
+ 334              		.cfi_endproc
+ 335              	.LFE132:
+ 337              		.section	.text.accelerometer_measurement,"ax",%progbits
+ 338              		.align	1
+ 339              		.global	accelerometer_measurement
+ 340              		.syntax unified
+ 341              		.thumb
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 12
+
+
+ 342              		.thumb_func
+ 343              		.fpu fpv4-sp-d16
+ 345              	accelerometer_measurement:
+ 346              	.LFB130:
+ 196:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 	uint16_t accDataRaw[3];
+ 347              		.loc 1 196 37 is_stmt 1 view -0
+ 348              		.cfi_startproc
+ 349              		@ args = 0, pretend = 0, frame = 8
+ 350              		@ frame_needed = 0, uses_anonymous_args = 0
+ 351 0000 10B5     		push	{r4, lr}
+ 352              	.LCFI5:
+ 353              		.cfi_def_cfa_offset 8
+ 354              		.cfi_offset 4, -8
+ 355              		.cfi_offset 14, -4
+ 356 0002 82B0     		sub	sp, sp, #8
+ 357              	.LCFI6:
+ 358              		.cfi_def_cfa_offset 16
+ 197:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osMutexWait(i2cMutexId, osWaitForever);
+ 359              		.loc 1 197 2 view .LVU61
+ 198:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   LSM303AGR_ACC_readAccelerationRawData(accDataRaw);
+ 360              		.loc 1 198 3 view .LVU62
+ 361 0004 084C     		ldr	r4, .L19
+ 362 0006 4FF0FF31 		mov	r1, #-1
+ 363 000a 2068     		ldr	r0, [r4]
+ 364 000c FFF7FEFF 		bl	osMutexWait
+ 365              	.LVL37:
+ 199:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osMutexRelease(i2cMutexId);
+ 366              		.loc 1 199 3 view .LVU63
+ 367 0010 6846     		mov	r0, sp
+ 368 0012 FFF7FEFF 		bl	LSM303AGR_ACC_readAccelerationRawData
+ 369              	.LVL38:
+ 200:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   print_accelerometer(accDataRaw);
+ 370              		.loc 1 200 3 view .LVU64
+ 371 0016 2068     		ldr	r0, [r4]
+ 372 0018 FFF7FEFF 		bl	osMutexRelease
+ 373              	.LVL39:
+ 201:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** }
+ 374              		.loc 1 201 3 view .LVU65
+ 375 001c 6846     		mov	r0, sp
+ 376 001e FFF7FEFF 		bl	print_accelerometer
+ 377              	.LVL40:
+ 202:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 378              		.loc 1 202 1 is_stmt 0 view .LVU66
+ 379 0022 02B0     		add	sp, sp, #8
+ 380              	.LCFI7:
+ 381              		.cfi_def_cfa_offset 8
+ 382              		@ sp needed
+ 383 0024 10BD     		pop	{r4, pc}
+ 384              	.L20:
+ 385 0026 00BF     		.align	2
+ 386              	.L19:
+ 387 0028 00000000 		.word	i2cMutexId
+ 388              		.cfi_endproc
+ 389              	.LFE130:
+ 391              		.section	.text.print_magnetometer,"ax",%progbits
+ 392              		.align	1
+ 393              		.global	print_magnetometer
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 13
+
+
+ 394              		.syntax unified
+ 395              		.thumb
+ 396              		.thumb_func
+ 397              		.fpu fpv4-sp-d16
+ 399              	print_magnetometer:
+ 400              	.LVL41:
+ 401              	.LFB133:
+ 217:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("\r\n");
+ 402              		.loc 1 217 41 is_stmt 1 view -0
+ 403              		.cfi_startproc
+ 404              		@ args = 0, pretend = 0, frame = 0
+ 405              		@ frame_needed = 0, uses_anonymous_args = 0
+ 217:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("\r\n");
+ 406              		.loc 1 217 41 is_stmt 0 view .LVU68
+ 407 0000 38B5     		push	{r3, r4, r5, lr}
+ 408              	.LCFI8:
+ 409              		.cfi_def_cfa_offset 16
+ 410              		.cfi_offset 3, -16
+ 411              		.cfi_offset 4, -12
+ 412              		.cfi_offset 5, -8
+ 413              		.cfi_offset 14, -4
+ 414 0002 0446     		mov	r4, r0
+ 218:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("Magnetometer data: X: %d Y: %d Z: %d \r\n", data[0], data[1], data[2]);
+ 415              		.loc 1 218 3 is_stmt 1 view .LVU69
+ 416 0004 064D     		ldr	r5, .L23
+ 417 0006 2846     		mov	r0, r5
+ 418              	.LVL42:
+ 218:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("Magnetometer data: X: %d Y: %d Z: %d \r\n", data[0], data[1], data[2]);
+ 419              		.loc 1 218 3 is_stmt 0 view .LVU70
+ 420 0008 FFF7FEFF 		bl	puts
+ 421              	.LVL43:
+ 219:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   printf("\r\n");
+ 422              		.loc 1 219 3 is_stmt 1 view .LVU71
+ 423 000c A388     		ldrh	r3, [r4, #4]
+ 424 000e 6288     		ldrh	r2, [r4, #2]
+ 425 0010 2188     		ldrh	r1, [r4]
+ 426 0012 0448     		ldr	r0, .L23+4
+ 427 0014 FFF7FEFF 		bl	printf
+ 428              	.LVL44:
+ 220:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** }
+ 429              		.loc 1 220 3 view .LVU72
+ 430 0018 2846     		mov	r0, r5
+ 431 001a FFF7FEFF 		bl	puts
+ 432              	.LVL45:
+ 221:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* USER CODE END 4 */
+ 433              		.loc 1 221 1 is_stmt 0 view .LVU73
+ 434 001e 38BD     		pop	{r3, r4, r5, pc}
+ 435              	.LVL46:
+ 436              	.L24:
+ 221:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /* USER CODE END 4 */
+ 437              		.loc 1 221 1 view .LVU74
+ 438              		.align	2
+ 439              	.L23:
+ 440 0020 00000000 		.word	.LC2
+ 441 0024 00000000 		.word	.LC8
+ 442              		.cfi_endproc
+ 443              	.LFE133:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 14
+
+
+ 445              		.section	.text.magnetometer_measurement,"ax",%progbits
+ 446              		.align	1
+ 447              		.global	magnetometer_measurement
+ 448              		.syntax unified
+ 449              		.thumb
+ 450              		.thumb_func
+ 451              		.fpu fpv4-sp-d16
+ 453              	magnetometer_measurement:
+ 454              	.LFB131:
+ 204:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   uint16_t magDataRaw[3];
+ 455              		.loc 1 204 36 is_stmt 1 view -0
+ 456              		.cfi_startproc
+ 457              		@ args = 0, pretend = 0, frame = 8
+ 458              		@ frame_needed = 0, uses_anonymous_args = 0
+ 459 0000 10B5     		push	{r4, lr}
+ 460              	.LCFI9:
+ 461              		.cfi_def_cfa_offset 8
+ 462              		.cfi_offset 4, -8
+ 463              		.cfi_offset 14, -4
+ 464 0002 82B0     		sub	sp, sp, #8
+ 465              	.LCFI10:
+ 466              		.cfi_def_cfa_offset 16
+ 205:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osMutexWait(i2cMutexId, osWaitForever);
+ 467              		.loc 1 205 3 view .LVU76
+ 206:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   LSM303AGR_MAG_readMagneticRawData(magDataRaw);
+ 468              		.loc 1 206 3 view .LVU77
+ 469 0004 084C     		ldr	r4, .L27
+ 470 0006 4FF0FF31 		mov	r1, #-1
+ 471 000a 2068     		ldr	r0, [r4]
+ 472 000c FFF7FEFF 		bl	osMutexWait
+ 473              	.LVL47:
+ 207:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   osMutexRelease(i2cMutexId);
+ 474              		.loc 1 207 3 view .LVU78
+ 475 0010 6846     		mov	r0, sp
+ 476 0012 FFF7FEFF 		bl	LSM303AGR_MAG_readMagneticRawData
+ 477              	.LVL48:
+ 208:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   print_magnetometer(magDataRaw);
+ 478              		.loc 1 208 3 view .LVU79
+ 479 0016 2068     		ldr	r0, [r4]
+ 480 0018 FFF7FEFF 		bl	osMutexRelease
+ 481              	.LVL49:
+ 209:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** }
+ 482              		.loc 1 209 3 view .LVU80
+ 483 001c 6846     		mov	r0, sp
+ 484 001e FFF7FEFF 		bl	print_magnetometer
+ 485              	.LVL50:
+ 210:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 486              		.loc 1 210 1 is_stmt 0 view .LVU81
+ 487 0022 02B0     		add	sp, sp, #8
+ 488              	.LCFI11:
+ 489              		.cfi_def_cfa_offset 8
+ 490              		@ sp needed
+ 491 0024 10BD     		pop	{r4, pc}
+ 492              	.L28:
+ 493 0026 00BF     		.align	2
+ 494              	.L27:
+ 495 0028 00000000 		.word	i2cMutexId
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 15
+
+
+ 496              		.cfi_endproc
+ 497              	.LFE131:
+ 499              		.section	.text.HAL_TIM_PeriodElapsedCallback,"ax",%progbits
+ 500              		.align	1
+ 501              		.global	HAL_TIM_PeriodElapsedCallback
+ 502              		.syntax unified
+ 503              		.thumb
+ 504              		.thumb_func
+ 505              		.fpu fpv4-sp-d16
+ 507              	HAL_TIM_PeriodElapsedCallback:
+ 508              	.LVL51:
+ 509              	.LFB135:
+ 239:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   }
+ 240:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE END 5 */
+ 241:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** }
+ 242:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 243:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /**
+ 244:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * @brief  Period elapsed callback in non blocking mode
+ 245:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * @note   This function is called  when TIM1 interrupt took place, inside
+ 246:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+ 247:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * a global variable "uwTick" used as application time base.
+ 248:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * @param  htim : TIM handle
+ 249:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * @retval None
+ 250:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   */
+ 251:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+ 252:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** {
+ 510              		.loc 1 252 1 is_stmt 1 view -0
+ 511              		.cfi_startproc
+ 512              		@ args = 0, pretend = 0, frame = 0
+ 513              		@ frame_needed = 0, uses_anonymous_args = 0
+ 514              		.loc 1 252 1 is_stmt 0 view .LVU83
+ 515 0000 08B5     		push	{r3, lr}
+ 516              	.LCFI12:
+ 517              		.cfi_def_cfa_offset 8
+ 518              		.cfi_offset 3, -8
+ 519              		.cfi_offset 14, -4
+ 253:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE BEGIN Callback 0 */
+ 254:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 255:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE END Callback 0 */
+ 256:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   if (htim->Instance == TIM1)
+ 520              		.loc 1 256 3 is_stmt 1 view .LVU84
+ 521              		.loc 1 256 11 is_stmt 0 view .LVU85
+ 522 0002 0268     		ldr	r2, [r0]
+ 523              		.loc 1 256 6 view .LVU86
+ 524 0004 034B     		ldr	r3, .L33
+ 525 0006 9A42     		cmp	r2, r3
+ 526 0008 00D0     		beq	.L32
+ 527              	.LVL52:
+ 528              	.L29:
+ 257:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   {
+ 258:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****     HAL_IncTick();
+ 259:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   }
+ 260:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE BEGIN Callback 1 */
+ 261:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 262:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE END Callback 1 */
+ 263:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** }
+ 529              		.loc 1 263 1 view .LVU87
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 16
+
+
+ 530 000a 08BD     		pop	{r3, pc}
+ 531              	.LVL53:
+ 532              	.L32:
+ 258:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   }
+ 533              		.loc 1 258 5 is_stmt 1 view .LVU88
+ 534 000c FFF7FEFF 		bl	HAL_IncTick
+ 535              	.LVL54:
+ 536              		.loc 1 263 1 is_stmt 0 view .LVU89
+ 537 0010 FBE7     		b	.L29
+ 538              	.L34:
+ 539 0012 00BF     		.align	2
+ 540              	.L33:
+ 541 0014 002C0140 		.word	1073818624
+ 542              		.cfi_endproc
+ 543              	.LFE135:
+ 545              		.section	.text.Error_Handler,"ax",%progbits
+ 546              		.align	1
+ 547              		.global	Error_Handler
+ 548              		.syntax unified
+ 549              		.thumb
+ 550              		.thumb_func
+ 551              		.fpu fpv4-sp-d16
+ 553              	Error_Handler:
+ 554              	.LFB136:
+ 264:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 265:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** /**
+ 266:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * @brief  This function is executed in case of error occurrence.
+ 267:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   * @retval None
+ 268:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   */
+ 269:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** void Error_Handler(void)
+ 270:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** {
+ 555              		.loc 1 270 1 is_stmt 1 view -0
+ 556              		.cfi_startproc
+ 557              		@ args = 0, pretend = 0, frame = 0
+ 558              		@ frame_needed = 0, uses_anonymous_args = 0
+ 559              		@ link register save eliminated.
+ 271:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE BEGIN Error_Handler_Debug */
+ 272:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* User can add his own implementation to report the HAL error return state */
+ 273:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** 
+ 274:../../applications/acc-mag-sensor/src/acc-mag-sensor.c ****   /* USER CODE END Error_Handler_Debug */
+ 275:../../applications/acc-mag-sensor/src/acc-mag-sensor.c **** }
+ 560              		.loc 1 275 1 view .LVU91
+ 561 0000 7047     		bx	lr
+ 562              		.cfi_endproc
+ 563              	.LFE136:
+ 565              		.comm	magnetometer_timer_id,4,4
+ 566              		.comm	accelerometer_timer_id,4,4
+ 567              		.comm	magRawData,6,4
+ 568              		.comm	magRegisterData,6,4
+ 569              		.comm	accRawData,6,4
+ 570              		.comm	accRegisterData,6,4
+ 571              		.comm	LSM303AGR_hi2c,4,4
+ 572              		.comm	LSM303AGR_setting,1,1
+ 573              		.comm	i2cMutexId,4,4
+ 574              		.comm	iwdgTimId,4,4
+ 575              		.comm	defaultTaskHandle,4,4
+ 576              		.comm	P3_header,44,4
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 17
+
+
+ 577              		.comm	P2_header,44,4
+ 578              		.comm	P1_header,44,4
+ 579              		.comm	FLASH_SPI,100,4
+ 580              		.comm	P3_SPI,100,4
+ 581              		.comm	P2_SPI,100,4
+ 582              		.comm	P1_SPI,100,4
+ 583              		.comm	P3_I2C,76,4
+ 584              		.comm	P2_I2C,76,4
+ 585              		.comm	P1_I2C,76,4
+ 586              		.comm	common_I2C,76,4
+ 587              		.comm	P3_UART,120,4
+ 588              		.comm	P2_UART,120,4
+ 589              		.comm	P1_UART,120,4
+ 590              		.comm	BLE_UART,120,4
+ 591              		.comm	USB_UART,120,4
+ 592              		.comm	hiwdg,16,4
+ 593              		.comm	P3_DIO6,8,4
+ 594              		.comm	P3_DIO5,8,4
+ 595              		.comm	P3_DIO4,8,4
+ 596              		.comm	P3_DIO3,8,4
+ 597              		.comm	P3_DIO2,8,4
+ 598              		.comm	P3_DIO1,8,4
+ 599              		.comm	P2_DIO6,8,4
+ 600              		.comm	P2_DIO5,8,4
+ 601              		.comm	P2_DIO4,8,4
+ 602              		.comm	P2_DIO3,8,4
+ 603              		.comm	P2_DIO2,8,4
+ 604              		.comm	P2_DIO1,8,4
+ 605              		.comm	P1_DIO6,8,4
+ 606              		.comm	P1_DIO5,8,4
+ 607              		.comm	P1_DIO4,8,4
+ 608              		.comm	P1_DIO3,8,4
+ 609              		.comm	P1_DIO2,8,4
+ 610              		.comm	P1_DIO1,8,4
+ 611              		.section	.rodata
+ 612              		.align	2
+ 613              		.set	.LANCHOR0,. + 0
+ 614              	.LC6:
+ 615 0000 00000000 		.word	.LC0
+ 616 0004 00000000 		.word	StartDefaultTask
+ 617 0008 FEFF     		.short	-2
+ 618 000a 0000     		.space	2
+ 619 000c 00000000 		.word	0
+ 620 0010 80000000 		.word	128
+ 621              		.section	.rodata.main.str1.4,"aMS",%progbits,1
+ 622              		.align	2
+ 623              	.LC5:
+ 624 0000 496E6974 		.ascii	"Initializing RTOS timers, threads and mutex\015\000"
+ 624      69616C69 
+ 624      7A696E67 
+ 624      2052544F 
+ 624      53207469 
+ 625              		.section	.rodata.printWelcome.str1.4,"aMS",%progbits,1
+ 626              		.align	2
+ 627              	.LC2:
+ 628 0000 0D00     		.ascii	"\015\000"
+ 629 0002 0000     		.space	2
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 18
+
+
+ 630              	.LC3:
+ 631 0004 2A2A2A2A 		.ascii	"*****************************************\015\000"
+ 631      2A2A2A2A 
+ 631      2A2A2A2A 
+ 631      2A2A2A2A 
+ 631      2A2A2A2A 
+ 632 002f 00       		.space	1
+ 633              	.LC4:
+ 634 0030 4170706C 		.ascii	"Application accelerometer and magnetometer \015\000"
+ 634      69636174 
+ 634      696F6E20 
+ 634      61636365 
+ 634      6C65726F 
+ 635              		.section	.rodata.print_accelerometer.str1.4,"aMS",%progbits,1
+ 636              		.align	2
+ 637              	.LC7:
+ 638 0000 41636365 		.ascii	"Accelerometer data: X: %d Y: %d Z: %d \015\012\000"
+ 638      6C65726F 
+ 638      6D657465 
+ 638      72206461 
+ 638      74613A20 
+ 639              		.section	.rodata.print_magnetometer.str1.4,"aMS",%progbits,1
+ 640              		.align	2
+ 641              	.LC8:
+ 642 0000 4D61676E 		.ascii	"Magnetometer data: X: %d Y: %d Z: %d \015\012\000"
+ 642      65746F6D 
+ 642      65746572 
+ 642      20646174 
+ 642      613A2058 
+ 643              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 644              		.align	2
+ 645              	.LC0:
+ 646 0000 64656661 		.ascii	"defaultTask\000"
+ 646      756C7454 
+ 646      61736B00 
+ 647              		.weak	SystemClock_Config
+ 648              		.text
+ 649              	.Letext0:
+ 650              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 651              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 652              		.file 4 "../../core/ST/CMSIS/Include/core_cm4.h"
+ 653              		.file 5 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/system_stm32l4xx.h"
+ 654              		.file 6 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/stm32l496xx.h"
+ 655              		.file 7 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h"
+ 656              		.file 8 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dma.h"
+ 657              		.file 9 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_i2c.h"
+ 658              		.file 10 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_iwdg.h"
+ 659              		.file 11 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h"
+ 660              		.file 12 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h"
+ 661              		.file 13 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h"
+ 662              		.file 14 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h"
+ 663              		.file 15 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
+ 664              		.file 16 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/include/timers.h"
+ 665              		.file 17 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
+ 666              		.file 18 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h"
+ 667              		.file 19 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h"
+ 668              		.file 20 "../../core/platform/octa/inc/gpio.h"
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 19
+
+
+ 669              		.file 21 "../../core/platform/octa/inc/iwdg.h"
+ 670              		.file 22 "../../core/platform/octa/inc/uart.h"
+ 671              		.file 23 "../../core/platform/octa/inc/i2c.h"
+ 672              		.file 24 "../../core/platform/octa/inc/spi.h"
+ 673              		.file 25 "../../core/platform/octa/inc/octa.h"
+ 674              		.file 26 "../../applications/acc-mag-sensor/inc/acc-mag-sensor.h"
+ 675              		.file 27 "../../core/drivers/LSM303AGR/inc/LSM303AGRSensor.h"
+ 676              		.file 28 "<built-in>"
+ 677              		.file 29 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio.h"
+ 678              		.file 30 "../../core/platform/octa/inc/sysclock.h"
+ 679              		.file 31 "../../core/platform/common/inc/platform.h"
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 20
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 acc-mag-sensor.c
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:18     .text.StartDefaultTask:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:26     .text.StartDefaultTask:00000000 StartDefaultTask
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:53     .text.printWelcome:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:60     .text.printWelcome:00000000 printWelcome
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:115    .text.printWelcome:00000044 $d
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:123    .text.main:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:130    .text.main:00000000 main
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:269    .text.main:000000b4 $d
+                            *COM*:00000004 i2cMutexId
+                            *COM*:0000004c common_I2C
+                            *COM*:00000004 defaultTaskHandle
+                            *COM*:00000004 iwdgTimId
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:345    .text.accelerometer_measurement:00000000 accelerometer_measurement
+                            *COM*:00000004 accelerometer_timer_id
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:453    .text.magnetometer_measurement:00000000 magnetometer_measurement
+                            *COM*:00000004 magnetometer_timer_id
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:284    .text.print_accelerometer:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:291    .text.print_accelerometer:00000000 print_accelerometer
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:332    .text.print_accelerometer:00000020 $d
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:338    .text.accelerometer_measurement:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:387    .text.accelerometer_measurement:00000028 $d
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:392    .text.print_magnetometer:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:399    .text.print_magnetometer:00000000 print_magnetometer
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:440    .text.print_magnetometer:00000020 $d
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:446    .text.magnetometer_measurement:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:495    .text.magnetometer_measurement:00000028 $d
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:500    .text.HAL_TIM_PeriodElapsedCallback:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:507    .text.HAL_TIM_PeriodElapsedCallback:00000000 HAL_TIM_PeriodElapsedCallback
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:541    .text.HAL_TIM_PeriodElapsedCallback:00000014 $d
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:546    .text.Error_Handler:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:553    .text.Error_Handler:00000000 Error_Handler
+                            *COM*:00000006 magRawData
+                            *COM*:00000006 magRegisterData
+                            *COM*:00000006 accRawData
+                            *COM*:00000006 accRegisterData
+                            *COM*:00000004 LSM303AGR_hi2c
+                            *COM*:00000001 LSM303AGR_setting
+                            *COM*:0000002c P3_header
+                            *COM*:0000002c P2_header
+                            *COM*:0000002c P1_header
+                            *COM*:00000064 FLASH_SPI
+                            *COM*:00000064 P3_SPI
+                            *COM*:00000064 P2_SPI
+                            *COM*:00000064 P1_SPI
+                            *COM*:0000004c P3_I2C
+                            *COM*:0000004c P2_I2C
+                            *COM*:0000004c P1_I2C
+                            *COM*:00000078 P3_UART
+                            *COM*:00000078 P2_UART
+                            *COM*:00000078 P1_UART
+                            *COM*:00000078 BLE_UART
+                            *COM*:00000078 USB_UART
+                            *COM*:00000010 hiwdg
+                            *COM*:00000008 P3_DIO6
+                            *COM*:00000008 P3_DIO5
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s 			page 21
+
+
+                            *COM*:00000008 P3_DIO4
+                            *COM*:00000008 P3_DIO3
+                            *COM*:00000008 P3_DIO2
+                            *COM*:00000008 P3_DIO1
+                            *COM*:00000008 P2_DIO6
+                            *COM*:00000008 P2_DIO5
+                            *COM*:00000008 P2_DIO4
+                            *COM*:00000008 P2_DIO3
+                            *COM*:00000008 P2_DIO2
+                            *COM*:00000008 P2_DIO1
+                            *COM*:00000008 P1_DIO6
+                            *COM*:00000008 P1_DIO5
+                            *COM*:00000008 P1_DIO4
+                            *COM*:00000008 P1_DIO3
+                            *COM*:00000008 P1_DIO2
+                            *COM*:00000008 P1_DIO1
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:612    .rodata:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:622    .rodata.main.str1.4:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:626    .rodata.printWelcome.str1.4:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:636    .rodata.print_accelerometer.str1.4:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:640    .rodata.print_magnetometer.str1.4:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\cc9MaMqp.s:644    .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+osDelay
+puts
+HAL_GPIO_TogglePin
+HAL_Delay
+HAL_Init
+SystemClock_Config
+Initialize_Platform
+osMutexCreate
+LSM303AGR_setI2CInterface
+LSM303AGR_ACC_reset
+LSM303AGR_MAG_reset
+LSM303AGR_init
+osThreadCreate
+IWDG_feed
+osTimerCreate
+osTimerStart
+osKernelStart
+printf
+osMutexWait
+LSM303AGR_ACC_readAccelerationRawData
+osMutexRelease
+LSM303AGR_MAG_readMagneticRawData
+HAL_IncTick

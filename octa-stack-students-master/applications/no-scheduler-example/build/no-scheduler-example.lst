@@ -1,0 +1,1402 @@
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"no-scheduler-example.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.printWelcome,"ax",%progbits
+  18              		.align	1
+  19              		.global	printWelcome
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	printWelcome:
+  27              	.LFB133:
+  28              		.file 1 "../../applications/no-scheduler-example/src/no-scheduler-example.c"
+   1:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /* USER CODE BEGIN Header */
+   2:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /**
+   3:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   ******************************************************************************
+   4:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * @file           : main.c
+   5:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * @brief          : Main program body
+   6:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   ******************************************************************************
+   7:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * This notice applies to any and all portions of this file
+   8:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * that are not between comment pairs USER CODE BEGIN and
+   9:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * USER CODE END. Other portions of this file, whether 
+  10:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * inserted by the user or by software development tools
+  11:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * are owned by their respective copyright owners.
+  12:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   *
+  13:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * Copyright (c) 2019 STMicroelectronics International N.V. 
+  14:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * All rights reserved.
+  15:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   *
+  16:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * Redistribution and use in source and binary forms, with or without 
+  17:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * modification, are permitted, provided that the following conditions are met:
+  18:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   *
+  19:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * 1. Redistribution of source code must retain the above copyright notice, 
+  20:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   *    this list of conditions and the following disclaimer.
+  21:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * 2. Redistributions in binary form must reproduce the above copyright notice,
+  22:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   *    this list of conditions and the following disclaimer in the documentation
+  23:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   *    and/or other materials provided with the distribution.
+  24:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * 3. Neither the name of STMicroelectronics nor the names of other 
+  25:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   *    contributors to this software may be used to endorse or promote products 
+  26:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   *    derived from this software without specific written permission.
+  27:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * 4. This software, including modifications and/or derivative works of this 
+  28:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   *    software, must execute solely and exclusively on microcontroller or
+  29:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   *    microprocessor devices manufactured by or for STMicroelectronics.
+  30:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * 5. Redistribution and use of this software other than as permitted under 
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 2
+
+
+  31:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   *    this license is void and will automatically terminate your rights under 
+  32:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   *    this license. 
+  33:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   *
+  34:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS IS" 
+  35:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT 
+  36:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+  37:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * PARTICULAR PURPOSE AND NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY
+  38:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * RIGHTS ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT 
+  39:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * SHALL STMICROELECTRONICS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+  40:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  41:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
+  42:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+  43:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+  44:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+  45:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  46:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   *
+  47:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   ******************************************************************************
+  48:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   */
+  49:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /* USER CODE END Header */
+  50:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+  51:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /* Includes ------------------------------------------------------------------*/
+  52:../../applications/no-scheduler-example/src/no-scheduler-example.c **** #include "no-scheduler-example.h"
+  53:../../applications/no-scheduler-example/src/no-scheduler-example.c **** #include "D:\Master\I-IOT_PROJECT\octa-stack-students-master_lorawan\core\drivers\LSM303AGR\inc\LSM
+  54:../../applications/no-scheduler-example/src/no-scheduler-example.c **** #include <stdio.h>
+  55:../../applications/no-scheduler-example/src/no-scheduler-example.c **** #include "D:\Master\I-IOT_PROJECT\octa-stack-students-master_lorawan\core\drivers\SHT31\inc\sht31.h
+  56:../../applications/no-scheduler-example/src/no-scheduler-example.c **** #include "murata.h"
+  57:../../applications/no-scheduler-example/src/no-scheduler-example.c **** //#include "C:\Users\yvesk\Documents\Academiejaar 2019-2020\IOT\Practicum\octa-stack-students-maste
+  58:../../applications/no-scheduler-example/src/no-scheduler-example.c **** //#include "C:\Users\yvesk\Documents\Academiejaar 2019-2020\IOT\Practicum\octa-stack-students-maste
+  59:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /* Private includes ----------------------------------------------------------*/
+  60:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /* USER CODE BEGIN Includes */
+  61:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+  62:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+  63:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /* USER CODE END Includes */
+  64:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+  65:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /* Private typedef -----------------------------------------------------------*/
+  66:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /* USER CODE BEGIN PTD */
+  67:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+  68:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /* USER CODE END PTD */
+  69:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+  70:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /* Private define ------------------------------------------------------------*/
+  71:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /* USER CODE BEGIN PD */
+  72:../../applications/no-scheduler-example/src/no-scheduler-example.c **** #define HAL_EXTI_MODULE_ENABLED
+  73:../../applications/no-scheduler-example/src/no-scheduler-example.c **** #define temp_hum_timer    3
+  74:../../applications/no-scheduler-example/src/no-scheduler-example.c **** #define LOW_POWER
+  75:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /* USER CODE END PD */
+  76:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+  77:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /* Private macro -------------------------------------------------------------*/
+  78:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /* USER CODE BEGIN PM */
+  79:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+  80:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /* USER CODE END PM */
+  81:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+  82:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /* Private user code ---------------------------------------------------------*/
+  83:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /* USER CODE BEGIN 0 */
+  84:../../applications/no-scheduler-example/src/no-scheduler-example.c **** osTimerId temp_hum_timer_id;
+  85:../../applications/no-scheduler-example/src/no-scheduler-example.c **** float SHTData[2];
+  86:../../applications/no-scheduler-example/src/no-scheduler-example.c **** volatile _Bool temperatureflag=0; 
+  87:../../applications/no-scheduler-example/src/no-scheduler-example.c **** uint16_t LoRaWAN_Counter = 0;
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 3
+
+
+  88:../../applications/no-scheduler-example/src/no-scheduler-example.c **** uint8_t lora_init = 0;
+  89:../../applications/no-scheduler-example/src/no-scheduler-example.c **** uint64_t short_UID;
+  90:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /* USER CODE END 0 */
+  91:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+  92:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /**
+  93:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * @brief  The application entry point.
+  94:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * @retval int
+  95:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   */
+  96:../../applications/no-scheduler-example/src/no-scheduler-example.c **** int main(void)
+  97:../../applications/no-scheduler-example/src/no-scheduler-example.c **** {
+  98:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* USER CODE BEGIN 1 */
+  99:../../applications/no-scheduler-example/src/no-scheduler-example.c **** #if USE_BOOTLOADER
+ 100:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   bootloader_SetVTOR();
+ 101:../../applications/no-scheduler-example/src/no-scheduler-example.c **** #endif
+ 102:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 103:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* USER CODE END 1 */
+ 104:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 105:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* MCU Configuration--------------------------------------------------------*/
+ 106:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 107:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+ 108:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   HAL_Init();
+ 109:../../applications/no-scheduler-example/src/no-scheduler-example.c ****  
+ 110:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* USER CODE BEGIN Init */
+ 111:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 112:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* USER CODE END Init */
+ 113:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 114:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* Configure the system clock */
+ 115:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   SystemClock_Config();
+ 116:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 117:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* USER CODE BEGIN SysInit */
+ 118:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 119:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* USER CODE END SysInit */
+ 120:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 121:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* Initialize theplatform */
+ 122:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   Initialize_Platform();
+ 123:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* USER CODE BEGIN 2 */
+ 124:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 125:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   // get Unique ID of Octa
+ 126:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   short_UID = get_UID(); 
+ 127:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 128:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   //LORAWAN
+ 129:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   lora_init=Murata_Initialize(short_UID);
+ 130:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 131:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   if (lora_init) {
+ 132:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     printf("Lorawan module init ok\r\n\r\n");
+ 133:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   }
+ 134:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   
+ 135:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   LSM303AGR_setI2CInterface(&common_I2C);
+ 136:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   setI2CInterface_SHT31(&common_I2C);
+ 137:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   SHT31_begin(); 
+ 138:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   LSM303AGR_init();
+ 139:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   printWelcome();
+ 140:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   uint8_t data; 
+ 141:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 142:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   //ENTER SLEEP MODE ONLY WAKE UP ON INTERRUPT!!
+ 143:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 144:../../applications/no-scheduler-example/src/no-scheduler-example.c **** // // TX MUTEX ensuring no transmits are happening at the same time
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 4
+
+
+ 145:../../applications/no-scheduler-example/src/no-scheduler-example.c **** //   osMutexDef(txMutex);
+ 146:../../applications/no-scheduler-example/src/no-scheduler-example.c **** //   txMutexId = osMutexCreate(osMutex(txMutex));
+ 147:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     
+ 148:../../applications/no-scheduler-example/src/no-scheduler-example.c **** //     // pass processing thread handle to murata driver
+ 149:../../applications/no-scheduler-example/src/no-scheduler-example.c **** //   Murata_SetProcessingThread(murata_rx_processing_handle);
+ 150:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* USER CODE END 2 */
+ 151:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 152:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* We should never get here as control is now taken by the scheduler */
+ 153:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 154:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* Infinite loop */
+ 155:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* USER CODE BEGIN WHILE */
+ 156:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   while (1)
+ 157:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   {
+ 158:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 159:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     uint8_t payload=5;
+ 160:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     IWDG_feed(NULL); 
+ 161:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     /* USER CODE END WHILE */
+ 162:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     //LSM303AGR_readRegister(0x31, data, 0);
+ 163:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     //de interrupt zal zorgen dat de flag op 1 staat, dan doen we een measurement van temp
+ 164:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     if (temperatureflag==1) {
+ 165:../../applications/no-scheduler-example/src/no-scheduler-example.c ****       temp_hum_measurement();
+ 166:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     // LoRaWAN_send_self();
+ 167:../../applications/no-scheduler-example/src/no-scheduler-example.c ****       temperatureflag=0; 
+ 168:../../applications/no-scheduler-example/src/no-scheduler-example.c ****       //lora_init=Murata_Initialize(short_UID);
+ 169:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     HAL_GPIO_TogglePin(OCTA_RLED_GPIO_Port, OCTA_RLED_Pin);
+ 170:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     HAL_Delay(1000);
+ 171:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     HAL_GPIO_TogglePin(OCTA_RLED_GPIO_Port, OCTA_RLED_Pin);
+ 172:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     HAL_GPIO_TogglePin(OCTA_GLED_GPIO_Port, OCTA_GLED_Pin);
+ 173:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     HAL_Delay(1000);
+ 174:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     HAL_GPIO_TogglePin(OCTA_GLED_GPIO_Port, OCTA_GLED_Pin);
+ 175:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin);
+ 176:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     HAL_Delay(1000);
+ 177:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin); 
+ 178:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     }
+ 179:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 180:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     printf("RUNNING!!!\r\n");
+ 181:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 182:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   HAL_PWR_EnterSTOPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+ 183:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   }
+ 184:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* USER CODE END 3 */
+ 185:../../applications/no-scheduler-example/src/no-scheduler-example.c **** }
+ 186:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 187:../../applications/no-scheduler-example/src/no-scheduler-example.c **** void printWelcome(void)
+ 188:../../applications/no-scheduler-example/src/no-scheduler-example.c **** {
+  29              		.loc 1 188 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 38B5     		push	{r3, r4, r5, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 16
+  36              		.cfi_offset 3, -16
+  37              		.cfi_offset 4, -12
+  38              		.cfi_offset 5, -8
+  39              		.cfi_offset 14, -4
+ 189:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   printf("\r\n");
+  40              		.loc 1 189 3 view .LVU1
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 5
+
+
+  41 0002 104C     		ldr	r4, .L3
+  42 0004 2046     		mov	r0, r4
+  43 0006 FFF7FEFF 		bl	puts
+  44              	.LVL0:
+ 190:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   printf("*****************************************\r\n");
+  45              		.loc 1 190 3 view .LVU2
+  46 000a 0F4D     		ldr	r5, .L3+4
+  47 000c 2846     		mov	r0, r5
+  48 000e FFF7FEFF 		bl	puts
+  49              	.LVL1:
+ 191:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   printf("no scheduler example\r\n");
+  50              		.loc 1 191 3 view .LVU3
+  51 0012 0E48     		ldr	r0, .L3+8
+  52 0014 FFF7FEFF 		bl	puts
+  53              	.LVL2:
+ 192:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   printf("*****************************************\r\n");
+  54              		.loc 1 192 3 view .LVU4
+  55 0018 2846     		mov	r0, r5
+  56 001a FFF7FEFF 		bl	puts
+  57              	.LVL3:
+ 193:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   printf("\r\n");
+  58              		.loc 1 193 3 view .LVU5
+  59 001e 2046     		mov	r0, r4
+  60 0020 FFF7FEFF 		bl	puts
+  61              	.LVL4:
+ 194:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin);
+  62              		.loc 1 194 3 view .LVU6
+  63 0024 0A4C     		ldr	r4, .L3+12
+  64 0026 4FF40041 		mov	r1, #32768
+  65 002a 2046     		mov	r0, r4
+  66 002c FFF7FEFF 		bl	HAL_GPIO_TogglePin
+  67              	.LVL5:
+ 195:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   HAL_Delay(2000);
+  68              		.loc 1 195 3 view .LVU7
+  69 0030 4FF4FA60 		mov	r0, #2000
+  70 0034 FFF7FEFF 		bl	HAL_Delay
+  71              	.LVL6:
+ 196:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin);
+  72              		.loc 1 196 3 view .LVU8
+  73 0038 4FF40041 		mov	r1, #32768
+  74 003c 2046     		mov	r0, r4
+  75 003e FFF7FEFF 		bl	HAL_GPIO_TogglePin
+  76              	.LVL7:
+ 197:../../applications/no-scheduler-example/src/no-scheduler-example.c **** }
+  77              		.loc 1 197 1 is_stmt 0 view .LVU9
+  78 0042 38BD     		pop	{r3, r4, r5, pc}
+  79              	.L4:
+  80              		.align	2
+  81              	.L3:
+  82 0044 00000000 		.word	.LC0
+  83 0048 04000000 		.word	.LC1
+  84 004c 30000000 		.word	.LC2
+  85 0050 000C0048 		.word	1207962624
+  86              		.cfi_endproc
+  87              	.LFE133:
+  89              		.section	.text.HAL_TIM_PeriodElapsedCallback,"ax",%progbits
+  90              		.align	1
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 6
+
+
+  91              		.global	HAL_TIM_PeriodElapsedCallback
+  92              		.syntax unified
+  93              		.thumb
+  94              		.thumb_func
+  95              		.fpu fpv4-sp-d16
+  97              	HAL_TIM_PeriodElapsedCallback:
+  98              	.LVL8:
+  99              	.LFB134:
+ 198:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 199:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 200:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 201:../../applications/no-scheduler-example/src/no-scheduler-example.c **** void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+ 202:../../applications/no-scheduler-example/src/no-scheduler-example.c **** {
+ 100              		.loc 1 202 1 is_stmt 1 view -0
+ 101              		.cfi_startproc
+ 102              		@ args = 0, pretend = 0, frame = 0
+ 103              		@ frame_needed = 0, uses_anonymous_args = 0
+ 104              		.loc 1 202 1 is_stmt 0 view .LVU11
+ 105 0000 08B5     		push	{r3, lr}
+ 106              	.LCFI1:
+ 107              		.cfi_def_cfa_offset 8
+ 108              		.cfi_offset 3, -8
+ 109              		.cfi_offset 14, -4
+ 203:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* USER CODE BEGIN Callback 0 */
+ 204:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 205:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* USER CODE END Callback 0 */
+ 206:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   if (htim->Instance == TIM1)
+ 110              		.loc 1 206 3 is_stmt 1 view .LVU12
+ 111              		.loc 1 206 11 is_stmt 0 view .LVU13
+ 112 0002 0268     		ldr	r2, [r0]
+ 113              		.loc 1 206 6 view .LVU14
+ 114 0004 034B     		ldr	r3, .L9
+ 115 0006 9A42     		cmp	r2, r3
+ 116 0008 00D0     		beq	.L8
+ 117              	.LVL9:
+ 118              	.L5:
+ 207:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   {
+ 208:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     HAL_IncTick();
+ 209:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   }
+ 210:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* USER CODE BEGIN Callback 1 */
+ 211:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 212:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* USER CODE END Callback 1 */
+ 213:../../applications/no-scheduler-example/src/no-scheduler-example.c **** }
+ 119              		.loc 1 213 1 view .LVU15
+ 120 000a 08BD     		pop	{r3, pc}
+ 121              	.LVL10:
+ 122              	.L8:
+ 208:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   }
+ 123              		.loc 1 208 5 is_stmt 1 view .LVU16
+ 124 000c FFF7FEFF 		bl	HAL_IncTick
+ 125              	.LVL11:
+ 126              		.loc 1 213 1 is_stmt 0 view .LVU17
+ 127 0010 FBE7     		b	.L5
+ 128              	.L10:
+ 129 0012 00BF     		.align	2
+ 130              	.L9:
+ 131 0014 002C0140 		.word	1073818624
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 7
+
+
+ 132              		.cfi_endproc
+ 133              	.LFE134:
+ 135              		.global	__aeabi_f2d
+ 136              		.section	.text.print_temp_hum,"ax",%progbits
+ 137              		.align	1
+ 138              		.global	print_temp_hum
+ 139              		.syntax unified
+ 140              		.thumb
+ 141              		.thumb_func
+ 142              		.fpu fpv4-sp-d16
+ 144              	print_temp_hum:
+ 145              	.LFB135:
+ 214:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 215:../../applications/no-scheduler-example/src/no-scheduler-example.c **** void print_temp_hum(void){
+ 146              		.loc 1 215 26 is_stmt 1 view -0
+ 147              		.cfi_startproc
+ 148              		@ args = 0, pretend = 0, frame = 0
+ 149              		@ frame_needed = 0, uses_anonymous_args = 0
+ 150 0000 38B5     		push	{r3, r4, r5, lr}
+ 151              	.LCFI2:
+ 152              		.cfi_def_cfa_offset 16
+ 153              		.cfi_offset 3, -16
+ 154              		.cfi_offset 4, -12
+ 155              		.cfi_offset 5, -8
+ 156              		.cfi_offset 14, -4
+ 216:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   printf("\r\n");
+ 157              		.loc 1 216 3 view .LVU19
+ 158 0002 0C4C     		ldr	r4, .L13
+ 159 0004 2046     		mov	r0, r4
+ 160 0006 FFF7FEFF 		bl	puts
+ 161              	.LVL12:
+ 217:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   printf("Temperature: %.2f °C  \r\n", SHTData[0]);
+ 162              		.loc 1 217 3 view .LVU20
+ 163              		.loc 1 217 48 is_stmt 0 view .LVU21
+ 164 000a 0B4D     		ldr	r5, .L13+4
+ 165              		.loc 1 217 3 view .LVU22
+ 166 000c 2868     		ldr	r0, [r5]	@ float
+ 167 000e FFF7FEFF 		bl	__aeabi_f2d
+ 168              	.LVL13:
+ 169 0012 0246     		mov	r2, r0
+ 170 0014 0B46     		mov	r3, r1
+ 171 0016 0948     		ldr	r0, .L13+8
+ 172 0018 FFF7FEFF 		bl	printf
+ 173              	.LVL14:
+ 218:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   printf("Humidity: %.2f %% \r\n", SHTData[1]);
+ 174              		.loc 1 218 3 is_stmt 1 view .LVU23
+ 175 001c 6868     		ldr	r0, [r5, #4]	@ float
+ 176 001e FFF7FEFF 		bl	__aeabi_f2d
+ 177              	.LVL15:
+ 178 0022 0246     		mov	r2, r0
+ 179 0024 0B46     		mov	r3, r1
+ 180 0026 0648     		ldr	r0, .L13+12
+ 181 0028 FFF7FEFF 		bl	printf
+ 182              	.LVL16:
+ 219:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   printf("\r\n");
+ 183              		.loc 1 219 3 view .LVU24
+ 184 002c 2046     		mov	r0, r4
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 8
+
+
+ 185 002e FFF7FEFF 		bl	puts
+ 186              	.LVL17:
+ 220:../../applications/no-scheduler-example/src/no-scheduler-example.c **** }
+ 187              		.loc 1 220 1 is_stmt 0 view .LVU25
+ 188 0032 38BD     		pop	{r3, r4, r5, pc}
+ 189              	.L14:
+ 190              		.align	2
+ 191              	.L13:
+ 192 0034 00000000 		.word	.LC0
+ 193 0038 00000000 		.word	SHTData
+ 194 003c 00000000 		.word	.LC3
+ 195 0040 1C000000 		.word	.LC4
+ 196              		.cfi_endproc
+ 197              	.LFE135:
+ 199              		.section	.text.temp_hum_measurement,"ax",%progbits
+ 200              		.align	1
+ 201              		.global	temp_hum_measurement
+ 202              		.syntax unified
+ 203              		.thumb
+ 204              		.thumb_func
+ 205              		.fpu fpv4-sp-d16
+ 207              	temp_hum_measurement:
+ 208              	.LFB136:
+ 221:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 222:../../applications/no-scheduler-example/src/no-scheduler-example.c **** void temp_hum_measurement(void){
+ 209              		.loc 1 222 32 is_stmt 1 view -0
+ 210              		.cfi_startproc
+ 211              		@ args = 0, pretend = 0, frame = 0
+ 212              		@ frame_needed = 0, uses_anonymous_args = 0
+ 213 0000 08B5     		push	{r3, lr}
+ 214              	.LCFI3:
+ 215              		.cfi_def_cfa_offset 8
+ 216              		.cfi_offset 3, -8
+ 217              		.cfi_offset 14, -4
+ 223:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 224:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   SHT31_get_temp_hum(SHTData);
+ 218              		.loc 1 224 3 view .LVU27
+ 219 0002 0348     		ldr	r0, .L17
+ 220 0004 FFF7FEFF 		bl	SHT31_get_temp_hum
+ 221              	.LVL18:
+ 225:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   print_temp_hum();
+ 222              		.loc 1 225 3 view .LVU28
+ 223 0008 FFF7FEFF 		bl	print_temp_hum
+ 224              	.LVL19:
+ 226:../../applications/no-scheduler-example/src/no-scheduler-example.c **** }
+ 225              		.loc 1 226 1 is_stmt 0 view .LVU29
+ 226 000c 08BD     		pop	{r3, pc}
+ 227              	.L18:
+ 228 000e 00BF     		.align	2
+ 229              	.L17:
+ 230 0010 00000000 		.word	SHTData
+ 231              		.cfi_endproc
+ 232              	.LFE136:
+ 234              		.section	.text.main,"ax",%progbits
+ 235              		.align	1
+ 236              		.global	main
+ 237              		.syntax unified
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 9
+
+
+ 238              		.thumb
+ 239              		.thumb_func
+ 240              		.fpu fpv4-sp-d16
+ 242              	main:
+ 243              	.LFB132:
+  97:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* USER CODE BEGIN 1 */
+ 244              		.loc 1 97 1 is_stmt 1 view -0
+ 245              		.cfi_startproc
+ 246              		@ args = 0, pretend = 0, frame = 0
+ 247              		@ frame_needed = 0, uses_anonymous_args = 0
+ 248 0000 38B5     		push	{r3, r4, r5, lr}
+ 249              	.LCFI4:
+ 250              		.cfi_def_cfa_offset 16
+ 251              		.cfi_offset 3, -16
+ 252              		.cfi_offset 4, -12
+ 253              		.cfi_offset 5, -8
+ 254              		.cfi_offset 14, -4
+ 108:../../applications/no-scheduler-example/src/no-scheduler-example.c ****  
+ 255              		.loc 1 108 3 view .LVU31
+ 256 0002 FFF7FEFF 		bl	HAL_Init
+ 257              	.LVL20:
+ 115:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 258              		.loc 1 115 3 view .LVU32
+ 259 0006 FFF7FEFF 		bl	SystemClock_Config
+ 260              	.LVL21:
+ 122:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* USER CODE BEGIN 2 */
+ 261              		.loc 1 122 3 view .LVU33
+ 262 000a FFF7FEFF 		bl	Initialize_Platform
+ 263              	.LVL22:
+ 126:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 264              		.loc 1 126 3 view .LVU34
+ 126:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 265              		.loc 1 126 15 is_stmt 0 view .LVU35
+ 266 000e FFF7FEFF 		bl	get_UID
+ 267              	.LVL23:
+ 126:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 268              		.loc 1 126 13 view .LVU36
+ 269 0012 2C4B     		ldr	r3, .L25
+ 270 0014 C3E90001 		strd	r0, [r3]
+ 129:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 271              		.loc 1 129 3 is_stmt 1 view .LVU37
+ 129:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 272              		.loc 1 129 13 is_stmt 0 view .LVU38
+ 273 0018 FFF7FEFF 		bl	Murata_Initialize
+ 274              	.LVL24:
+ 129:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 275              		.loc 1 129 12 view .LVU39
+ 276 001c 2A4B     		ldr	r3, .L25+4
+ 277 001e 1870     		strb	r0, [r3]
+ 131:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     printf("Lorawan module init ok\r\n\r\n");
+ 278              		.loc 1 131 3 is_stmt 1 view .LVU40
+ 131:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     printf("Lorawan module init ok\r\n\r\n");
+ 279              		.loc 1 131 6 is_stmt 0 view .LVU41
+ 280 0020 68B9     		cbnz	r0, .L24
+ 281              	.L20:
+ 135:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   setI2CInterface_SHT31(&common_I2C);
+ 282              		.loc 1 135 3 is_stmt 1 view .LVU42
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 10
+
+
+ 283 0022 2A4C     		ldr	r4, .L25+8
+ 284 0024 2046     		mov	r0, r4
+ 285 0026 FFF7FEFF 		bl	LSM303AGR_setI2CInterface
+ 286              	.LVL25:
+ 136:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   SHT31_begin(); 
+ 287              		.loc 1 136 3 view .LVU43
+ 288 002a 2046     		mov	r0, r4
+ 289 002c FFF7FEFF 		bl	setI2CInterface_SHT31
+ 290              	.LVL26:
+ 137:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   LSM303AGR_init();
+ 291              		.loc 1 137 3 view .LVU44
+ 292 0030 FFF7FEFF 		bl	SHT31_begin
+ 293              	.LVL27:
+ 138:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   printWelcome();
+ 294              		.loc 1 138 3 view .LVU45
+ 295 0034 FFF7FEFF 		bl	LSM303AGR_init
+ 296              	.LVL28:
+ 139:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   uint8_t data; 
+ 297              		.loc 1 139 3 view .LVU46
+ 298 0038 FFF7FEFF 		bl	printWelcome
+ 299              	.LVL29:
+ 300 003c 0AE0     		b	.L22
+ 301              	.L24:
+ 132:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   }
+ 302              		.loc 1 132 5 view .LVU47
+ 303 003e 2448     		ldr	r0, .L25+12
+ 304 0040 FFF7FEFF 		bl	puts
+ 305              	.LVL30:
+ 306 0044 EDE7     		b	.L20
+ 307              	.LVL31:
+ 308              	.L21:
+ 309              	.LBB2:
+ 180:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 310              		.loc 1 180 5 view .LVU48
+ 311 0046 2348     		ldr	r0, .L25+16
+ 312 0048 FFF7FEFF 		bl	puts
+ 313              	.LVL32:
+ 182:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   }
+ 314              		.loc 1 182 3 view .LVU49
+ 315 004c 0121     		movs	r1, #1
+ 316 004e 0020     		movs	r0, #0
+ 317 0050 FFF7FEFF 		bl	HAL_PWR_EnterSTOPMode
+ 318              	.LVL33:
+ 319              	.L22:
+ 182:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   }
+ 320              		.loc 1 182 3 is_stmt 0 view .LVU50
+ 321              	.LBE2:
+ 140:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 322              		.loc 1 140 3 is_stmt 1 view .LVU51
+ 156:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   {
+ 323              		.loc 1 156 3 view .LVU52
+ 324              	.LBB3:
+ 159:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     IWDG_feed(NULL); 
+ 325              		.loc 1 159 5 view .LVU53
+ 160:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     /* USER CODE END WHILE */
+ 326              		.loc 1 160 5 view .LVU54
+ 327 0054 0020     		movs	r0, #0
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 11
+
+
+ 328 0056 FFF7FEFF 		bl	IWDG_feed
+ 329              	.LVL34:
+ 164:../../applications/no-scheduler-example/src/no-scheduler-example.c ****       temp_hum_measurement();
+ 330              		.loc 1 164 5 view .LVU55
+ 164:../../applications/no-scheduler-example/src/no-scheduler-example.c ****       temp_hum_measurement();
+ 331              		.loc 1 164 24 is_stmt 0 view .LVU56
+ 332 005a 1F4B     		ldr	r3, .L25+20
+ 333 005c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 164:../../applications/no-scheduler-example/src/no-scheduler-example.c ****       temp_hum_measurement();
+ 334              		.loc 1 164 8 view .LVU57
+ 335 005e 002B     		cmp	r3, #0
+ 336 0060 F1D0     		beq	.L21
+ 165:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     // LoRaWAN_send_self();
+ 337              		.loc 1 165 7 is_stmt 1 view .LVU58
+ 338 0062 FFF7FEFF 		bl	temp_hum_measurement
+ 339              	.LVL35:
+ 167:../../applications/no-scheduler-example/src/no-scheduler-example.c ****       //lora_init=Murata_Initialize(short_UID);
+ 340              		.loc 1 167 7 view .LVU59
+ 167:../../applications/no-scheduler-example/src/no-scheduler-example.c ****       //lora_init=Murata_Initialize(short_UID);
+ 341              		.loc 1 167 22 is_stmt 0 view .LVU60
+ 342 0066 1C4B     		ldr	r3, .L25+20
+ 343 0068 0022     		movs	r2, #0
+ 344 006a 1A70     		strb	r2, [r3]
+ 169:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     HAL_Delay(1000);
+ 345              		.loc 1 169 5 is_stmt 1 view .LVU61
+ 346 006c 1B4C     		ldr	r4, .L25+24
+ 347 006e 4FF48041 		mov	r1, #16384
+ 348 0072 2046     		mov	r0, r4
+ 349 0074 FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 350              	.LVL36:
+ 170:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     HAL_GPIO_TogglePin(OCTA_RLED_GPIO_Port, OCTA_RLED_Pin);
+ 351              		.loc 1 170 5 view .LVU62
+ 352 0078 4FF47A70 		mov	r0, #1000
+ 353 007c FFF7FEFF 		bl	HAL_Delay
+ 354              	.LVL37:
+ 171:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     HAL_GPIO_TogglePin(OCTA_GLED_GPIO_Port, OCTA_GLED_Pin);
+ 355              		.loc 1 171 5 view .LVU63
+ 356 0080 4FF48041 		mov	r1, #16384
+ 357 0084 2046     		mov	r0, r4
+ 358 0086 FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 359              	.LVL38:
+ 172:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     HAL_Delay(1000);
+ 360              		.loc 1 172 5 view .LVU64
+ 361 008a 154D     		ldr	r5, .L25+28
+ 362 008c 0121     		movs	r1, #1
+ 363 008e 2846     		mov	r0, r5
+ 364 0090 FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 365              	.LVL39:
+ 173:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     HAL_GPIO_TogglePin(OCTA_GLED_GPIO_Port, OCTA_GLED_Pin);
+ 366              		.loc 1 173 5 view .LVU65
+ 367 0094 4FF47A70 		mov	r0, #1000
+ 368 0098 FFF7FEFF 		bl	HAL_Delay
+ 369              	.LVL40:
+ 174:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin);
+ 370              		.loc 1 174 5 view .LVU66
+ 371 009c 0121     		movs	r1, #1
+ 372 009e 2846     		mov	r0, r5
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 12
+
+
+ 373 00a0 FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 374              	.LVL41:
+ 175:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     HAL_Delay(1000);
+ 375              		.loc 1 175 5 view .LVU67
+ 376 00a4 4FF40041 		mov	r1, #32768
+ 377 00a8 2046     		mov	r0, r4
+ 378 00aa FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 379              	.LVL42:
+ 176:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin); 
+ 380              		.loc 1 176 5 view .LVU68
+ 381 00ae 4FF47A70 		mov	r0, #1000
+ 382 00b2 FFF7FEFF 		bl	HAL_Delay
+ 383              	.LVL43:
+ 177:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     }
+ 384              		.loc 1 177 5 view .LVU69
+ 385 00b6 4FF40041 		mov	r1, #32768
+ 386 00ba 2046     		mov	r0, r4
+ 387 00bc FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 388              	.LVL44:
+ 389 00c0 C1E7     		b	.L21
+ 390              	.L26:
+ 391 00c2 00BF     		.align	2
+ 392              	.L25:
+ 393 00c4 00000000 		.word	short_UID
+ 394 00c8 00000000 		.word	.LANCHOR0
+ 395 00cc 00000000 		.word	common_I2C
+ 396 00d0 00000000 		.word	.LC5
+ 397 00d4 1C000000 		.word	.LC6
+ 398 00d8 00000000 		.word	.LANCHOR1
+ 399 00dc 000C0048 		.word	1207962624
+ 400 00e0 00040048 		.word	1207960576
+ 401              	.LBE3:
+ 402              		.cfi_endproc
+ 403              	.LFE132:
+ 405              		.section	.text.HAL_UART_RxCpltCallback,"ax",%progbits
+ 406              		.align	1
+ 407              		.global	HAL_UART_RxCpltCallback
+ 408              		.syntax unified
+ 409              		.thumb
+ 410              		.thumb_func
+ 411              		.fpu fpv4-sp-d16
+ 413              	HAL_UART_RxCpltCallback:
+ 414              	.LVL45:
+ 415              	.LFB137:
+ 227:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 228:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 229:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /* USER CODE END 4 */
+ 230:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 231:../../applications/no-scheduler-example/src/no-scheduler-example.c **** void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+ 232:../../applications/no-scheduler-example/src/no-scheduler-example.c **** {
+ 416              		.loc 1 232 1 view -0
+ 417              		.cfi_startproc
+ 418              		@ args = 0, pretend = 0, frame = 0
+ 419              		@ frame_needed = 0, uses_anonymous_args = 0
+ 420              		@ link register save eliminated.
+ 233:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 	#if USE_BOOTLOADER
+ 234:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     if(huart == &BLE_UART);
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 13
+
+
+ 235:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     {
+ 236:../../applications/no-scheduler-example/src/no-scheduler-example.c ****           printf("BLE UART INTERRUPT\r\n");
+ 237:../../applications/no-scheduler-example/src/no-scheduler-example.c ****           bootloader_parse_data();        
+ 238:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     }
+ 239:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   #endif
+ 240:../../applications/no-scheduler-example/src/no-scheduler-example.c **** }
+ 421              		.loc 1 240 1 view .LVU71
+ 422 0000 7047     		bx	lr
+ 423              		.cfi_endproc
+ 424              	.LFE137:
+ 426              		.section	.text.HAL_GPIO_EXTI_Callback,"ax",%progbits
+ 427              		.align	1
+ 428              		.global	HAL_GPIO_EXTI_Callback
+ 429              		.syntax unified
+ 430              		.thumb
+ 431              		.thumb_func
+ 432              		.fpu fpv4-sp-d16
+ 434              	HAL_GPIO_EXTI_Callback:
+ 435              	.LVL46:
+ 436              	.LFB138:
+ 241:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 242:../../applications/no-scheduler-example/src/no-scheduler-example.c **** //hier de callback die zul das willen opgeroepen als de EXTI15_10 interrupt opvangt. 
+ 243:../../applications/no-scheduler-example/src/no-scheduler-example.c **** void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+ 437              		.loc 1 243 48 view -0
+ 438              		.cfi_startproc
+ 439              		@ args = 0, pretend = 0, frame = 0
+ 440              		@ frame_needed = 0, uses_anonymous_args = 0
+ 244:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   if (GPIO_Pin==GPIO_Pin_13) {
+ 441              		.loc 1 244 3 view .LVU73
+ 442              		.loc 1 244 6 is_stmt 0 view .LVU74
+ 443 0000 B0F5005F 		cmp	r0, #8192
+ 444 0004 00D0     		beq	.L34
+ 445 0006 7047     		bx	lr
+ 446              	.L34:
+ 243:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   if (GPIO_Pin==GPIO_Pin_13) {
+ 447              		.loc 1 243 48 view .LVU75
+ 448 0008 08B5     		push	{r3, lr}
+ 449              	.LCFI5:
+ 450              		.cfi_def_cfa_offset 8
+ 451              		.cfi_offset 3, -8
+ 452              		.cfi_offset 14, -4
+ 245:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   temperatureflag = 1; 
+ 453              		.loc 1 245 3 is_stmt 1 view .LVU76
+ 454              		.loc 1 245 19 is_stmt 0 view .LVU77
+ 455 000a 034B     		ldr	r3, .L35
+ 456 000c 0122     		movs	r2, #1
+ 457 000e 1A70     		strb	r2, [r3]
+ 246:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   printf("IM AWAKE NOW :D \r\n");
+ 458              		.loc 1 246 3 is_stmt 1 view .LVU78
+ 459 0010 0248     		ldr	r0, .L35+4
+ 460              	.LVL47:
+ 461              		.loc 1 246 3 is_stmt 0 view .LVU79
+ 462 0012 FFF7FEFF 		bl	puts
+ 463              	.LVL48:
+ 247:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   // we work with a flag so as to make sure that we don't stay in the callback for too long. 
+ 248:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   // the flag will call the measurement function 
+ 249:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   } 
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 14
+
+
+ 250:../../applications/no-scheduler-example/src/no-scheduler-example.c **** }
+ 464              		.loc 1 250 1 view .LVU80
+ 465 0016 08BD     		pop	{r3, pc}
+ 466              	.L36:
+ 467              		.align	2
+ 468              	.L35:
+ 469 0018 00000000 		.word	.LANCHOR1
+ 470 001c 00000000 		.word	.LC7
+ 471              		.cfi_endproc
+ 472              	.LFE138:
+ 474              		.section	.text.LoRaWAN_send_self,"ax",%progbits
+ 475              		.align	1
+ 476              		.global	LoRaWAN_send_self
+ 477              		.syntax unified
+ 478              		.thumb
+ 479              		.thumb_func
+ 480              		.fpu fpv4-sp-d16
+ 482              	LoRaWAN_send_self:
+ 483              	.LFB139:
+ 251:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 252:../../applications/no-scheduler-example/src/no-scheduler-example.c **** void LoRaWAN_send_self()
+ 253:../../applications/no-scheduler-example/src/no-scheduler-example.c **** {
+ 484              		.loc 1 253 1 is_stmt 1 view -0
+ 485              		.cfi_startproc
+ 486              		@ args = 0, pretend = 0, frame = 8
+ 487              		@ frame_needed = 0, uses_anonymous_args = 0
+ 488 0000 00B5     		push	{lr}
+ 489              	.LCFI6:
+ 490              		.cfi_def_cfa_offset 4
+ 491              		.cfi_offset 14, -4
+ 492 0002 83B0     		sub	sp, sp, #12
+ 493              	.LCFI7:
+ 494              		.cfi_def_cfa_offset 16
+ 254:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   if (lora_init)
+ 495              		.loc 1 254 3 view .LVU82
+ 496              		.loc 1 254 7 is_stmt 0 view .LVU83
+ 497 0004 194B     		ldr	r3, .L44
+ 498 0006 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 499              		.loc 1 254 6 view .LVU84
+ 500 0008 63B3     		cbz	r3, .L38
+ 501              	.LBB4:
+ 255:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   {
+ 256:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     uint8_t loraMessage[5];
+ 502              		.loc 1 256 5 is_stmt 1 view .LVU85
+ 257:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     uint8_t i = 0;
+ 503              		.loc 1 257 5 view .LVU86
+ 504              	.LVL49:
+ 258:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     //uint16 counter to uint8 array (little endian)
+ 259:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     //counter (large) type byte
+ 260:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 261:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     //first data transfer works, but afterwards it stays in a kind of 'transmitted' loop. Find wher
+ 262:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     loraMessage[i++] = SHTData[0];
+ 505              		.loc 1 262 5 view .LVU87
+ 506              		.loc 1 262 31 is_stmt 0 view .LVU88
+ 507 000a 194A     		ldr	r2, .L44+4
+ 508 000c D2ED007A 		vldr.32	s15, [r2]
+ 509              	.LVL50:
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 15
+
+
+ 510              		.loc 1 262 22 view .LVU89
+ 511 0010 FCEEE77A 		vcvt.u32.f32	s15, s15
+ 512 0014 17EE903A 		vmov	r3, s15	@ int
+ 513 0018 8DF80030 		strb	r3, [sp]
+ 263:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     loraMessage[i++] = SHTData[1];
+ 514              		.loc 1 263 5 is_stmt 1 view .LVU90
+ 515              		.loc 1 263 31 is_stmt 0 view .LVU91
+ 516 001c D2ED017A 		vldr.32	s15, [r2, #4]
+ 517              	.LVL51:
+ 518              		.loc 1 263 22 view .LVU92
+ 519 0020 FCEEE77A 		vcvt.u32.f32	s15, s15
+ 520 0024 17EE903A 		vmov	r3, s15	@ int
+ 521 0028 8DF80130 		strb	r3, [sp, #1]
+ 264:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     loraMessage[i++] = LoRaWAN_Counter >> 8;
+ 522              		.loc 1 264 5 is_stmt 1 view .LVU93
+ 523              	.LVL52:
+ 524              		.loc 1 264 22 is_stmt 0 view .LVU94
+ 525 002c 114B     		ldr	r3, .L44+8
+ 526 002e 1B88     		ldrh	r3, [r3]
+ 527 0030 1B0A     		lsrs	r3, r3, #8
+ 528 0032 8DF80230 		strb	r3, [sp, #2]
+ 265:../../applications/no-scheduler-example/src/no-scheduler-example.c ****    // osMutexWait(txMutexId, osWaitForever);
+ 266:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     if(!Murata_LoRaWAN_Send((uint8_t *)loraMessage, i))
+ 529              		.loc 1 266 5 is_stmt 1 view .LVU95
+ 530              		.loc 1 266 9 is_stmt 0 view .LVU96
+ 531 0036 0321     		movs	r1, #3
+ 532 0038 6846     		mov	r0, sp
+ 533 003a FFF7FEFF 		bl	Murata_LoRaWAN_Send
+ 534              	.LVL53:
+ 535              		.loc 1 266 7 view .LVU97
+ 536 003e 48B1     		cbz	r0, .L43
+ 267:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     {
+ 268:../../applications/no-scheduler-example/src/no-scheduler-example.c ****       printf("tis ni gelukt :( ");
+ 269:../../applications/no-scheduler-example/src/no-scheduler-example.c ****       lora_init++;
+ 270:../../applications/no-scheduler-example/src/no-scheduler-example.c ****       if(lora_init == 10)
+ 271:../../applications/no-scheduler-example/src/no-scheduler-example.c ****         lora_init == 0;
+ 272:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     }
+ 273:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     else
+ 274:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     {
+ 275:../../applications/no-scheduler-example/src/no-scheduler-example.c ****       lora_init = 1;
+ 537              		.loc 1 275 7 is_stmt 1 view .LVU98
+ 538              		.loc 1 275 17 is_stmt 0 view .LVU99
+ 539 0040 0A4B     		ldr	r3, .L44
+ 540 0042 0122     		movs	r2, #1
+ 541 0044 1A70     		strb	r2, [r3]
+ 542              	.L40:
+ 276:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     }
+ 277:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     //BLOCK TX MUTEX FOR 3s
+ 278:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     // osDelay(3000);
+ 279:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     // osMutexRelease(txMutexId);
+ 280:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     LoRaWAN_Counter++;
+ 543              		.loc 1 280 5 is_stmt 1 discriminator 1 view .LVU100
+ 544              		.loc 1 280 20 is_stmt 0 discriminator 1 view .LVU101
+ 545 0046 0B4A     		ldr	r2, .L44+8
+ 546 0048 1388     		ldrh	r3, [r2]
+ 547 004a 0133     		adds	r3, r3, #1
+ 548 004c 1380     		strh	r3, [r2]	@ movhi
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 16
+
+
+ 549              	.LVL54:
+ 550              	.L37:
+ 551              		.loc 1 280 20 discriminator 1 view .LVU102
+ 552              	.LBE4:
+ 281:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   }
+ 282:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   else{
+ 283:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     printf("murata not initialized, not sending\r\n");
+ 284:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   }
+ 285:../../applications/no-scheduler-example/src/no-scheduler-example.c **** }
+ 553              		.loc 1 285 1 view .LVU103
+ 554 004e 03B0     		add	sp, sp, #12
+ 555              	.LCFI8:
+ 556              		.cfi_remember_state
+ 557              		.cfi_def_cfa_offset 4
+ 558              		@ sp needed
+ 559 0050 5DF804FB 		ldr	pc, [sp], #4
+ 560              	.LVL55:
+ 561              	.L43:
+ 562              	.LCFI9:
+ 563              		.cfi_restore_state
+ 564              	.LBB5:
+ 268:../../applications/no-scheduler-example/src/no-scheduler-example.c ****       lora_init++;
+ 565              		.loc 1 268 7 is_stmt 1 view .LVU104
+ 566 0054 0848     		ldr	r0, .L44+12
+ 567 0056 FFF7FEFF 		bl	printf
+ 568              	.LVL56:
+ 269:../../applications/no-scheduler-example/src/no-scheduler-example.c ****       if(lora_init == 10)
+ 569              		.loc 1 269 7 view .LVU105
+ 269:../../applications/no-scheduler-example/src/no-scheduler-example.c ****       if(lora_init == 10)
+ 570              		.loc 1 269 16 is_stmt 0 view .LVU106
+ 571 005a 044A     		ldr	r2, .L44
+ 572 005c 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 573 005e 0133     		adds	r3, r3, #1
+ 574 0060 1370     		strb	r3, [r2]
+ 270:../../applications/no-scheduler-example/src/no-scheduler-example.c ****         lora_init == 0;
+ 575              		.loc 1 270 7 is_stmt 1 view .LVU107
+ 576 0062 F0E7     		b	.L40
+ 577              	.LVL57:
+ 578              	.L38:
+ 270:../../applications/no-scheduler-example/src/no-scheduler-example.c ****         lora_init == 0;
+ 579              		.loc 1 270 7 is_stmt 0 view .LVU108
+ 580              	.LBE5:
+ 283:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   }
+ 581              		.loc 1 283 5 is_stmt 1 view .LVU109
+ 582 0064 0548     		ldr	r0, .L44+16
+ 583 0066 FFF7FEFF 		bl	puts
+ 584              	.LVL58:
+ 585              		.loc 1 285 1 is_stmt 0 view .LVU110
+ 586 006a F0E7     		b	.L37
+ 587              	.L45:
+ 588              		.align	2
+ 589              	.L44:
+ 590 006c 00000000 		.word	.LANCHOR0
+ 591 0070 00000000 		.word	SHTData
+ 592 0074 00000000 		.word	.LANCHOR2
+ 593 0078 00000000 		.word	.LC8
+ 594 007c 14000000 		.word	.LC9
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 17
+
+
+ 595              		.cfi_endproc
+ 596              	.LFE139:
+ 598              		.section	.text.Error_Handler,"ax",%progbits
+ 599              		.align	1
+ 600              		.global	Error_Handler
+ 601              		.syntax unified
+ 602              		.thumb
+ 603              		.thumb_func
+ 604              		.fpu fpv4-sp-d16
+ 606              	Error_Handler:
+ 607              	.LFB140:
+ 286:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 287:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 288:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 289:../../applications/no-scheduler-example/src/no-scheduler-example.c **** /**
+ 290:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * @brief  This function is executed in case of error occurrence.
+ 291:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   * @retval None
+ 292:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   */
+ 293:../../applications/no-scheduler-example/src/no-scheduler-example.c **** void Error_Handler(void)
+ 294:../../applications/no-scheduler-example/src/no-scheduler-example.c **** {
+ 608              		.loc 1 294 1 is_stmt 1 view -0
+ 609              		.cfi_startproc
+ 610              		@ args = 0, pretend = 0, frame = 0
+ 611              		@ frame_needed = 0, uses_anonymous_args = 0
+ 612              		@ link register save eliminated.
+ 295:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* USER CODE BEGIN Error_Handler_Debug */
+ 296:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* User can add his own implementation to report the HAL error return state */
+ 297:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 298:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   /* USER CODE END Error_Handler_Debug */
+ 299:../../applications/no-scheduler-example/src/no-scheduler-example.c **** }
+ 613              		.loc 1 299 1 view .LVU112
+ 614 0000 7047     		bx	lr
+ 615              		.cfi_endproc
+ 616              	.LFE140:
+ 618              		.section	.text.murata_process_rx_response,"ax",%progbits
+ 619              		.align	1
+ 620              		.global	murata_process_rx_response
+ 621              		.syntax unified
+ 622              		.thumb
+ 623              		.thumb_func
+ 624              		.fpu fpv4-sp-d16
+ 626              	murata_process_rx_response:
+ 627              	.LFB141:
+ 300:../../applications/no-scheduler-example/src/no-scheduler-example.c **** 
+ 301:../../applications/no-scheduler-example/src/no-scheduler-example.c **** void murata_process_rx_response(void)
+ 302:../../applications/no-scheduler-example/src/no-scheduler-example.c **** {
+ 628              		.loc 1 302 1 view -0
+ 629              		.cfi_startproc
+ 630              		@ args = 0, pretend = 0, frame = 0
+ 631              		@ frame_needed = 0, uses_anonymous_args = 0
+ 632 0000 08B5     		push	{r3, lr}
+ 633              	.LCFI10:
+ 634              		.cfi_def_cfa_offset 8
+ 635              		.cfi_offset 3, -8
+ 636              		.cfi_offset 14, -4
+ 637 0002 02E0     		b	.L49
+ 638              	.LVL59:
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 18
+
+
+ 639              	.L48:
+ 303:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   uint32_t startProcessing;
+ 304:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   while (1)
+ 305:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   {
+ 306:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     // Wait to be notified that the transmission is complete.  Note the first
+ 307:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     //parameter is pdTRUE, which has the effect of clearing the task's notification
+ 308:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     //value back to 0, making the notification value act like a binary (rather than
+ 309:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     //a counting) semaphore.
+ 310:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     startProcessing = ulTaskNotifyTake(pdTRUE, osWaitForever);
+ 311:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     if (startProcessing == 1)
+ 312:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     {
+ 313:../../applications/no-scheduler-example/src/no-scheduler-example.c ****       // The transmission ended as expected.
+ 314:../../applications/no-scheduler-example/src/no-scheduler-example.c ****       Murata_process_fifo();
+ 315:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     }
+ 316:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     else
+ 317:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     {
+ 318:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     }
+ 640              		.loc 1 318 5 view .LVU114
+ 319:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     osDelay(1);
+ 641              		.loc 1 319 5 view .LVU115
+ 642 0004 0120     		movs	r0, #1
+ 643 0006 FFF7FEFF 		bl	osDelay
+ 644              	.LVL60:
+ 645              	.L49:
+ 303:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   uint32_t startProcessing;
+ 646              		.loc 1 303 3 view .LVU116
+ 304:../../applications/no-scheduler-example/src/no-scheduler-example.c ****   {
+ 647              		.loc 1 304 3 view .LVU117
+ 310:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     if (startProcessing == 1)
+ 648              		.loc 1 310 5 view .LVU118
+ 310:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     if (startProcessing == 1)
+ 649              		.loc 1 310 23 is_stmt 0 view .LVU119
+ 650 000a 4FF0FF31 		mov	r1, #-1
+ 651 000e 0120     		movs	r0, #1
+ 652 0010 FFF7FEFF 		bl	ulTaskNotifyTake
+ 653              	.LVL61:
+ 311:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     {
+ 654              		.loc 1 311 5 is_stmt 1 view .LVU120
+ 311:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     {
+ 655              		.loc 1 311 8 is_stmt 0 view .LVU121
+ 656 0014 0128     		cmp	r0, #1
+ 657 0016 F5D1     		bne	.L48
+ 314:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     }
+ 658              		.loc 1 314 7 is_stmt 1 view .LVU122
+ 659 0018 FFF7FEFF 		bl	Murata_process_fifo
+ 660              	.LVL62:
+ 314:../../applications/no-scheduler-example/src/no-scheduler-example.c ****     }
+ 661              		.loc 1 314 7 is_stmt 0 view .LVU123
+ 662 001c F2E7     		b	.L48
+ 663              		.cfi_endproc
+ 664              	.LFE141:
+ 666              		.comm	short_UID,8,8
+ 667              		.global	lora_init
+ 668              		.global	LoRaWAN_Counter
+ 669              		.global	temperatureflag
+ 670              		.comm	SHTData,8,4
+ 671              		.comm	temp_hum_timer_id,4,4
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 19
+
+
+ 672              		.comm	threadToNotify,4,4
+ 673              		.comm	murata_reset_pin,4,4
+ 674              		.comm	murata_wakeup_pin,4,4
+ 675              		.comm	temp,4,4
+ 676              		.comm	humidity,4,4
+ 677              		.comm	_i2caddr,1,1
+ 678              		.comm	SHThi2cLib,4,4
+ 679              		.comm	magRawData,6,4
+ 680              		.comm	magRegisterData,6,4
+ 681              		.comm	accRawData,6,4
+ 682              		.comm	accRegisterData,6,4
+ 683              		.comm	LSM303AGR_hi2c,4,4
+ 684              		.comm	LSM303AGR_setting,1,1
+ 685              		.comm	murata_rx_process_mutex_id,4,4
+ 686              		.comm	txMutexId,4,4
+ 687              		.comm	moduleCheckTimId,4,4
+ 688              		.comm	loraWANTimId,4,4
+ 689              		.comm	murata_rx_processing_handle,4,4
+ 690              		.comm	defaultTaskHandle,4,4
+ 691              		.comm	iwdgTimId,4,4
+ 692              		.comm	P3_header,44,4
+ 693              		.comm	P2_header,44,4
+ 694              		.comm	P1_header,44,4
+ 695              		.comm	FLASH_SPI,100,4
+ 696              		.comm	P3_SPI,100,4
+ 697              		.comm	P2_SPI,100,4
+ 698              		.comm	P1_SPI,100,4
+ 699              		.comm	P3_I2C,76,4
+ 700              		.comm	P2_I2C,76,4
+ 701              		.comm	P1_I2C,76,4
+ 702              		.comm	common_I2C,76,4
+ 703              		.comm	P3_UART,120,4
+ 704              		.comm	P2_UART,120,4
+ 705              		.comm	P1_UART,120,4
+ 706              		.comm	BLE_UART,120,4
+ 707              		.comm	USB_UART,120,4
+ 708              		.comm	hiwdg,16,4
+ 709              		.comm	P3_DIO6,8,4
+ 710              		.comm	P3_DIO5,8,4
+ 711              		.comm	P3_DIO4,8,4
+ 712              		.comm	P3_DIO3,8,4
+ 713              		.comm	P3_DIO2,8,4
+ 714              		.comm	P3_DIO1,8,4
+ 715              		.comm	P2_DIO6,8,4
+ 716              		.comm	P2_DIO5,8,4
+ 717              		.comm	P2_DIO4,8,4
+ 718              		.comm	P2_DIO3,8,4
+ 719              		.comm	P2_DIO2,8,4
+ 720              		.comm	P2_DIO1,8,4
+ 721              		.comm	P1_DIO6,8,4
+ 722              		.comm	P1_DIO5,8,4
+ 723              		.comm	P1_DIO4,8,4
+ 724              		.comm	P1_DIO3,8,4
+ 725              		.comm	P1_DIO2,8,4
+ 726              		.comm	P1_DIO1,8,4
+ 727              		.section	.bss.LoRaWAN_Counter,"aw",%nobits
+ 728              		.align	1
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 20
+
+
+ 729              		.set	.LANCHOR2,. + 0
+ 732              	LoRaWAN_Counter:
+ 733 0000 0000     		.space	2
+ 734              		.section	.bss.lora_init,"aw",%nobits
+ 735              		.set	.LANCHOR0,. + 0
+ 738              	lora_init:
+ 739 0000 00       		.space	1
+ 740              		.section	.bss.temperatureflag,"aw",%nobits
+ 741              		.set	.LANCHOR1,. + 0
+ 744              	temperatureflag:
+ 745 0000 00       		.space	1
+ 746              		.section	.rodata.HAL_GPIO_EXTI_Callback.str1.4,"aMS",%progbits,1
+ 747              		.align	2
+ 748              	.LC7:
+ 749 0000 494D2041 		.ascii	"IM AWAKE NOW :D \015\000"
+ 749      57414B45 
+ 749      204E4F57 
+ 749      203A4420 
+ 749      0D00
+ 750              		.section	.rodata.LoRaWAN_send_self.str1.4,"aMS",%progbits,1
+ 751              		.align	2
+ 752              	.LC8:
+ 753 0000 74697320 		.ascii	"tis ni gelukt :( \000"
+ 753      6E692067 
+ 753      656C756B 
+ 753      74203A28 
+ 753      2000
+ 754 0012 0000     		.space	2
+ 755              	.LC9:
+ 756 0014 6D757261 		.ascii	"murata not initialized, not sending\015\000"
+ 756      7461206E 
+ 756      6F742069 
+ 756      6E697469 
+ 756      616C697A 
+ 757              		.section	.rodata.main.str1.4,"aMS",%progbits,1
+ 758              		.align	2
+ 759              	.LC5:
+ 760 0000 4C6F7261 		.ascii	"Lorawan module init ok\015\012\015\000"
+ 760      77616E20 
+ 760      6D6F6475 
+ 760      6C652069 
+ 760      6E697420 
+ 761 001a 0000     		.space	2
+ 762              	.LC6:
+ 763 001c 52554E4E 		.ascii	"RUNNING!!!\015\000"
+ 763      494E4721 
+ 763      21210D00 
+ 764              		.section	.rodata.printWelcome.str1.4,"aMS",%progbits,1
+ 765              		.align	2
+ 766              	.LC0:
+ 767 0000 0D00     		.ascii	"\015\000"
+ 768 0002 0000     		.space	2
+ 769              	.LC1:
+ 770 0004 2A2A2A2A 		.ascii	"*****************************************\015\000"
+ 770      2A2A2A2A 
+ 770      2A2A2A2A 
+ 770      2A2A2A2A 
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 21
+
+
+ 770      2A2A2A2A 
+ 771 002f 00       		.space	1
+ 772              	.LC2:
+ 773 0030 6E6F2073 		.ascii	"no scheduler example\015\000"
+ 773      63686564 
+ 773      756C6572 
+ 773      20657861 
+ 773      6D706C65 
+ 774              		.section	.rodata.print_temp_hum.str1.4,"aMS",%progbits,1
+ 775              		.align	2
+ 776              	.LC3:
+ 777 0000 54656D70 		.ascii	"Temperature: %.2f \302\260C  \015\012\000"
+ 777      65726174 
+ 777      7572653A 
+ 777      20252E32 
+ 777      6620C2B0 
+ 778 001a 0000     		.space	2
+ 779              	.LC4:
+ 780 001c 48756D69 		.ascii	"Humidity: %.2f %% \015\012\000"
+ 780      64697479 
+ 780      3A20252E 
+ 780      32662025 
+ 780      25200D0A 
+ 781              		.weak	SystemClock_Config
+ 782              		.text
+ 783              	.Letext0:
+ 784              		.file 2 "d:\\softwareunif\\toolchainkit\\8 2019-q3-update\\arm-none-eabi\\include\\machine\\_defau
+ 785              		.file 3 "d:\\softwareunif\\toolchainkit\\8 2019-q3-update\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 786              		.file 4 "../../core/ST/CMSIS/Include/core_cm4.h"
+ 787              		.file 5 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/system_stm32l4xx.h"
+ 788              		.file 6 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/stm32l496xx.h"
+ 789              		.file 7 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h"
+ 790              		.file 8 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dma.h"
+ 791              		.file 9 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_i2c.h"
+ 792              		.file 10 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_iwdg.h"
+ 793              		.file 11 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h"
+ 794              		.file 12 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h"
+ 795              		.file 13 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h"
+ 796              		.file 14 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h"
+ 797              		.file 15 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 798              		.file 16 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
+ 799              		.file 17 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/include/timers.h"
+ 800              		.file 18 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
+ 801              		.file 19 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h"
+ 802              		.file 20 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h"
+ 803              		.file 21 "../../core/platform/octa/inc/gpio.h"
+ 804              		.file 22 "../../core/platform/octa/inc/iwdg.h"
+ 805              		.file 23 "../../core/platform/octa/inc/uart.h"
+ 806              		.file 24 "../../core/platform/octa/inc/i2c.h"
+ 807              		.file 25 "../../core/platform/octa/inc/spi.h"
+ 808              		.file 26 "../../core/platform/octa/inc/octa.h"
+ 809              		.file 27 "../../applications/no-scheduler-example/inc/no-scheduler-example.h"
+ 810              		.file 28 "D:\\Master\\I-IOT_PROJECT\\octa-stack-students-master_lorawan\\core\\drivers\\LSM303AGR\
+ 811              		.file 29 "d:\\softwareunif\\toolchainkit\\8 2019-q3-update\\lib\\gcc\\arm-none-eabi\\8.3.1\\includ
+ 812              		.file 30 "d:\\softwareunif\\toolchainkit\\8 2019-q3-update\\arm-none-eabi\\include\\sys\\_types.h"
+ 813              		.file 31 "d:\\softwareunif\\toolchainkit\\8 2019-q3-update\\arm-none-eabi\\include\\sys\\reent.h"
+ 814              		.file 32 "d:\\softwareunif\\toolchainkit\\8 2019-q3-update\\arm-none-eabi\\include\\sys\\lock.h"
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 22
+
+
+ 815              		.file 33 "D:\\Master\\I-IOT_PROJECT\\octa-stack-students-master_lorawan\\core\\drivers\\SHT31\\inc
+ 816              		.file 34 "../../shields/Murata/inc/murata.h"
+ 817              		.file 35 "d:\\softwareunif\\toolchainkit\\8 2019-q3-update\\arm-none-eabi\\include\\stdio.h"
+ 818              		.file 36 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio.h"
+ 819              		.file 37 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr.h"
+ 820              		.file 38 "../../core/platform/octa/inc/sysclock.h"
+ 821              		.file 39 "../../core/platform/common/inc/platform.h"
+ 822              		.file 40 "<built-in>"
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 23
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 no-scheduler-example.c
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:18     .text.printWelcome:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:26     .text.printWelcome:00000000 printWelcome
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:82     .text.printWelcome:00000044 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:90     .text.HAL_TIM_PeriodElapsedCallback:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:97     .text.HAL_TIM_PeriodElapsedCallback:00000000 HAL_TIM_PeriodElapsedCallback
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:131    .text.HAL_TIM_PeriodElapsedCallback:00000014 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:137    .text.print_temp_hum:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:144    .text.print_temp_hum:00000000 print_temp_hum
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:192    .text.print_temp_hum:00000034 $d
+                            *COM*:00000008 SHTData
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:200    .text.temp_hum_measurement:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:207    .text.temp_hum_measurement:00000000 temp_hum_measurement
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:230    .text.temp_hum_measurement:00000010 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:235    .text.main:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:242    .text.main:00000000 main
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:393    .text.main:000000c4 $d
+                            *COM*:00000008 short_UID
+                            *COM*:0000004c common_I2C
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:406    .text.HAL_UART_RxCpltCallback:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:413    .text.HAL_UART_RxCpltCallback:00000000 HAL_UART_RxCpltCallback
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:427    .text.HAL_GPIO_EXTI_Callback:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:434    .text.HAL_GPIO_EXTI_Callback:00000000 HAL_GPIO_EXTI_Callback
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:469    .text.HAL_GPIO_EXTI_Callback:00000018 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:475    .text.LoRaWAN_send_self:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:482    .text.LoRaWAN_send_self:00000000 LoRaWAN_send_self
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:590    .text.LoRaWAN_send_self:0000006c $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:599    .text.Error_Handler:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:606    .text.Error_Handler:00000000 Error_Handler
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:619    .text.murata_process_rx_response:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:626    .text.murata_process_rx_response:00000000 murata_process_rx_response
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:738    .bss.lora_init:00000000 lora_init
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:732    .bss.LoRaWAN_Counter:00000000 LoRaWAN_Counter
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:744    .bss.temperatureflag:00000000 temperatureflag
+                            *COM*:00000004 temp_hum_timer_id
+                            *COM*:00000004 threadToNotify
+                            *COM*:00000004 murata_reset_pin
+                            *COM*:00000004 murata_wakeup_pin
+                            *COM*:00000004 temp
+                            *COM*:00000004 humidity
+                            *COM*:00000001 _i2caddr
+                            *COM*:00000004 SHThi2cLib
+                            *COM*:00000006 magRawData
+                            *COM*:00000006 magRegisterData
+                            *COM*:00000006 accRawData
+                            *COM*:00000006 accRegisterData
+                            *COM*:00000004 LSM303AGR_hi2c
+                            *COM*:00000001 LSM303AGR_setting
+                            *COM*:00000004 murata_rx_process_mutex_id
+                            *COM*:00000004 txMutexId
+                            *COM*:00000004 moduleCheckTimId
+                            *COM*:00000004 loraWANTimId
+                            *COM*:00000004 murata_rx_processing_handle
+                            *COM*:00000004 defaultTaskHandle
+                            *COM*:00000004 iwdgTimId
+                            *COM*:0000002c P3_header
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 24
+
+
+                            *COM*:0000002c P2_header
+                            *COM*:0000002c P1_header
+                            *COM*:00000064 FLASH_SPI
+                            *COM*:00000064 P3_SPI
+                            *COM*:00000064 P2_SPI
+                            *COM*:00000064 P1_SPI
+                            *COM*:0000004c P3_I2C
+                            *COM*:0000004c P2_I2C
+                            *COM*:0000004c P1_I2C
+                            *COM*:00000078 P3_UART
+                            *COM*:00000078 P2_UART
+                            *COM*:00000078 P1_UART
+                            *COM*:00000078 BLE_UART
+                            *COM*:00000078 USB_UART
+                            *COM*:00000010 hiwdg
+                            *COM*:00000008 P3_DIO6
+                            *COM*:00000008 P3_DIO5
+                            *COM*:00000008 P3_DIO4
+                            *COM*:00000008 P3_DIO3
+                            *COM*:00000008 P3_DIO2
+                            *COM*:00000008 P3_DIO1
+                            *COM*:00000008 P2_DIO6
+                            *COM*:00000008 P2_DIO5
+                            *COM*:00000008 P2_DIO4
+                            *COM*:00000008 P2_DIO3
+                            *COM*:00000008 P2_DIO2
+                            *COM*:00000008 P2_DIO1
+                            *COM*:00000008 P1_DIO6
+                            *COM*:00000008 P1_DIO5
+                            *COM*:00000008 P1_DIO4
+                            *COM*:00000008 P1_DIO3
+                            *COM*:00000008 P1_DIO2
+                            *COM*:00000008 P1_DIO1
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:728    .bss.LoRaWAN_Counter:00000000 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:739    .bss.lora_init:00000000 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:745    .bss.temperatureflag:00000000 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:747    .rodata.HAL_GPIO_EXTI_Callback.str1.4:00000000 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:751    .rodata.LoRaWAN_send_self.str1.4:00000000 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:758    .rodata.main.str1.4:00000000 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:765    .rodata.printWelcome.str1.4:00000000 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s:775    .rodata.print_temp_hum.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+puts
+HAL_GPIO_TogglePin
+HAL_Delay
+HAL_IncTick
+__aeabi_f2d
+printf
+SHT31_get_temp_hum
+HAL_Init
+SystemClock_Config
+Initialize_Platform
+get_UID
+Murata_Initialize
+LSM303AGR_setI2CInterface
+setI2CInterface_SHT31
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccdJqpHS.s 			page 25
+
+
+SHT31_begin
+LSM303AGR_init
+HAL_PWR_EnterSTOPMode
+IWDG_feed
+Murata_LoRaWAN_Send
+osDelay
+ulTaskNotifyTake
+Murata_process_fifo

@@ -1,0 +1,430 @@
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccd94UWL.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"SPG30.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.SPG30_Initialize,"ax",%progbits
+  18              		.align	1
+  19              		.global	SPG30_Initialize
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	SPG30_Initialize:
+  27              	.LFB128:
+  28              		.file 1 "../../shields/SPG30/src/SPG30.c"
+   1:../../shields/SPG30/src/SPG30.c **** #include "platform.h"
+   2:../../shields/SPG30/src/SPG30.c **** #include "SPG30.h"
+   3:../../shields/SPG30/src/SPG30.c **** 
+   4:../../shields/SPG30/src/SPG30.c **** struct OCTA_header SPG30_Header;
+   5:../../shields/SPG30/src/SPG30.c **** I2C_HandleTypeDef *hi2cLib; 
+   6:../../shields/SPG30/src/SPG30.c **** 
+   7:../../shields/SPG30/src/SPG30.c **** uint8_t SPG30_Initialize(void) {
+  29              		.loc 1 7 32 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 48
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 70B5     		push	{r4, r5, r6, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 16
+  36              		.cfi_offset 4, -16
+  37              		.cfi_offset 5, -12
+  38              		.cfi_offset 6, -8
+  39              		.cfi_offset 14, -4
+  40 0002 94B0     		sub	sp, sp, #80
+  41              	.LCFI1:
+  42              		.cfi_def_cfa_offset 96
+   8:../../shields/SPG30/src/SPG30.c ****     printf("****_____Initalize SPG30 now!!____****\r\n");
+  43              		.loc 1 8 5 view .LVU1
+  44 0004 1848     		ldr	r0, .L6
+  45 0006 FFF7FEFF 		bl	puts
+  46              	.LVL0:
+   9:../../shields/SPG30/src/SPG30.c ****     #ifndef SPG30_CONNECTOR
+  10:../../shields/SPG30/src/SPG30.c ****         printf("No SPG30_CONNECTOR provided in Makefile \r\n");
+  11:../../shields/SPG30/src/SPG30.c ****         return 0;
+  12:../../shields/SPG30/src/SPG30.c ****     #else
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccd94UWL.s 			page 2
+
+
+  13:../../shields/SPG30/src/SPG30.c ****         SPG30_Header = platform_getHeader((uint8_t)SPG30_CONNECTOR); //this connector is specified 
+  47              		.loc 1 13 9 view .LVU2
+  48              		.loc 1 13 24 is_stmt 0 view .LVU3
+  49 000a 184E     		ldr	r6, .L6+4
+  50 000c 0121     		movs	r1, #1
+  51 000e 08A8     		add	r0, sp, #32
+  52 0010 FFF7FEFF 		bl	platform_getHeader
+  53              	.LVL1:
+  54 0014 3546     		mov	r5, r6
+  55 0016 08AC     		add	r4, sp, #32
+  56 0018 0FCC     		ldmia	r4!, {r0, r1, r2, r3}
+  57 001a 0FC5     		stmia	r5!, {r0, r1, r2, r3}
+  58 001c 0FCC     		ldmia	r4!, {r0, r1, r2, r3}
+  59 001e 0FC5     		stmia	r5!, {r0, r1, r2, r3}
+  60 0020 94E80700 		ldm	r4, {r0, r1, r2}
+  61 0024 85E80700 		stm	r5, {r0, r1, r2}
+  14:../../shields/SPG30/src/SPG30.c ****         if (!SPG30_Header.active) {
+  62              		.loc 1 14 9 is_stmt 1 view .LVU4
+  63              		.loc 1 14 26 is_stmt 0 view .LVU5
+  64 0028 96F82840 		ldrb	r4, [r6, #40]	@ zero_extendqisi2
+  65              		.loc 1 14 12 view .LVU6
+  66 002c C4B1     		cbz	r4, .L5
+  15:../../shields/SPG30/src/SPG30.c ****             printf("Invalid SPG30_CONNECTOR provided in Makefile\r\n");
+  16:../../shields/SPG30/src/SPG30.c ****             return 0; 
+  17:../../shields/SPG30/src/SPG30.c ****         }
+  18:../../shields/SPG30/src/SPG30.c ****         else 
+  19:../../shields/SPG30/src/SPG30.c ****             printf("SPG30 sensor on P%d, initializing I2C\r\n", (uint8_t)SPG30_CONNECTOR);
+  67              		.loc 1 19 13 is_stmt 1 view .LVU7
+  68 002e 0121     		movs	r1, #1
+  69 0030 0F48     		ldr	r0, .L6+8
+  70 0032 FFF7FEFF 		bl	printf
+  71              	.LVL2:
+  20:../../shields/SPG30/src/SPG30.c ****     #endif
+  21:../../shields/SPG30/src/SPG30.c **** 
+  22:../../shields/SPG30/src/SPG30.c ****     platform_initialize_I2C(SPG30_Header);
+  72              		.loc 1 22 5 view .LVU8
+  73 0036 0D4E     		ldr	r6, .L6+4
+  74 0038 6C46     		mov	r4, sp
+  75 003a 06F11005 		add	r5, r6, #16
+  76 003e 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+  77 0040 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+  78 0042 95E80700 		ldm	r5, {r0, r1, r2}
+  79 0046 84E80700 		stm	r4, {r0, r1, r2}
+  80 004a 96E80F00 		ldm	r6, {r0, r1, r2, r3}
+  81 004e FFF7FEFF 		bl	platform_initialize_I2C
+  82              	.LVL3:
+  23:../../shields/SPG30/src/SPG30.c **** 
+  24:../../shields/SPG30/src/SPG30.c ****     hi2cLib = SPG30_Header.i2cHandle;       //we don't know what this does but included for the mom
+  83              		.loc 1 24 5 view .LVU9
+  84              		.loc 1 24 27 is_stmt 0 view .LVU10
+  85 0052 B268     		ldr	r2, [r6, #8]
+  86              		.loc 1 24 13 view .LVU11
+  87 0054 074B     		ldr	r3, .L6+12
+  88 0056 1A60     		str	r2, [r3]
+  25:../../shields/SPG30/src/SPG30.c **** 
+  26:../../shields/SPG30/src/SPG30.c ****     return 1;
+  89              		.loc 1 26 5 is_stmt 1 view .LVU12
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccd94UWL.s 			page 3
+
+
+  90              		.loc 1 26 12 is_stmt 0 view .LVU13
+  91 0058 0124     		movs	r4, #1
+  92              	.L3:
+  27:../../shields/SPG30/src/SPG30.c **** 
+  28:../../shields/SPG30/src/SPG30.c **** }
+  93              		.loc 1 28 1 view .LVU14
+  94 005a 2046     		mov	r0, r4
+  95 005c 14B0     		add	sp, sp, #80
+  96              	.LCFI2:
+  97              		.cfi_remember_state
+  98              		.cfi_def_cfa_offset 16
+  99              		@ sp needed
+ 100 005e 70BD     		pop	{r4, r5, r6, pc}
+ 101              	.L5:
+ 102              	.LCFI3:
+ 103              		.cfi_restore_state
+  15:../../shields/SPG30/src/SPG30.c ****             return 0; 
+ 104              		.loc 1 15 13 is_stmt 1 view .LVU15
+ 105 0060 0548     		ldr	r0, .L6+16
+ 106 0062 FFF7FEFF 		bl	puts
+ 107              	.LVL4:
+  16:../../shields/SPG30/src/SPG30.c ****         }
+ 108              		.loc 1 16 13 view .LVU16
+  16:../../shields/SPG30/src/SPG30.c ****         }
+ 109              		.loc 1 16 20 is_stmt 0 view .LVU17
+ 110 0066 F8E7     		b	.L3
+ 111              	.L7:
+ 112              		.align	2
+ 113              	.L6:
+ 114 0068 00000000 		.word	.LC0
+ 115 006c 00000000 		.word	SPG30_Header
+ 116 0070 58000000 		.word	.LC2
+ 117 0074 00000000 		.word	hi2cLib
+ 118 0078 28000000 		.word	.LC1
+ 119              		.cfi_endproc
+ 120              	.LFE128:
+ 122              		.section	.text.WRITE_REGISTER_SPG30,"ax",%progbits
+ 123              		.align	1
+ 124              		.global	WRITE_REGISTER_SPG30
+ 125              		.syntax unified
+ 126              		.thumb
+ 127              		.thumb_func
+ 128              		.fpu fpv4-sp-d16
+ 130              	WRITE_REGISTER_SPG30:
+ 131              	.LVL5:
+ 132              	.LFB129:
+  29:../../shields/SPG30/src/SPG30.c **** 
+  30:../../shields/SPG30/src/SPG30.c **** 
+  31:../../shields/SPG30/src/SPG30.c **** uint8_t WRITE_REGISTER_SPG30(uint8_t pData[],uint8_t length)
+  32:../../shields/SPG30/src/SPG30.c **** {
+ 133              		.loc 1 32 1 is_stmt 1 view -0
+ 134              		.cfi_startproc
+ 135              		@ args = 0, pretend = 0, frame = 0
+ 136              		@ frame_needed = 0, uses_anonymous_args = 0
+ 137              		.loc 1 32 1 is_stmt 0 view .LVU19
+ 138 0000 00B5     		push	{lr}
+ 139              	.LCFI4:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccd94UWL.s 			page 4
+
+
+ 140              		.cfi_def_cfa_offset 4
+ 141              		.cfi_offset 14, -4
+ 142 0002 83B0     		sub	sp, sp, #12
+ 143              	.LCFI5:
+ 144              		.cfi_def_cfa_offset 16
+  33:../../shields/SPG30/src/SPG30.c ****     uint8_t status=HAL_I2C_Master_Transmit(hi2cLib, SPG30_ADDR<<1, pData,length, HAL_MAX_DELAY);
+ 145              		.loc 1 33 5 is_stmt 1 view .LVU20
+ 146              		.loc 1 33 20 is_stmt 0 view .LVU21
+ 147 0004 4FF0FF33 		mov	r3, #-1
+ 148 0008 0093     		str	r3, [sp]
+ 149 000a 0B46     		mov	r3, r1
+ 150 000c 0246     		mov	r2, r0
+ 151 000e B021     		movs	r1, #176
+ 152              	.LVL6:
+ 153              		.loc 1 33 20 view .LVU22
+ 154 0010 0348     		ldr	r0, .L10
+ 155              	.LVL7:
+ 156              		.loc 1 33 20 view .LVU23
+ 157 0012 0068     		ldr	r0, [r0]
+ 158 0014 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 159              	.LVL8:
+  34:../../shields/SPG30/src/SPG30.c ****     return status;
+ 160              		.loc 1 34 5 is_stmt 1 view .LVU24
+  35:../../shields/SPG30/src/SPG30.c **** }
+ 161              		.loc 1 35 1 is_stmt 0 view .LVU25
+ 162 0018 03B0     		add	sp, sp, #12
+ 163              	.LCFI6:
+ 164              		.cfi_def_cfa_offset 4
+ 165              		@ sp needed
+ 166 001a 5DF804FB 		ldr	pc, [sp], #4
+ 167              	.L11:
+ 168 001e 00BF     		.align	2
+ 169              	.L10:
+ 170 0020 00000000 		.word	hi2cLib
+ 171              		.cfi_endproc
+ 172              	.LFE129:
+ 174              		.section	.text.READ_REGISTER_SPG30,"ax",%progbits
+ 175              		.align	1
+ 176              		.global	READ_REGISTER_SPG30
+ 177              		.syntax unified
+ 178              		.thumb
+ 179              		.thumb_func
+ 180              		.fpu fpv4-sp-d16
+ 182              	READ_REGISTER_SPG30:
+ 183              	.LVL9:
+ 184              	.LFB130:
+  36:../../shields/SPG30/src/SPG30.c **** 
+  37:../../shields/SPG30/src/SPG30.c **** uint8_t READ_REGISTER_SPG30(uint8_t buf[],uint16_t reg,uint8_t length)
+  38:../../shields/SPG30/src/SPG30.c **** {
+ 185              		.loc 1 38 1 is_stmt 1 view -0
+ 186              		.cfi_startproc
+ 187              		@ args = 0, pretend = 0, frame = 0
+ 188              		@ frame_needed = 0, uses_anonymous_args = 0
+ 189              		.loc 1 38 1 is_stmt 0 view .LVU27
+ 190 0000 00B5     		push	{lr}
+ 191              	.LCFI7:
+ 192              		.cfi_def_cfa_offset 4
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccd94UWL.s 			page 5
+
+
+ 193              		.cfi_offset 14, -4
+ 194 0002 85B0     		sub	sp, sp, #20
+ 195              	.LCFI8:
+ 196              		.cfi_def_cfa_offset 24
+  39:../../shields/SPG30/src/SPG30.c ****     uint8_t status = HAL_I2C_Mem_Read(hi2cLib, SPG30_ADDR<<1, reg, I2C_MEMADD_SIZE_16BIT, buf, leng
+ 197              		.loc 1 39 5 is_stmt 1 view .LVU28
+ 198              		.loc 1 39 22 is_stmt 0 view .LVU29
+ 199 0004 4FF0FF33 		mov	r3, #-1
+ 200 0008 0293     		str	r3, [sp, #8]
+ 201 000a 0192     		str	r2, [sp, #4]
+ 202 000c 0090     		str	r0, [sp]
+ 203 000e 0223     		movs	r3, #2
+ 204 0010 0A46     		mov	r2, r1
+ 205              	.LVL10:
+ 206              		.loc 1 39 22 view .LVU30
+ 207 0012 B021     		movs	r1, #176
+ 208              	.LVL11:
+ 209              		.loc 1 39 22 view .LVU31
+ 210 0014 0348     		ldr	r0, .L14
+ 211              	.LVL12:
+ 212              		.loc 1 39 22 view .LVU32
+ 213 0016 0068     		ldr	r0, [r0]
+ 214 0018 FFF7FEFF 		bl	HAL_I2C_Mem_Read
+ 215              	.LVL13:
+  40:../../shields/SPG30/src/SPG30.c ****     return status;
+ 216              		.loc 1 40 5 is_stmt 1 view .LVU33
+  41:../../shields/SPG30/src/SPG30.c **** }
+ 217              		.loc 1 41 1 is_stmt 0 view .LVU34
+ 218 001c 05B0     		add	sp, sp, #20
+ 219              	.LCFI9:
+ 220              		.cfi_def_cfa_offset 4
+ 221              		@ sp needed
+ 222 001e 5DF804FB 		ldr	pc, [sp], #4
+ 223              	.L15:
+ 224 0022 00BF     		.align	2
+ 225              	.L14:
+ 226 0024 00000000 		.word	hi2cLib
+ 227              		.cfi_endproc
+ 228              	.LFE130:
+ 230              		.comm	hi2cLib,4,4
+ 231              		.comm	SPG30_Header,44,4
+ 232              		.comm	P3_header,44,4
+ 233              		.comm	P2_header,44,4
+ 234              		.comm	P1_header,44,4
+ 235              		.comm	FLASH_SPI,100,4
+ 236              		.comm	P3_SPI,100,4
+ 237              		.comm	P2_SPI,100,4
+ 238              		.comm	P1_SPI,100,4
+ 239              		.comm	P3_I2C,76,4
+ 240              		.comm	P2_I2C,76,4
+ 241              		.comm	P1_I2C,76,4
+ 242              		.comm	common_I2C,76,4
+ 243              		.comm	P3_UART,120,4
+ 244              		.comm	P2_UART,120,4
+ 245              		.comm	P1_UART,120,4
+ 246              		.comm	BLE_UART,120,4
+ 247              		.comm	USB_UART,120,4
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccd94UWL.s 			page 6
+
+
+ 248              		.comm	hiwdg,16,4
+ 249              		.comm	P3_DIO6,8,4
+ 250              		.comm	P3_DIO5,8,4
+ 251              		.comm	P3_DIO4,8,4
+ 252              		.comm	P3_DIO3,8,4
+ 253              		.comm	P3_DIO2,8,4
+ 254              		.comm	P3_DIO1,8,4
+ 255              		.comm	P2_DIO6,8,4
+ 256              		.comm	P2_DIO5,8,4
+ 257              		.comm	P2_DIO4,8,4
+ 258              		.comm	P2_DIO3,8,4
+ 259              		.comm	P2_DIO2,8,4
+ 260              		.comm	P2_DIO1,8,4
+ 261              		.comm	P1_DIO6,8,4
+ 262              		.comm	P1_DIO5,8,4
+ 263              		.comm	P1_DIO4,8,4
+ 264              		.comm	P1_DIO3,8,4
+ 265              		.comm	P1_DIO2,8,4
+ 266              		.comm	P1_DIO1,8,4
+ 267              		.section	.rodata.SPG30_Initialize.str1.4,"aMS",%progbits,1
+ 268              		.align	2
+ 269              	.LC0:
+ 270 0000 2A2A2A2A 		.ascii	"****_____Initalize SPG30 now!!____****\015\000"
+ 270      5F5F5F5F 
+ 270      5F496E69 
+ 270      74616C69 
+ 270      7A652053 
+ 271              	.LC1:
+ 272 0028 496E7661 		.ascii	"Invalid SPG30_CONNECTOR provided in Makefile\015\000"
+ 272      6C696420 
+ 272      53504733 
+ 272      305F434F 
+ 272      4E4E4543 
+ 273 0056 0000     		.space	2
+ 274              	.LC2:
+ 275 0058 53504733 		.ascii	"SPG30 sensor on P%d, initializing I2C\015\012\000"
+ 275      30207365 
+ 275      6E736F72 
+ 275      206F6E20 
+ 275      5025642C 
+ 276              		.text
+ 277              	.Letext0:
+ 278              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 279              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 280              		.file 4 "../../core/ST/CMSIS/Include/core_cm4.h"
+ 281              		.file 5 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/system_stm32l4xx.h"
+ 282              		.file 6 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/stm32l496xx.h"
+ 283              		.file 7 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h"
+ 284              		.file 8 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dma.h"
+ 285              		.file 9 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_i2c.h"
+ 286              		.file 10 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_iwdg.h"
+ 287              		.file 11 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h"
+ 288              		.file 12 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h"
+ 289              		.file 13 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h"
+ 290              		.file 14 "../../core/platform/octa/inc/gpio.h"
+ 291              		.file 15 "../../core/platform/octa/inc/iwdg.h"
+ 292              		.file 16 "../../core/platform/octa/inc/uart.h"
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccd94UWL.s 			page 7
+
+
+ 293              		.file 17 "../../core/platform/octa/inc/i2c.h"
+ 294              		.file 18 "../../core/platform/octa/inc/spi.h"
+ 295              		.file 19 "../../core/platform/octa/inc/octa.h"
+ 296              		.file 20 "<built-in>"
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccd94UWL.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 SPG30.c
+C:\Users\yvesk\AppData\Local\Temp\ccd94UWL.s:18     .text.SPG30_Initialize:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccd94UWL.s:26     .text.SPG30_Initialize:00000000 SPG30_Initialize
+C:\Users\yvesk\AppData\Local\Temp\ccd94UWL.s:114    .text.SPG30_Initialize:00000068 $d
+                            *COM*:0000002c SPG30_Header
+                            *COM*:00000004 hi2cLib
+C:\Users\yvesk\AppData\Local\Temp\ccd94UWL.s:123    .text.WRITE_REGISTER_SPG30:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccd94UWL.s:130    .text.WRITE_REGISTER_SPG30:00000000 WRITE_REGISTER_SPG30
+C:\Users\yvesk\AppData\Local\Temp\ccd94UWL.s:170    .text.WRITE_REGISTER_SPG30:00000020 $d
+C:\Users\yvesk\AppData\Local\Temp\ccd94UWL.s:175    .text.READ_REGISTER_SPG30:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccd94UWL.s:182    .text.READ_REGISTER_SPG30:00000000 READ_REGISTER_SPG30
+C:\Users\yvesk\AppData\Local\Temp\ccd94UWL.s:226    .text.READ_REGISTER_SPG30:00000024 $d
+                            *COM*:0000002c P3_header
+                            *COM*:0000002c P2_header
+                            *COM*:0000002c P1_header
+                            *COM*:00000064 FLASH_SPI
+                            *COM*:00000064 P3_SPI
+                            *COM*:00000064 P2_SPI
+                            *COM*:00000064 P1_SPI
+                            *COM*:0000004c P3_I2C
+                            *COM*:0000004c P2_I2C
+                            *COM*:0000004c P1_I2C
+                            *COM*:0000004c common_I2C
+                            *COM*:00000078 P3_UART
+                            *COM*:00000078 P2_UART
+                            *COM*:00000078 P1_UART
+                            *COM*:00000078 BLE_UART
+                            *COM*:00000078 USB_UART
+                            *COM*:00000010 hiwdg
+                            *COM*:00000008 P3_DIO6
+                            *COM*:00000008 P3_DIO5
+                            *COM*:00000008 P3_DIO4
+                            *COM*:00000008 P3_DIO3
+                            *COM*:00000008 P3_DIO2
+                            *COM*:00000008 P3_DIO1
+                            *COM*:00000008 P2_DIO6
+                            *COM*:00000008 P2_DIO5
+                            *COM*:00000008 P2_DIO4
+                            *COM*:00000008 P2_DIO3
+                            *COM*:00000008 P2_DIO2
+                            *COM*:00000008 P2_DIO1
+                            *COM*:00000008 P1_DIO6
+                            *COM*:00000008 P1_DIO5
+                            *COM*:00000008 P1_DIO4
+                            *COM*:00000008 P1_DIO3
+                            *COM*:00000008 P1_DIO2
+                            *COM*:00000008 P1_DIO1
+C:\Users\yvesk\AppData\Local\Temp\ccd94UWL.s:268    .rodata.SPG30_Initialize.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+puts
+platform_getHeader
+printf
+platform_initialize_I2C
+HAL_I2C_Master_Transmit
+HAL_I2C_Mem_Read
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccd94UWL.s 			page 9
+
+

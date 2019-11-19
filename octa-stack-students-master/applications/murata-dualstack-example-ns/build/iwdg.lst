@@ -1,0 +1,349 @@
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\cc69CfTA.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"iwdg.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.OCTA_IWDG_Init,"ax",%progbits
+  18              		.align	1
+  19              		.global	OCTA_IWDG_Init
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	OCTA_IWDG_Init:
+  27              	.LFB123:
+  28              		.file 1 "../../core/platform/octa/src/iwdg.c"
+   1:../../core/platform/octa/src/iwdg.c **** #include "iwdg.h"
+   2:../../core/platform/octa/src/iwdg.c **** 
+   3:../../core/platform/octa/src/iwdg.c **** /**
+   4:../../core/platform/octa/src/iwdg.c ****   * @brief IWDG Initialization Function
+   5:../../core/platform/octa/src/iwdg.c ****   * @param None
+   6:../../core/platform/octa/src/iwdg.c ****   * @retval None
+   7:../../core/platform/octa/src/iwdg.c ****   */
+   8:../../core/platform/octa/src/iwdg.c **** void OCTA_IWDG_Init(void)
+   9:../../core/platform/octa/src/iwdg.c **** {
+  29              		.loc 1 9 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 40
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 00B5     		push	{lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 4
+  36              		.cfi_offset 14, -4
+  37 0002 8BB0     		sub	sp, sp, #44
+  38              	.LCFI1:
+  39              		.cfi_def_cfa_offset 48
+  10:../../core/platform/octa/src/iwdg.c **** 
+  11:../../core/platform/octa/src/iwdg.c ****   /* USER CODE BEGIN IWDG_Init 0 */
+  12:../../core/platform/octa/src/iwdg.c **** 
+  13:../../core/platform/octa/src/iwdg.c ****   /* USER CODE END IWDG_Init 0 */
+  14:../../core/platform/octa/src/iwdg.c **** 
+  15:../../core/platform/octa/src/iwdg.c ****   /* USER CODE BEGIN IWDG_Init 1 */
+  16:../../core/platform/octa/src/iwdg.c **** /*    FLASH_OBProgramInitTypeDef pOBInit;
+  17:../../core/platform/octa/src/iwdg.c ****   HAL_FLASHEx_OBGetConfig(&pOBInit); // Get the Option bytes configuration.
+  18:../../core/platform/octa/src/iwdg.c ****   if((pOBInit.OptionType==OPTIONBYTE_USER) && (pOBInit.USERType == OB_USER_IWDG_STOP) && (pOBInit.U
+  19:../../core/platform/octa/src/iwdg.c ****     //printf("Watchdog already disabled\r\n"); 
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\cc69CfTA.s 			page 2
+
+
+  20:../../core/platform/octa/src/iwdg.c ****   }
+  21:../../core/platform/octa/src/iwdg.c ****   else{
+  22:../../core/platform/octa/src/iwdg.c ****     HAL_FLASH_Unlock();
+  23:../../core/platform/octa/src/iwdg.c ****     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_OPTVERR); // Clear the FLASH's pending flags.
+  24:../../core/platform/octa/src/iwdg.c ****     HAL_FLASH_OB_Unlock();
+  25:../../core/platform/octa/src/iwdg.c ****    // HAL_FLASHEx_OBGetConfig(&pOBInit); // Get the Option bytes configuration.
+  26:../../core/platform/octa/src/iwdg.c ****     //printf("Watchdog disabled\r\n");
+  27:../../core/platform/octa/src/iwdg.c ****     pOBInit.OptionType = OPTIONBYTE_USER;
+  28:../../core/platform/octa/src/iwdg.c ****     pOBInit.USERType = OB_USER_IWDG_STOP;
+  29:../../core/platform/octa/src/iwdg.c ****     pOBInit.USERConfig = OB_IWDG_STOP_FREEZE;
+  30:../../core/platform/octa/src/iwdg.c ****     HAL_FLASHEx_OBProgram(&pOBInit);
+  31:../../core/platform/octa/src/iwdg.c ****     HAL_FLASH_OB_Lock();
+  32:../../core/platform/octa/src/iwdg.c ****     HAL_FLASH_Lock();
+  33:../../core/platform/octa/src/iwdg.c ****     HAL_FLASH_OB_Launch(); //Relaunch 
+  34:../../core/platform/octa/src/iwdg.c ****   } 
+  35:../../core/platform/octa/src/iwdg.c ****  */
+  36:../../core/platform/octa/src/iwdg.c **** 
+  37:../../core/platform/octa/src/iwdg.c ****   /*
+  38:../../core/platform/octa/src/iwdg.c ****     check if bit 17 of USERConfig byte is set (IWDG_STOP = 1), if yes, set to 0
+  39:../../core/platform/octa/src/iwdg.c ****       Bit 17 IWDG_STOP: Independent watchdog counter freeze in Stop mode
+  40:../../core/platform/octa/src/iwdg.c ****           0: Independent watchdog counter is frozen in Stop mode
+  41:../../core/platform/octa/src/iwdg.c ****           1: Independent watchdog counter is running in Stop mode
+  42:../../core/platform/octa/src/iwdg.c ****   */
+  43:../../core/platform/octa/src/iwdg.c ****   FLASH_OBProgramInitTypeDef OBInitStruct;
+  40              		.loc 1 43 3 view .LVU1
+  44:../../core/platform/octa/src/iwdg.c ****   HAL_FLASHEx_OBGetConfig(&OBInitStruct);
+  41              		.loc 1 44 3 view .LVU2
+  42 0004 6846     		mov	r0, sp
+  43 0006 FFF7FEFF 		bl	HAL_FLASHEx_OBGetConfig
+  44              	.LVL0:
+  45:../../core/platform/octa/src/iwdg.c ****   
+  46:../../core/platform/octa/src/iwdg.c ****   if(OBInitStruct.USERConfig & (1 << 17)) //We checken maar 1 bit :) 
+  45              		.loc 1 46 3 view .LVU3
+  46              		.loc 1 46 5 is_stmt 0 view .LVU4
+  47 000a 069B     		ldr	r3, [sp, #24]
+  48 000c 13F4003F 		tst	r3, #131072
+  49 0010 0ED1     		bne	.L5
+  50              	.L2:
+  47:../../core/platform/octa/src/iwdg.c ****   {
+  48:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.OptionType = OPTIONBYTE_USER;
+  49:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.WRPArea = OB_WRPAREA_BANK1_AREAA;
+  50:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.WRPStartOffset = 0;
+  51:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.WRPEndOffset = 0;
+  52:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.RDPLevel = OB_RDP_LEVEL_0;
+  53:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.USERType = OB_USER_IWDG_STOP;
+  54:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.USERConfig = OB_IWDG_STOP_FREEZE;
+  55:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.PCROPConfig = OB_PCROP_RDP_NOT_ERASE;
+  56:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.PCROPStartAddr = 0;
+  57:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.PCROPEndAddr = 0;
+  58:../../core/platform/octa/src/iwdg.c ****       /* USER CODE BEGIN IWDG_Init 0 */
+  59:../../core/platform/octa/src/iwdg.c ****       HAL_FLASH_Unlock();
+  60:../../core/platform/octa/src/iwdg.c ****       HAL_FLASH_OB_Unlock();
+  61:../../core/platform/octa/src/iwdg.c ****       HAL_FLASHEx_OBProgram(&OBInitStruct);
+  62:../../core/platform/octa/src/iwdg.c ****       HAL_FLASH_OB_Lock();
+  63:../../core/platform/octa/src/iwdg.c ****       HAL_FLASH_Lock();
+  64:../../core/platform/octa/src/iwdg.c ****       HAL_FLASH_OB_Launch();
+  65:../../core/platform/octa/src/iwdg.c ****   }
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\cc69CfTA.s 			page 3
+
+
+  66:../../core/platform/octa/src/iwdg.c ****   //Code to freeze the watchdog when going in stop mode. 
+  67:../../core/platform/octa/src/iwdg.c **** 
+  68:../../core/platform/octa/src/iwdg.c ****   /* USER CODE END IWDG_Init 1 */
+  69:../../core/platform/octa/src/iwdg.c ****   hiwdg.Instance = IWDG;
+  51              		.loc 1 69 3 is_stmt 1 view .LVU5
+  52              		.loc 1 69 18 is_stmt 0 view .LVU6
+  53 0012 1748     		ldr	r0, .L7
+  54 0014 174B     		ldr	r3, .L7+4
+  55 0016 0360     		str	r3, [r0]
+  70:../../core/platform/octa/src/iwdg.c ****   hiwdg.Init.Prescaler = IWDG_PRESCALER_256;
+  56              		.loc 1 70 3 is_stmt 1 view .LVU7
+  57              		.loc 1 70 24 is_stmt 0 view .LVU8
+  58 0018 0623     		movs	r3, #6
+  59 001a 4360     		str	r3, [r0, #4]
+  71:../../core/platform/octa/src/iwdg.c ****   hiwdg.Init.Window = 4095;
+  60              		.loc 1 71 3 is_stmt 1 view .LVU9
+  61              		.loc 1 71 21 is_stmt 0 view .LVU10
+  62 001c 40F6FF73 		movw	r3, #4095
+  63 0020 C360     		str	r3, [r0, #12]
+  72:../../core/platform/octa/src/iwdg.c ****   hiwdg.Init.Reload = 4095; 
+  64              		.loc 1 72 3 is_stmt 1 view .LVU11
+  65              		.loc 1 72 21 is_stmt 0 view .LVU12
+  66 0022 8360     		str	r3, [r0, #8]
+  73:../../core/platform/octa/src/iwdg.c ****   if (HAL_IWDG_Init(&hiwdg) != HAL_OK)
+  67              		.loc 1 73 3 is_stmt 1 view .LVU13
+  68              		.loc 1 73 7 is_stmt 0 view .LVU14
+  69 0024 FFF7FEFF 		bl	HAL_IWDG_Init
+  70              	.LVL1:
+  71              		.loc 1 73 6 view .LVU15
+  72 0028 F0B9     		cbnz	r0, .L6
+  73              	.L1:
+  74:../../core/platform/octa/src/iwdg.c ****   {
+  75:../../core/platform/octa/src/iwdg.c ****     Error_Handler();
+  76:../../core/platform/octa/src/iwdg.c ****   }
+  77:../../core/platform/octa/src/iwdg.c **** 
+  78:../../core/platform/octa/src/iwdg.c **** 
+  79:../../core/platform/octa/src/iwdg.c ****   /* USER CODE BEGIN IWDG_Init 2 */
+  80:../../core/platform/octa/src/iwdg.c **** 
+  81:../../core/platform/octa/src/iwdg.c ****   //ENABLE FREEZE IN STOP MODE
+  82:../../core/platform/octa/src/iwdg.c ****   /* USER CODE END IWDG_Init 2 */
+  83:../../core/platform/octa/src/iwdg.c **** 
+  84:../../core/platform/octa/src/iwdg.c **** }
+  74              		.loc 1 84 1 view .LVU16
+  75 002a 0BB0     		add	sp, sp, #44
+  76              	.LCFI2:
+  77              		.cfi_remember_state
+  78              		.cfi_def_cfa_offset 4
+  79              		@ sp needed
+  80 002c 5DF804FB 		ldr	pc, [sp], #4
+  81              	.L5:
+  82              	.LCFI3:
+  83              		.cfi_restore_state
+  48:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.WRPArea = OB_WRPAREA_BANK1_AREAA;
+  84              		.loc 1 48 7 is_stmt 1 view .LVU17
+  48:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.WRPArea = OB_WRPAREA_BANK1_AREAA;
+  85              		.loc 1 48 31 is_stmt 0 view .LVU18
+  86 0030 0423     		movs	r3, #4
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\cc69CfTA.s 			page 4
+
+
+  87 0032 0093     		str	r3, [sp]
+  49:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.WRPStartOffset = 0;
+  88              		.loc 1 49 7 is_stmt 1 view .LVU19
+  49:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.WRPStartOffset = 0;
+  89              		.loc 1 49 28 is_stmt 0 view .LVU20
+  90 0034 0023     		movs	r3, #0
+  91 0036 0193     		str	r3, [sp, #4]
+  50:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.WRPEndOffset = 0;
+  92              		.loc 1 50 7 is_stmt 1 view .LVU21
+  50:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.WRPEndOffset = 0;
+  93              		.loc 1 50 35 is_stmt 0 view .LVU22
+  94 0038 0293     		str	r3, [sp, #8]
+  51:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.RDPLevel = OB_RDP_LEVEL_0;
+  95              		.loc 1 51 7 is_stmt 1 view .LVU23
+  51:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.RDPLevel = OB_RDP_LEVEL_0;
+  96              		.loc 1 51 33 is_stmt 0 view .LVU24
+  97 003a 0393     		str	r3, [sp, #12]
+  52:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.USERType = OB_USER_IWDG_STOP;
+  98              		.loc 1 52 7 is_stmt 1 view .LVU25
+  52:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.USERType = OB_USER_IWDG_STOP;
+  99              		.loc 1 52 29 is_stmt 0 view .LVU26
+ 100 003c AA22     		movs	r2, #170
+ 101 003e 0492     		str	r2, [sp, #16]
+  53:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.USERConfig = OB_IWDG_STOP_FREEZE;
+ 102              		.loc 1 53 7 is_stmt 1 view .LVU27
+  53:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.USERConfig = OB_IWDG_STOP_FREEZE;
+ 103              		.loc 1 53 29 is_stmt 0 view .LVU28
+ 104 0040 1022     		movs	r2, #16
+ 105 0042 0592     		str	r2, [sp, #20]
+  54:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.PCROPConfig = OB_PCROP_RDP_NOT_ERASE;
+ 106              		.loc 1 54 7 is_stmt 1 view .LVU29
+  54:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.PCROPConfig = OB_PCROP_RDP_NOT_ERASE;
+ 107              		.loc 1 54 31 is_stmt 0 view .LVU30
+ 108 0044 0693     		str	r3, [sp, #24]
+  55:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.PCROPStartAddr = 0;
+ 109              		.loc 1 55 7 is_stmt 1 view .LVU31
+  55:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.PCROPStartAddr = 0;
+ 110              		.loc 1 55 32 is_stmt 0 view .LVU32
+ 111 0046 0793     		str	r3, [sp, #28]
+  56:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.PCROPEndAddr = 0;
+ 112              		.loc 1 56 7 is_stmt 1 view .LVU33
+  56:../../core/platform/octa/src/iwdg.c ****       OBInitStruct.PCROPEndAddr = 0;
+ 113              		.loc 1 56 35 is_stmt 0 view .LVU34
+ 114 0048 0893     		str	r3, [sp, #32]
+  57:../../core/platform/octa/src/iwdg.c ****       /* USER CODE BEGIN IWDG_Init 0 */
+ 115              		.loc 1 57 7 is_stmt 1 view .LVU35
+  57:../../core/platform/octa/src/iwdg.c ****       /* USER CODE BEGIN IWDG_Init 0 */
+ 116              		.loc 1 57 33 is_stmt 0 view .LVU36
+ 117 004a 0993     		str	r3, [sp, #36]
+  59:../../core/platform/octa/src/iwdg.c ****       HAL_FLASH_OB_Unlock();
+ 118              		.loc 1 59 7 is_stmt 1 view .LVU37
+ 119 004c FFF7FEFF 		bl	HAL_FLASH_Unlock
+ 120              	.LVL2:
+  60:../../core/platform/octa/src/iwdg.c ****       HAL_FLASHEx_OBProgram(&OBInitStruct);
+ 121              		.loc 1 60 7 view .LVU38
+ 122 0050 FFF7FEFF 		bl	HAL_FLASH_OB_Unlock
+ 123              	.LVL3:
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\cc69CfTA.s 			page 5
+
+
+  61:../../core/platform/octa/src/iwdg.c ****       HAL_FLASH_OB_Lock();
+ 124              		.loc 1 61 7 view .LVU39
+ 125 0054 6846     		mov	r0, sp
+ 126 0056 FFF7FEFF 		bl	HAL_FLASHEx_OBProgram
+ 127              	.LVL4:
+  62:../../core/platform/octa/src/iwdg.c ****       HAL_FLASH_Lock();
+ 128              		.loc 1 62 7 view .LVU40
+ 129 005a FFF7FEFF 		bl	HAL_FLASH_OB_Lock
+ 130              	.LVL5:
+  63:../../core/platform/octa/src/iwdg.c ****       HAL_FLASH_OB_Launch();
+ 131              		.loc 1 63 7 view .LVU41
+ 132 005e FFF7FEFF 		bl	HAL_FLASH_Lock
+ 133              	.LVL6:
+  64:../../core/platform/octa/src/iwdg.c ****   }
+ 134              		.loc 1 64 7 view .LVU42
+ 135 0062 FFF7FEFF 		bl	HAL_FLASH_OB_Launch
+ 136              	.LVL7:
+ 137 0066 D4E7     		b	.L2
+ 138              	.L6:
+ 139              	.LBB2:
+  75:../../core/platform/octa/src/iwdg.c ****   }
+ 140              		.loc 1 75 5 view .LVU43
+ 141 0068 FFF7FEFF 		bl	Error_Handler
+ 142              	.LVL8:
+ 143              	.LBE2:
+ 144              		.loc 1 84 1 is_stmt 0 view .LVU44
+ 145 006c DDE7     		b	.L1
+ 146              	.L8:
+ 147 006e 00BF     		.align	2
+ 148              	.L7:
+ 149 0070 00000000 		.word	hiwdg
+ 150 0074 00300040 		.word	1073754112
+ 151              		.cfi_endproc
+ 152              	.LFE123:
+ 154              		.section	.text.IWDG_feed,"ax",%progbits
+ 155              		.align	1
+ 156              		.global	IWDG_feed
+ 157              		.syntax unified
+ 158              		.thumb
+ 159              		.thumb_func
+ 160              		.fpu fpv4-sp-d16
+ 162              	IWDG_feed:
+ 163              	.LVL9:
+ 164              	.LFB124:
+  85:../../core/platform/octa/src/iwdg.c **** 
+  86:../../core/platform/octa/src/iwdg.c **** void IWDG_feed(void const *argument)
+  87:../../core/platform/octa/src/iwdg.c **** {
+ 165              		.loc 1 87 1 is_stmt 1 view -0
+ 166              		.cfi_startproc
+ 167              		@ args = 0, pretend = 0, frame = 0
+ 168              		@ frame_needed = 0, uses_anonymous_args = 0
+ 169              		@ link register save eliminated.
+  88:../../core/platform/octa/src/iwdg.c ****   WRITE_REG(IWDG->KR, IWDG_KEY_RELOAD);
+ 170              		.loc 1 88 3 view .LVU46
+ 171 0000 024B     		ldr	r3, .L10
+ 172 0002 4AF6AA22 		movw	r2, #43690
+ 173 0006 1A60     		str	r2, [r3]
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\cc69CfTA.s 			page 6
+
+
+  89:../../core/platform/octa/src/iwdg.c **** }...
+ 174              		.loc 1 89 1 is_stmt 0 view .LVU47
+ 175 0008 7047     		bx	lr
+ 176              	.L11:
+ 177 000a 00BF     		.align	2
+ 178              	.L10:
+ 179 000c 00300040 		.word	1073754112
+ 180              		.cfi_endproc
+ 181              	.LFE124:
+ 183              		.comm	hiwdg,16,4
+ 184              		.text
+ 185              	.Letext0:
+ 186              		.file 2 "d:\\softwareunif\\toolchainkit\\8 2019-q3-update\\arm-none-eabi\\include\\machine\\_defau
+ 187              		.file 3 "d:\\softwareunif\\toolchainkit\\8 2019-q3-update\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 188              		.file 4 "../../core/ST/CMSIS/Include/core_cm4.h"
+ 189              		.file 5 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/system_stm32l4xx.h"
+ 190              		.file 6 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/stm32l496xx.h"
+ 191              		.file 7 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_flash.h"
+ 192              		.file 8 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_iwdg.h"
+ 193              		.file 9 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h"
+ 194              		.file 10 "../../core/platform/octa/inc/iwdg.h"
+ 195              		.file 11 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_flash_ex.h"
+ 196              		.file 12 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h"
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\cc69CfTA.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 iwdg.c
+C:\Users\WILKOM~1\AppData\Local\Temp\cc69CfTA.s:18     .text.OCTA_IWDG_Init:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\cc69CfTA.s:26     .text.OCTA_IWDG_Init:00000000 OCTA_IWDG_Init
+C:\Users\WILKOM~1\AppData\Local\Temp\cc69CfTA.s:149    .text.OCTA_IWDG_Init:00000070 $d
+                            *COM*:00000010 hiwdg
+C:\Users\WILKOM~1\AppData\Local\Temp\cc69CfTA.s:155    .text.IWDG_feed:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\cc69CfTA.s:162    .text.IWDG_feed:00000000 IWDG_feed
+C:\Users\WILKOM~1\AppData\Local\Temp\cc69CfTA.s:179    .text.IWDG_feed:0000000c $d
+
+UNDEFINED SYMBOLS
+HAL_FLASHEx_OBGetConfig
+HAL_IWDG_Init
+HAL_FLASH_Unlock
+HAL_FLASH_OB_Unlock
+HAL_FLASHEx_OBProgram
+HAL_FLASH_OB_Lock
+HAL_FLASH_Lock
+HAL_FLASH_OB_Launch
+Error_Handler

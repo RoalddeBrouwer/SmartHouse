@@ -1,0 +1,954 @@
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"uart.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.USB_UART_Init,"ax",%progbits
+  18              		.align	1
+  19              		.global	USB_UART_Init
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	USB_UART_Init:
+  27              	.LVL0:
+  28              	.LFB123:
+  29              		.file 1 "../../core/platform/octa/src/uart.c"
+   1:../../core/platform/octa/src/uart.c **** #include "uart.h"
+   2:../../core/platform/octa/src/uart.c **** 
+   3:../../core/platform/octa/src/uart.c **** /**
+   4:../../core/platform/octa/src/uart.c ****   * @brief LPUART1 Initialization Function
+   5:../../core/platform/octa/src/uart.c ****   * @param None
+   6:../../core/platform/octa/src/uart.c ****   * @retval None
+   7:../../core/platform/octa/src/uart.c ****   */
+   8:../../core/platform/octa/src/uart.c **** void USB_UART_Init(uint32_t aBaudRate)
+   9:../../core/platform/octa/src/uart.c **** {
+  30              		.loc 1 9 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 9 1 is_stmt 0 view .LVU1
+  35 0000 08B5     		push	{r3, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 8
+  38              		.cfi_offset 3, -8
+  39              		.cfi_offset 14, -4
+  10:../../core/platform/octa/src/uart.c **** 
+  11:../../core/platform/octa/src/uart.c ****   /* USER CODE BEGIN LPUART1_Init 0 */
+  12:../../core/platform/octa/src/uart.c **** 
+  13:../../core/platform/octa/src/uart.c ****   /* USER CODE END LPUART1_Init 0 */
+  14:../../core/platform/octa/src/uart.c **** 
+  15:../../core/platform/octa/src/uart.c ****   /* USER CODE BEGIN LPUART1_Init 1 */
+  16:../../core/platform/octa/src/uart.c **** 
+  17:../../core/platform/octa/src/uart.c ****   /* USER CODE END LPUART1_Init 1 */
+  18:../../core/platform/octa/src/uart.c ****   USB_UART.Instance = LPUART1;
+  40              		.loc 1 18 3 is_stmt 1 view .LVU2
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s 			page 2
+
+
+  41              		.loc 1 18 21 is_stmt 0 view .LVU3
+  42 0002 0A4B     		ldr	r3, .L5
+  43 0004 0A4A     		ldr	r2, .L5+4
+  44 0006 1A60     		str	r2, [r3]
+  19:../../core/platform/octa/src/uart.c ****   USB_UART.Init.BaudRate = aBaudRate;
+  45              		.loc 1 19 3 is_stmt 1 view .LVU4
+  46              		.loc 1 19 26 is_stmt 0 view .LVU5
+  47 0008 5860     		str	r0, [r3, #4]
+  20:../../core/platform/octa/src/uart.c ****   USB_UART.Init.WordLength = UART_WORDLENGTH_8B;
+  48              		.loc 1 20 3 is_stmt 1 view .LVU6
+  49              		.loc 1 20 28 is_stmt 0 view .LVU7
+  50 000a 0022     		movs	r2, #0
+  51 000c 9A60     		str	r2, [r3, #8]
+  21:../../core/platform/octa/src/uart.c ****   USB_UART.Init.StopBits = UART_STOPBITS_1;
+  52              		.loc 1 21 3 is_stmt 1 view .LVU8
+  53              		.loc 1 21 26 is_stmt 0 view .LVU9
+  54 000e DA60     		str	r2, [r3, #12]
+  22:../../core/platform/octa/src/uart.c ****   USB_UART.Init.Parity = UART_PARITY_NONE;
+  55              		.loc 1 22 3 is_stmt 1 view .LVU10
+  56              		.loc 1 22 24 is_stmt 0 view .LVU11
+  57 0010 1A61     		str	r2, [r3, #16]
+  23:../../core/platform/octa/src/uart.c ****   USB_UART.Init.Mode = UART_MODE_TX_RX;
+  58              		.loc 1 23 3 is_stmt 1 view .LVU12
+  59              		.loc 1 23 22 is_stmt 0 view .LVU13
+  60 0012 0C21     		movs	r1, #12
+  61 0014 5961     		str	r1, [r3, #20]
+  24:../../core/platform/octa/src/uart.c ****   USB_UART.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  62              		.loc 1 24 3 is_stmt 1 view .LVU14
+  63              		.loc 1 24 27 is_stmt 0 view .LVU15
+  64 0016 9A61     		str	r2, [r3, #24]
+  25:../../core/platform/octa/src/uart.c ****   USB_UART.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  65              		.loc 1 25 3 is_stmt 1 view .LVU16
+  66              		.loc 1 25 32 is_stmt 0 view .LVU17
+  67 0018 1A62     		str	r2, [r3, #32]
+  26:../../core/platform/octa/src/uart.c ****   USB_UART.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  68              		.loc 1 26 3 is_stmt 1 view .LVU18
+  69              		.loc 1 26 40 is_stmt 0 view .LVU19
+  70 001a 5A62     		str	r2, [r3, #36]
+  27:../../core/platform/octa/src/uart.c ****   if (HAL_UART_Init(&USB_UART) != HAL_OK)
+  71              		.loc 1 27 3 is_stmt 1 view .LVU20
+  72              		.loc 1 27 7 is_stmt 0 view .LVU21
+  73 001c 1846     		mov	r0, r3
+  74              	.LVL1:
+  75              		.loc 1 27 7 view .LVU22
+  76 001e FFF7FEFF 		bl	HAL_UART_Init
+  77              	.LVL2:
+  78              		.loc 1 27 6 view .LVU23
+  79 0022 00B9     		cbnz	r0, .L4
+  80              	.L1:
+  28:../../core/platform/octa/src/uart.c ****   {
+  29:../../core/platform/octa/src/uart.c ****     Error_Handler();
+  30:../../core/platform/octa/src/uart.c ****   }
+  31:../../core/platform/octa/src/uart.c ****   /* USER CODE BEGIN LPUART1_Init 2 */
+  32:../../core/platform/octa/src/uart.c **** 
+  33:../../core/platform/octa/src/uart.c ****   /* USER CODE END LPUART1_Init 2 */
+  34:../../core/platform/octa/src/uart.c **** 
+  35:../../core/platform/octa/src/uart.c **** }
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s 			page 3
+
+
+  81              		.loc 1 35 1 view .LVU24
+  82 0024 08BD     		pop	{r3, pc}
+  83              	.L4:
+  84              	.LBB2:
+  29:../../core/platform/octa/src/uart.c ****   }
+  85              		.loc 1 29 5 is_stmt 1 view .LVU25
+  86 0026 FFF7FEFF 		bl	Error_Handler
+  87              	.LVL3:
+  88              	.LBE2:
+  89              		.loc 1 35 1 is_stmt 0 view .LVU26
+  90 002a FBE7     		b	.L1
+  91              	.L6:
+  92              		.align	2
+  93              	.L5:
+  94 002c 00000000 		.word	USB_UART
+  95 0030 00800040 		.word	1073774592
+  96              		.cfi_endproc
+  97              	.LFE123:
+  99              		.section	.text.P1_UART_Init,"ax",%progbits
+ 100              		.align	1
+ 101              		.global	P1_UART_Init
+ 102              		.syntax unified
+ 103              		.thumb
+ 104              		.thumb_func
+ 105              		.fpu fpv4-sp-d16
+ 107              	P1_UART_Init:
+ 108              	.LVL4:
+ 109              	.LFB124:
+  36:../../core/platform/octa/src/uart.c **** 
+  37:../../core/platform/octa/src/uart.c **** /**
+  38:../../core/platform/octa/src/uart.c ****   * @brief UART5 Initialization Function
+  39:../../core/platform/octa/src/uart.c ****   * @param None
+  40:../../core/platform/octa/src/uart.c ****   * @retval None
+  41:../../core/platform/octa/src/uart.c ****   */
+  42:../../core/platform/octa/src/uart.c **** void P1_UART_Init(uint32_t aBaudRate)
+  43:../../core/platform/octa/src/uart.c **** {
+ 110              		.loc 1 43 1 is_stmt 1 view -0
+ 111              		.cfi_startproc
+ 112              		@ args = 0, pretend = 0, frame = 0
+ 113              		@ frame_needed = 0, uses_anonymous_args = 0
+ 114              		.loc 1 43 1 is_stmt 0 view .LVU28
+ 115 0000 08B5     		push	{r3, lr}
+ 116              	.LCFI1:
+ 117              		.cfi_def_cfa_offset 8
+ 118              		.cfi_offset 3, -8
+ 119              		.cfi_offset 14, -4
+  44:../../core/platform/octa/src/uart.c **** 
+  45:../../core/platform/octa/src/uart.c ****   /* USER CODE BEGIN UART5_Init 0 */
+  46:../../core/platform/octa/src/uart.c **** 
+  47:../../core/platform/octa/src/uart.c ****   /* USER CODE END UART5_Init 0 */
+  48:../../core/platform/octa/src/uart.c **** 
+  49:../../core/platform/octa/src/uart.c ****   /* USER CODE BEGIN UART5_Init 1 */
+  50:../../core/platform/octa/src/uart.c **** 
+  51:../../core/platform/octa/src/uart.c ****   /* USER CODE END UART5_Init 1 */
+  52:../../core/platform/octa/src/uart.c ****   P1_UART.Instance = UART5;
+ 120              		.loc 1 52 3 is_stmt 1 view .LVU29
+ 121              		.loc 1 52 20 is_stmt 0 view .LVU30
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s 			page 4
+
+
+ 122 0002 0F4B     		ldr	r3, .L11
+ 123 0004 0F4A     		ldr	r2, .L11+4
+ 124 0006 1A60     		str	r2, [r3]
+  53:../../core/platform/octa/src/uart.c ****   P1_UART.Init.BaudRate = aBaudRate;
+ 125              		.loc 1 53 3 is_stmt 1 view .LVU31
+ 126              		.loc 1 53 25 is_stmt 0 view .LVU32
+ 127 0008 5860     		str	r0, [r3, #4]
+  54:../../core/platform/octa/src/uart.c ****   P1_UART.Init.WordLength = UART_WORDLENGTH_8B;
+ 128              		.loc 1 54 3 is_stmt 1 view .LVU33
+ 129              		.loc 1 54 27 is_stmt 0 view .LVU34
+ 130 000a 0022     		movs	r2, #0
+ 131 000c 9A60     		str	r2, [r3, #8]
+  55:../../core/platform/octa/src/uart.c ****   P1_UART.Init.StopBits = UART_STOPBITS_1;
+ 132              		.loc 1 55 3 is_stmt 1 view .LVU35
+ 133              		.loc 1 55 25 is_stmt 0 view .LVU36
+ 134 000e DA60     		str	r2, [r3, #12]
+  56:../../core/platform/octa/src/uart.c ****   P1_UART.Init.Parity = UART_PARITY_NONE;
+ 135              		.loc 1 56 3 is_stmt 1 view .LVU37
+ 136              		.loc 1 56 23 is_stmt 0 view .LVU38
+ 137 0010 1A61     		str	r2, [r3, #16]
+  57:../../core/platform/octa/src/uart.c ****   P1_UART.Init.Mode = UART_MODE_TX_RX;
+ 138              		.loc 1 57 3 is_stmt 1 view .LVU39
+ 139              		.loc 1 57 21 is_stmt 0 view .LVU40
+ 140 0012 0C21     		movs	r1, #12
+ 141 0014 5961     		str	r1, [r3, #20]
+  58:../../core/platform/octa/src/uart.c ****   P1_UART.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 142              		.loc 1 58 3 is_stmt 1 view .LVU41
+ 143              		.loc 1 58 26 is_stmt 0 view .LVU42
+ 144 0016 9A61     		str	r2, [r3, #24]
+  59:../../core/platform/octa/src/uart.c ****   P1_UART.Init.OverSampling = UART_OVERSAMPLING_16;
+ 145              		.loc 1 59 3 is_stmt 1 view .LVU43
+ 146              		.loc 1 59 29 is_stmt 0 view .LVU44
+ 147 0018 DA61     		str	r2, [r3, #28]
+  60:../../core/platform/octa/src/uart.c ****   P1_UART.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+ 148              		.loc 1 60 3 is_stmt 1 view .LVU45
+ 149              		.loc 1 60 31 is_stmt 0 view .LVU46
+ 150 001a 1A62     		str	r2, [r3, #32]
+  61:../../core/platform/octa/src/uart.c ****   P1_UART.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+ 151              		.loc 1 61 3 is_stmt 1 view .LVU47
+ 152              		.loc 1 61 39 is_stmt 0 view .LVU48
+ 153 001c 5A62     		str	r2, [r3, #36]
+  62:../../core/platform/octa/src/uart.c ****   if (HAL_UART_Init(&P1_UART) != HAL_OK)
+ 154              		.loc 1 62 3 is_stmt 1 view .LVU49
+ 155              		.loc 1 62 7 is_stmt 0 view .LVU50
+ 156 001e 1846     		mov	r0, r3
+ 157              	.LVL5:
+ 158              		.loc 1 62 7 view .LVU51
+ 159 0020 FFF7FEFF 		bl	HAL_UART_Init
+ 160              	.LVL6:
+ 161              		.loc 1 62 6 view .LVU52
+ 162 0024 40B9     		cbnz	r0, .L10
+ 163              	.L8:
+  63:../../core/platform/octa/src/uart.c ****   {
+  64:../../core/platform/octa/src/uart.c ****     Error_Handler();
+  65:../../core/platform/octa/src/uart.c ****   }
+  66:../../core/platform/octa/src/uart.c ****   /* USER CODE BEGIN UART5_Init 2 */
+  67:../../core/platform/octa/src/uart.c ****   HAL_NVIC_SetPriority(UART5_IRQn, 7, 0);
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s 			page 5
+
+
+ 164              		.loc 1 67 3 is_stmt 1 view .LVU53
+ 165 0026 0022     		movs	r2, #0
+ 166 0028 0721     		movs	r1, #7
+ 167 002a 3520     		movs	r0, #53
+ 168 002c FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 169              	.LVL7:
+  68:../../core/platform/octa/src/uart.c ****   HAL_NVIC_EnableIRQ(UART5_IRQn);
+ 170              		.loc 1 68 3 view .LVU54
+ 171 0030 3520     		movs	r0, #53
+ 172 0032 FFF7FEFF 		bl	HAL_NVIC_EnableIRQ
+ 173              	.LVL8:
+  69:../../core/platform/octa/src/uart.c **** 
+  70:../../core/platform/octa/src/uart.c ****   /* USER CODE END UART5_Init 2 */
+  71:../../core/platform/octa/src/uart.c **** 
+  72:../../core/platform/octa/src/uart.c **** }
+ 174              		.loc 1 72 1 is_stmt 0 view .LVU55
+ 175 0036 08BD     		pop	{r3, pc}
+ 176              	.L10:
+ 177              	.LBB3:
+  64:../../core/platform/octa/src/uart.c ****   }
+ 178              		.loc 1 64 5 is_stmt 1 view .LVU56
+ 179 0038 FFF7FEFF 		bl	Error_Handler
+ 180              	.LVL9:
+ 181 003c F3E7     		b	.L8
+ 182              	.L12:
+ 183 003e 00BF     		.align	2
+ 184              	.L11:
+ 185 0040 00000000 		.word	P1_UART
+ 186 0044 00500040 		.word	1073762304
+ 187              	.LBE3:
+ 188              		.cfi_endproc
+ 189              	.LFE124:
+ 191              		.section	.text.P2_UART_Init,"ax",%progbits
+ 192              		.align	1
+ 193              		.global	P2_UART_Init
+ 194              		.syntax unified
+ 195              		.thumb
+ 196              		.thumb_func
+ 197              		.fpu fpv4-sp-d16
+ 199              	P2_UART_Init:
+ 200              	.LVL10:
+ 201              	.LFB125:
+  73:../../core/platform/octa/src/uart.c **** 
+  74:../../core/platform/octa/src/uart.c **** /**
+  75:../../core/platform/octa/src/uart.c ****   * @brief USART2 Initialization Function
+  76:../../core/platform/octa/src/uart.c ****   * @param None
+  77:../../core/platform/octa/src/uart.c ****   * @retval None
+  78:../../core/platform/octa/src/uart.c ****   */
+  79:../../core/platform/octa/src/uart.c **** void P2_UART_Init(uint32_t aBaudRate)
+  80:../../core/platform/octa/src/uart.c **** {
+ 202              		.loc 1 80 1 view -0
+ 203              		.cfi_startproc
+ 204              		@ args = 0, pretend = 0, frame = 0
+ 205              		@ frame_needed = 0, uses_anonymous_args = 0
+ 206              		.loc 1 80 1 is_stmt 0 view .LVU58
+ 207 0000 08B5     		push	{r3, lr}
+ 208              	.LCFI2:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s 			page 6
+
+
+ 209              		.cfi_def_cfa_offset 8
+ 210              		.cfi_offset 3, -8
+ 211              		.cfi_offset 14, -4
+  81:../../core/platform/octa/src/uart.c **** 
+  82:../../core/platform/octa/src/uart.c ****   /* USER CODE BEGIN USART2_Init 0 */
+  83:../../core/platform/octa/src/uart.c **** 
+  84:../../core/platform/octa/src/uart.c ****   /* USER CODE END USART2_Init 0 */
+  85:../../core/platform/octa/src/uart.c **** 
+  86:../../core/platform/octa/src/uart.c ****   /* USER CODE BEGIN USART2_Init 1 */
+  87:../../core/platform/octa/src/uart.c ****   /* USER CODE END USART2_Init 1 */
+  88:../../core/platform/octa/src/uart.c ****   P2_UART.Instance = USART2;
+ 212              		.loc 1 88 3 is_stmt 1 view .LVU59
+ 213              		.loc 1 88 20 is_stmt 0 view .LVU60
+ 214 0002 0F4B     		ldr	r3, .L17
+ 215 0004 0F4A     		ldr	r2, .L17+4
+ 216 0006 1A60     		str	r2, [r3]
+  89:../../core/platform/octa/src/uart.c ****   P2_UART.Init.BaudRate = aBaudRate;
+ 217              		.loc 1 89 3 is_stmt 1 view .LVU61
+ 218              		.loc 1 89 25 is_stmt 0 view .LVU62
+ 219 0008 5860     		str	r0, [r3, #4]
+  90:../../core/platform/octa/src/uart.c ****   P2_UART.Init.WordLength = UART_WORDLENGTH_8B;
+ 220              		.loc 1 90 3 is_stmt 1 view .LVU63
+ 221              		.loc 1 90 27 is_stmt 0 view .LVU64
+ 222 000a 0022     		movs	r2, #0
+ 223 000c 9A60     		str	r2, [r3, #8]
+  91:../../core/platform/octa/src/uart.c ****   P2_UART.Init.StopBits = UART_STOPBITS_1;
+ 224              		.loc 1 91 3 is_stmt 1 view .LVU65
+ 225              		.loc 1 91 25 is_stmt 0 view .LVU66
+ 226 000e DA60     		str	r2, [r3, #12]
+  92:../../core/platform/octa/src/uart.c ****   P2_UART.Init.Parity = UART_PARITY_NONE;
+ 227              		.loc 1 92 3 is_stmt 1 view .LVU67
+ 228              		.loc 1 92 23 is_stmt 0 view .LVU68
+ 229 0010 1A61     		str	r2, [r3, #16]
+  93:../../core/platform/octa/src/uart.c ****   P2_UART.Init.Mode = UART_MODE_TX_RX;
+ 230              		.loc 1 93 3 is_stmt 1 view .LVU69
+ 231              		.loc 1 93 21 is_stmt 0 view .LVU70
+ 232 0012 0C21     		movs	r1, #12
+ 233 0014 5961     		str	r1, [r3, #20]
+  94:../../core/platform/octa/src/uart.c ****   P2_UART.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 234              		.loc 1 94 3 is_stmt 1 view .LVU71
+ 235              		.loc 1 94 26 is_stmt 0 view .LVU72
+ 236 0016 9A61     		str	r2, [r3, #24]
+  95:../../core/platform/octa/src/uart.c ****   P2_UART.Init.OverSampling = UART_OVERSAMPLING_16;
+ 237              		.loc 1 95 3 is_stmt 1 view .LVU73
+ 238              		.loc 1 95 29 is_stmt 0 view .LVU74
+ 239 0018 DA61     		str	r2, [r3, #28]
+  96:../../core/platform/octa/src/uart.c ****   P2_UART.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+ 240              		.loc 1 96 3 is_stmt 1 view .LVU75
+ 241              		.loc 1 96 31 is_stmt 0 view .LVU76
+ 242 001a 1A62     		str	r2, [r3, #32]
+  97:../../core/platform/octa/src/uart.c ****   P2_UART.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+ 243              		.loc 1 97 3 is_stmt 1 view .LVU77
+ 244              		.loc 1 97 39 is_stmt 0 view .LVU78
+ 245 001c 5A62     		str	r2, [r3, #36]
+  98:../../core/platform/octa/src/uart.c ****   if (HAL_UART_Init(&P2_UART) != HAL_OK)
+ 246              		.loc 1 98 3 is_stmt 1 view .LVU79
+ 247              		.loc 1 98 7 is_stmt 0 view .LVU80
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s 			page 7
+
+
+ 248 001e 1846     		mov	r0, r3
+ 249              	.LVL11:
+ 250              		.loc 1 98 7 view .LVU81
+ 251 0020 FFF7FEFF 		bl	HAL_UART_Init
+ 252              	.LVL12:
+ 253              		.loc 1 98 6 view .LVU82
+ 254 0024 40B9     		cbnz	r0, .L16
+ 255              	.L14:
+  99:../../core/platform/octa/src/uart.c ****   {
+ 100:../../core/platform/octa/src/uart.c ****     Error_Handler();
+ 101:../../core/platform/octa/src/uart.c ****   }
+ 102:../../core/platform/octa/src/uart.c **** 
+ 103:../../core/platform/octa/src/uart.c ****   /* USER CODE BEGIN USART2_Init 2 */
+ 104:../../core/platform/octa/src/uart.c ****   HAL_NVIC_SetPriority(USART2_IRQn, 7, 0);
+ 256              		.loc 1 104 3 is_stmt 1 view .LVU83
+ 257 0026 0022     		movs	r2, #0
+ 258 0028 0721     		movs	r1, #7
+ 259 002a 2620     		movs	r0, #38
+ 260 002c FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 261              	.LVL13:
+ 105:../../core/platform/octa/src/uart.c ****   HAL_NVIC_EnableIRQ(USART2_IRQn);
+ 262              		.loc 1 105 3 view .LVU84
+ 263 0030 2620     		movs	r0, #38
+ 264 0032 FFF7FEFF 		bl	HAL_NVIC_EnableIRQ
+ 265              	.LVL14:
+ 106:../../core/platform/octa/src/uart.c **** 
+ 107:../../core/platform/octa/src/uart.c ****   /* USER CODE END USART2_Init 2 */
+ 108:../../core/platform/octa/src/uart.c **** 
+ 109:../../core/platform/octa/src/uart.c **** }
+ 266              		.loc 1 109 1 is_stmt 0 view .LVU85
+ 267 0036 08BD     		pop	{r3, pc}
+ 268              	.L16:
+ 269              	.LBB4:
+ 100:../../core/platform/octa/src/uart.c ****   }
+ 270              		.loc 1 100 5 is_stmt 1 view .LVU86
+ 271 0038 FFF7FEFF 		bl	Error_Handler
+ 272              	.LVL15:
+ 273 003c F3E7     		b	.L14
+ 274              	.L18:
+ 275 003e 00BF     		.align	2
+ 276              	.L17:
+ 277 0040 00000000 		.word	P2_UART
+ 278 0044 00440040 		.word	1073759232
+ 279              	.LBE4:
+ 280              		.cfi_endproc
+ 281              	.LFE125:
+ 283              		.section	.text.P3_UART_Init,"ax",%progbits
+ 284              		.align	1
+ 285              		.global	P3_UART_Init
+ 286              		.syntax unified
+ 287              		.thumb
+ 288              		.thumb_func
+ 289              		.fpu fpv4-sp-d16
+ 291              	P3_UART_Init:
+ 292              	.LVL16:
+ 293              	.LFB126:
+ 110:../../core/platform/octa/src/uart.c **** 
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s 			page 8
+
+
+ 111:../../core/platform/octa/src/uart.c **** /**
+ 112:../../core/platform/octa/src/uart.c ****   * @brief USART3 Initialization Function
+ 113:../../core/platform/octa/src/uart.c ****   * @param None
+ 114:../../core/platform/octa/src/uart.c ****   * @retval None
+ 115:../../core/platform/octa/src/uart.c ****   */
+ 116:../../core/platform/octa/src/uart.c **** void P3_UART_Init(uint32_t aBaudRate)
+ 117:../../core/platform/octa/src/uart.c **** {
+ 294              		.loc 1 117 1 view -0
+ 295              		.cfi_startproc
+ 296              		@ args = 0, pretend = 0, frame = 0
+ 297              		@ frame_needed = 0, uses_anonymous_args = 0
+ 298              		.loc 1 117 1 is_stmt 0 view .LVU88
+ 299 0000 08B5     		push	{r3, lr}
+ 300              	.LCFI3:
+ 301              		.cfi_def_cfa_offset 8
+ 302              		.cfi_offset 3, -8
+ 303              		.cfi_offset 14, -4
+ 118:../../core/platform/octa/src/uart.c **** 
+ 119:../../core/platform/octa/src/uart.c ****   /* USER CODE BEGIN USART3_Init 0 */
+ 120:../../core/platform/octa/src/uart.c **** 
+ 121:../../core/platform/octa/src/uart.c ****   /* USER CODE END USART3_Init 0 */
+ 122:../../core/platform/octa/src/uart.c **** 
+ 123:../../core/platform/octa/src/uart.c ****   /* USER CODE BEGIN USART3_Init 1 */
+ 124:../../core/platform/octa/src/uart.c **** 
+ 125:../../core/platform/octa/src/uart.c ****   /* USER CODE END USART3_Init 1 */
+ 126:../../core/platform/octa/src/uart.c ****   P3_UART.Instance = USART3;
+ 304              		.loc 1 126 3 is_stmt 1 view .LVU89
+ 305              		.loc 1 126 20 is_stmt 0 view .LVU90
+ 306 0002 0F4B     		ldr	r3, .L23
+ 307 0004 0F4A     		ldr	r2, .L23+4
+ 308 0006 1A60     		str	r2, [r3]
+ 127:../../core/platform/octa/src/uart.c ****   P3_UART.Init.BaudRate = aBaudRate;
+ 309              		.loc 1 127 3 is_stmt 1 view .LVU91
+ 310              		.loc 1 127 25 is_stmt 0 view .LVU92
+ 311 0008 5860     		str	r0, [r3, #4]
+ 128:../../core/platform/octa/src/uart.c ****   P3_UART.Init.WordLength = UART_WORDLENGTH_8B;
+ 312              		.loc 1 128 3 is_stmt 1 view .LVU93
+ 313              		.loc 1 128 27 is_stmt 0 view .LVU94
+ 314 000a 0022     		movs	r2, #0
+ 315 000c 9A60     		str	r2, [r3, #8]
+ 129:../../core/platform/octa/src/uart.c ****   P3_UART.Init.StopBits = UART_STOPBITS_1;
+ 316              		.loc 1 129 3 is_stmt 1 view .LVU95
+ 317              		.loc 1 129 25 is_stmt 0 view .LVU96
+ 318 000e DA60     		str	r2, [r3, #12]
+ 130:../../core/platform/octa/src/uart.c ****   P3_UART.Init.Parity = UART_PARITY_NONE;
+ 319              		.loc 1 130 3 is_stmt 1 view .LVU97
+ 320              		.loc 1 130 23 is_stmt 0 view .LVU98
+ 321 0010 1A61     		str	r2, [r3, #16]
+ 131:../../core/platform/octa/src/uart.c ****   P3_UART.Init.Mode = UART_MODE_TX_RX;
+ 322              		.loc 1 131 3 is_stmt 1 view .LVU99
+ 323              		.loc 1 131 21 is_stmt 0 view .LVU100
+ 324 0012 0C21     		movs	r1, #12
+ 325 0014 5961     		str	r1, [r3, #20]
+ 132:../../core/platform/octa/src/uart.c ****   P3_UART.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 326              		.loc 1 132 3 is_stmt 1 view .LVU101
+ 327              		.loc 1 132 26 is_stmt 0 view .LVU102
+ 328 0016 9A61     		str	r2, [r3, #24]
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s 			page 9
+
+
+ 133:../../core/platform/octa/src/uart.c ****   P3_UART.Init.OverSampling = UART_OVERSAMPLING_16;
+ 329              		.loc 1 133 3 is_stmt 1 view .LVU103
+ 330              		.loc 1 133 29 is_stmt 0 view .LVU104
+ 331 0018 DA61     		str	r2, [r3, #28]
+ 134:../../core/platform/octa/src/uart.c ****   P3_UART.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+ 332              		.loc 1 134 3 is_stmt 1 view .LVU105
+ 333              		.loc 1 134 31 is_stmt 0 view .LVU106
+ 334 001a 1A62     		str	r2, [r3, #32]
+ 135:../../core/platform/octa/src/uart.c ****   P3_UART.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+ 335              		.loc 1 135 3 is_stmt 1 view .LVU107
+ 336              		.loc 1 135 39 is_stmt 0 view .LVU108
+ 337 001c 5A62     		str	r2, [r3, #36]
+ 136:../../core/platform/octa/src/uart.c ****   if (HAL_UART_Init(&P3_UART) != HAL_OK)
+ 338              		.loc 1 136 3 is_stmt 1 view .LVU109
+ 339              		.loc 1 136 7 is_stmt 0 view .LVU110
+ 340 001e 1846     		mov	r0, r3
+ 341              	.LVL17:
+ 342              		.loc 1 136 7 view .LVU111
+ 343 0020 FFF7FEFF 		bl	HAL_UART_Init
+ 344              	.LVL18:
+ 345              		.loc 1 136 6 view .LVU112
+ 346 0024 40B9     		cbnz	r0, .L22
+ 347              	.L20:
+ 137:../../core/platform/octa/src/uart.c ****   {
+ 138:../../core/platform/octa/src/uart.c ****     Error_Handler();
+ 139:../../core/platform/octa/src/uart.c ****   }
+ 140:../../core/platform/octa/src/uart.c ****   /* USER CODE BEGIN USART3_Init 2 */
+ 141:../../core/platform/octa/src/uart.c ****   HAL_NVIC_SetPriority(USART3_IRQn, 7, 0);
+ 348              		.loc 1 141 3 is_stmt 1 view .LVU113
+ 349 0026 0022     		movs	r2, #0
+ 350 0028 0721     		movs	r1, #7
+ 351 002a 2720     		movs	r0, #39
+ 352 002c FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 353              	.LVL19:
+ 142:../../core/platform/octa/src/uart.c ****   HAL_NVIC_EnableIRQ(USART3_IRQn);
+ 354              		.loc 1 142 3 view .LVU114
+ 355 0030 2720     		movs	r0, #39
+ 356 0032 FFF7FEFF 		bl	HAL_NVIC_EnableIRQ
+ 357              	.LVL20:
+ 143:../../core/platform/octa/src/uart.c ****   /* USER CODE END USART3_Init 2 */
+ 144:../../core/platform/octa/src/uart.c **** 
+ 145:../../core/platform/octa/src/uart.c **** }
+ 358              		.loc 1 145 1 is_stmt 0 view .LVU115
+ 359 0036 08BD     		pop	{r3, pc}
+ 360              	.L22:
+ 361              	.LBB5:
+ 138:../../core/platform/octa/src/uart.c ****   }
+ 362              		.loc 1 138 5 is_stmt 1 view .LVU116
+ 363 0038 FFF7FEFF 		bl	Error_Handler
+ 364              	.LVL21:
+ 365 003c F3E7     		b	.L20
+ 366              	.L24:
+ 367 003e 00BF     		.align	2
+ 368              	.L23:
+ 369 0040 00000000 		.word	P3_UART
+ 370 0044 00480040 		.word	1073760256
+ 371              	.LBE5:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s 			page 10
+
+
+ 372              		.cfi_endproc
+ 373              	.LFE126:
+ 375              		.section	.text.BLE_UART_Init,"ax",%progbits
+ 376              		.align	1
+ 377              		.global	BLE_UART_Init
+ 378              		.syntax unified
+ 379              		.thumb
+ 380              		.thumb_func
+ 381              		.fpu fpv4-sp-d16
+ 383              	BLE_UART_Init:
+ 384              	.LVL22:
+ 385              	.LFB127:
+ 146:../../core/platform/octa/src/uart.c **** 
+ 147:../../core/platform/octa/src/uart.c **** 
+ 148:../../core/platform/octa/src/uart.c **** /**
+ 149:../../core/platform/octa/src/uart.c ****   * @brief USART2 Initialization Function
+ 150:../../core/platform/octa/src/uart.c ****   * @param None
+ 151:../../core/platform/octa/src/uart.c ****   * @retval None
+ 152:../../core/platform/octa/src/uart.c ****   */
+ 153:../../core/platform/octa/src/uart.c **** void BLE_UART_Init(uint32_t aBaudRate)
+ 154:../../core/platform/octa/src/uart.c **** {
+ 386              		.loc 1 154 1 view -0
+ 387              		.cfi_startproc
+ 388              		@ args = 0, pretend = 0, frame = 0
+ 389              		@ frame_needed = 0, uses_anonymous_args = 0
+ 390              		.loc 1 154 1 is_stmt 0 view .LVU118
+ 391 0000 08B5     		push	{r3, lr}
+ 392              	.LCFI4:
+ 393              		.cfi_def_cfa_offset 8
+ 394              		.cfi_offset 3, -8
+ 395              		.cfi_offset 14, -4
+ 155:../../core/platform/octa/src/uart.c **** 
+ 156:../../core/platform/octa/src/uart.c ****   /* USER CODE BEGIN USART2_Init 0 */
+ 157:../../core/platform/octa/src/uart.c **** 
+ 158:../../core/platform/octa/src/uart.c ****   /* USER CODE END USART2_Init 0 */
+ 159:../../core/platform/octa/src/uart.c **** 
+ 160:../../core/platform/octa/src/uart.c ****   /* USER CODE BEGIN USART2_Init 1 */
+ 161:../../core/platform/octa/src/uart.c **** 
+ 162:../../core/platform/octa/src/uart.c ****   /* USER CODE END USART2_Init 1 */
+ 163:../../core/platform/octa/src/uart.c ****   BLE_UART.Instance = USART2;
+ 396              		.loc 1 163 3 is_stmt 1 view .LVU119
+ 397              		.loc 1 163 21 is_stmt 0 view .LVU120
+ 398 0002 0F4B     		ldr	r3, .L29
+ 399 0004 0F4A     		ldr	r2, .L29+4
+ 400 0006 1A60     		str	r2, [r3]
+ 164:../../core/platform/octa/src/uart.c ****   BLE_UART.Init.BaudRate = aBaudRate;
+ 401              		.loc 1 164 3 is_stmt 1 view .LVU121
+ 402              		.loc 1 164 26 is_stmt 0 view .LVU122
+ 403 0008 5860     		str	r0, [r3, #4]
+ 165:../../core/platform/octa/src/uart.c ****   BLE_UART.Init.WordLength = UART_WORDLENGTH_8B;
+ 404              		.loc 1 165 3 is_stmt 1 view .LVU123
+ 405              		.loc 1 165 28 is_stmt 0 view .LVU124
+ 406 000a 0022     		movs	r2, #0
+ 407 000c 9A60     		str	r2, [r3, #8]
+ 166:../../core/platform/octa/src/uart.c ****   BLE_UART.Init.StopBits = UART_STOPBITS_1;
+ 408              		.loc 1 166 3 is_stmt 1 view .LVU125
+ 409              		.loc 1 166 26 is_stmt 0 view .LVU126
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s 			page 11
+
+
+ 410 000e DA60     		str	r2, [r3, #12]
+ 167:../../core/platform/octa/src/uart.c ****   BLE_UART.Init.Parity = UART_PARITY_NONE;
+ 411              		.loc 1 167 3 is_stmt 1 view .LVU127
+ 412              		.loc 1 167 24 is_stmt 0 view .LVU128
+ 413 0010 1A61     		str	r2, [r3, #16]
+ 168:../../core/platform/octa/src/uart.c ****   BLE_UART.Init.Mode = UART_MODE_TX_RX;
+ 414              		.loc 1 168 3 is_stmt 1 view .LVU129
+ 415              		.loc 1 168 22 is_stmt 0 view .LVU130
+ 416 0012 0C21     		movs	r1, #12
+ 417 0014 5961     		str	r1, [r3, #20]
+ 169:../../core/platform/octa/src/uart.c ****   BLE_UART.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 418              		.loc 1 169 3 is_stmt 1 view .LVU131
+ 419              		.loc 1 169 27 is_stmt 0 view .LVU132
+ 420 0016 9A61     		str	r2, [r3, #24]
+ 170:../../core/platform/octa/src/uart.c ****   BLE_UART.Init.OverSampling = UART_OVERSAMPLING_16;
+ 421              		.loc 1 170 3 is_stmt 1 view .LVU133
+ 422              		.loc 1 170 30 is_stmt 0 view .LVU134
+ 423 0018 DA61     		str	r2, [r3, #28]
+ 171:../../core/platform/octa/src/uart.c ****   BLE_UART.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+ 424              		.loc 1 171 3 is_stmt 1 view .LVU135
+ 425              		.loc 1 171 32 is_stmt 0 view .LVU136
+ 426 001a 1A62     		str	r2, [r3, #32]
+ 172:../../core/platform/octa/src/uart.c ****   BLE_UART.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+ 427              		.loc 1 172 3 is_stmt 1 view .LVU137
+ 428              		.loc 1 172 40 is_stmt 0 view .LVU138
+ 429 001c 5A62     		str	r2, [r3, #36]
+ 173:../../core/platform/octa/src/uart.c ****   if (HAL_UART_Init(&BLE_UART) != HAL_OK)
+ 430              		.loc 1 173 3 is_stmt 1 view .LVU139
+ 431              		.loc 1 173 7 is_stmt 0 view .LVU140
+ 432 001e 1846     		mov	r0, r3
+ 433              	.LVL23:
+ 434              		.loc 1 173 7 view .LVU141
+ 435 0020 FFF7FEFF 		bl	HAL_UART_Init
+ 436              	.LVL24:
+ 437              		.loc 1 173 6 view .LVU142
+ 438 0024 40B9     		cbnz	r0, .L28
+ 439              	.L26:
+ 174:../../core/platform/octa/src/uart.c ****   {
+ 175:../../core/platform/octa/src/uart.c ****     Error_Handler();
+ 176:../../core/platform/octa/src/uart.c ****   }
+ 177:../../core/platform/octa/src/uart.c **** 
+ 178:../../core/platform/octa/src/uart.c ****   /* USER CODE BEGIN USART2_Init 2 */
+ 179:../../core/platform/octa/src/uart.c ****   HAL_NVIC_SetPriority(USART2_IRQn, 7, 0);
+ 440              		.loc 1 179 3 is_stmt 1 view .LVU143
+ 441 0026 0022     		movs	r2, #0
+ 442 0028 0721     		movs	r1, #7
+ 443 002a 2620     		movs	r0, #38
+ 444 002c FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 445              	.LVL25:
+ 180:../../core/platform/octa/src/uart.c ****   HAL_NVIC_EnableIRQ(USART2_IRQn);
+ 446              		.loc 1 180 3 view .LVU144
+ 447 0030 2620     		movs	r0, #38
+ 448 0032 FFF7FEFF 		bl	HAL_NVIC_EnableIRQ
+ 449              	.LVL26:
+ 181:../../core/platform/octa/src/uart.c ****   /* USER CODE END USART2_Init 2 */
+ 182:../../core/platform/octa/src/uart.c **** 
+ 183:../../core/platform/octa/src/uart.c **** }
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s 			page 12
+
+
+ 450              		.loc 1 183 1 is_stmt 0 view .LVU145
+ 451 0036 08BD     		pop	{r3, pc}
+ 452              	.L28:
+ 453              	.LBB6:
+ 175:../../core/platform/octa/src/uart.c ****   }
+ 454              		.loc 1 175 5 is_stmt 1 view .LVU146
+ 455 0038 FFF7FEFF 		bl	Error_Handler
+ 456              	.LVL27:
+ 457 003c F3E7     		b	.L26
+ 458              	.L30:
+ 459 003e 00BF     		.align	2
+ 460              	.L29:
+ 461 0040 00000000 		.word	BLE_UART
+ 462 0044 00440040 		.word	1073759232
+ 463              	.LBE6:
+ 464              		.cfi_endproc
+ 465              	.LFE127:
+ 467              		.section	.text.HAL_UART_RxCpltCallback,"ax",%progbits
+ 468              		.align	1
+ 469              		.weak	HAL_UART_RxCpltCallback
+ 470              		.syntax unified
+ 471              		.thumb
+ 472              		.thumb_func
+ 473              		.fpu fpv4-sp-d16
+ 475              	HAL_UART_RxCpltCallback:
+ 476              	.LVL28:
+ 477              	.LFB128:
+ 184:../../core/platform/octa/src/uart.c **** 
+ 185:../../core/platform/octa/src/uart.c **** // WEAK UART RX CALLBACK
+ 186:../../core/platform/octa/src/uart.c **** __weak void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+ 187:../../core/platform/octa/src/uart.c **** {
+ 478              		.loc 1 187 1 view -0
+ 479              		.cfi_startproc
+ 480              		@ args = 0, pretend = 0, frame = 0
+ 481              		@ frame_needed = 0, uses_anonymous_args = 0
+ 482              		.loc 1 187 1 is_stmt 0 view .LVU148
+ 483 0000 08B5     		push	{r3, lr}
+ 484              	.LCFI5:
+ 485              		.cfi_def_cfa_offset 8
+ 486              		.cfi_offset 3, -8
+ 487              		.cfi_offset 14, -4
+ 188:../../core/platform/octa/src/uart.c ****   printf("uart interrupt callback not implemented in application\r\n");
+ 488              		.loc 1 188 3 is_stmt 1 view .LVU149
+ 489 0002 0248     		ldr	r0, .L33
+ 490              	.LVL29:
+ 491              		.loc 1 188 3 is_stmt 0 view .LVU150
+ 492 0004 FFF7FEFF 		bl	puts
+ 493              	.LVL30:
+ 189:../../core/platform/octa/src/uart.c **** }
+ 494              		.loc 1 189 1 view .LVU151
+ 495 0008 08BD     		pop	{r3, pc}
+ 496              	.L34:
+ 497 000a 00BF     		.align	2
+ 498              	.L33:
+ 499 000c 00000000 		.word	.LC0
+ 500              		.cfi_endproc
+ 501              	.LFE128:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s 			page 13
+
+
+ 503              		.section	.text.__io_putchar,"ax",%progbits
+ 504              		.align	1
+ 505              		.global	__io_putchar
+ 506              		.syntax unified
+ 507              		.thumb
+ 508              		.thumb_func
+ 509              		.fpu fpv4-sp-d16
+ 511              	__io_putchar:
+ 512              	.LVL31:
+ 513              	.LFB130:
+ 190:../../core/platform/octa/src/uart.c **** 
+ 191:../../core/platform/octa/src/uart.c **** /*******************************************
+ 192:../../core/platform/octa/src/uart.c **** PRINTF TO SERIAL REDIRECT FUNCTION PROTOTYPE 
+ 193:../../core/platform/octa/src/uart.c **** ********************************************/
+ 194:../../core/platform/octa/src/uart.c **** #ifdef __GNUC__
+ 195:../../core/platform/octa/src/uart.c **** 
+ 196:../../core/platform/octa/src/uart.c **** #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+ 197:../../core/platform/octa/src/uart.c **** #else
+ 198:../../core/platform/octa/src/uart.c **** #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+ 199:../../core/platform/octa/src/uart.c **** 
+ 200:../../core/platform/octa/src/uart.c **** #endif
+ 201:../../core/platform/octa/src/uart.c **** 
+ 202:../../core/platform/octa/src/uart.c **** /* required for printf to work */
+ 203:../../core/platform/octa/src/uart.c **** int _write(int file, char *ptr, int len)
+ 204:../../core/platform/octa/src/uart.c **** {
+ 205:../../core/platform/octa/src/uart.c ****   int DataIdx;
+ 206:../../core/platform/octa/src/uart.c **** 
+ 207:../../core/platform/octa/src/uart.c ****   for (DataIdx = 0; DataIdx < len; DataIdx++)
+ 208:../../core/platform/octa/src/uart.c ****   {
+ 209:../../core/platform/octa/src/uart.c ****     __io_putchar(*ptr++);
+ 210:../../core/platform/octa/src/uart.c ****   }
+ 211:../../core/platform/octa/src/uart.c ****   return len;
+ 212:../../core/platform/octa/src/uart.c **** }
+ 213:../../core/platform/octa/src/uart.c **** 
+ 214:../../core/platform/octa/src/uart.c **** /**
+ 215:../../core/platform/octa/src/uart.c ****   * @brief  Retargets the C library printf function to the USART.
+ 216:../../core/platform/octa/src/uart.c ****   * @param  None
+ 217:../../core/platform/octa/src/uart.c ****   * @retval None
+ 218:../../core/platform/octa/src/uart.c ****   */
+ 219:../../core/platform/octa/src/uart.c **** PUTCHAR_PROTOTYPE
+ 220:../../core/platform/octa/src/uart.c **** {
+ 514              		.loc 1 220 1 is_stmt 1 view -0
+ 515              		.cfi_startproc
+ 516              		@ args = 0, pretend = 0, frame = 8
+ 517              		@ frame_needed = 0, uses_anonymous_args = 0
+ 518              		.loc 1 220 1 is_stmt 0 view .LVU153
+ 519 0000 00B5     		push	{lr}
+ 520              	.LCFI6:
+ 521              		.cfi_def_cfa_offset 4
+ 522              		.cfi_offset 14, -4
+ 523 0002 83B0     		sub	sp, sp, #12
+ 524              	.LCFI7:
+ 525              		.cfi_def_cfa_offset 16
+ 526 0004 0190     		str	r0, [sp, #4]
+ 221:../../core/platform/octa/src/uart.c ****   HAL_UART_Transmit(&USB_UART, (uint8_t *)&ch, 1, 0xFFFF);
+ 527              		.loc 1 221 3 is_stmt 1 view .LVU154
+ 528 0006 4FF6FF73 		movw	r3, #65535
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s 			page 14
+
+
+ 529 000a 0122     		movs	r2, #1
+ 530 000c 01A9     		add	r1, sp, #4
+ 531 000e 0348     		ldr	r0, .L37
+ 532              	.LVL32:
+ 533              		.loc 1 221 3 is_stmt 0 view .LVU155
+ 534 0010 FFF7FEFF 		bl	HAL_UART_Transmit
+ 535              	.LVL33:
+ 222:../../core/platform/octa/src/uart.c ****   return ch;
+ 536              		.loc 1 222 3 is_stmt 1 view .LVU156
+ 223:../../core/platform/octa/src/uart.c **** }...
+ 537              		.loc 1 223 1 is_stmt 0 view .LVU157
+ 538 0014 0198     		ldr	r0, [sp, #4]
+ 539 0016 03B0     		add	sp, sp, #12
+ 540              	.LCFI8:
+ 541              		.cfi_def_cfa_offset 4
+ 542              		@ sp needed
+ 543 0018 5DF804FB 		ldr	pc, [sp], #4
+ 544              	.L38:
+ 545              		.align	2
+ 546              	.L37:
+ 547 001c 00000000 		.word	USB_UART
+ 548              		.cfi_endproc
+ 549              	.LFE130:
+ 551              		.section	.text._write,"ax",%progbits
+ 552              		.align	1
+ 553              		.global	_write
+ 554              		.syntax unified
+ 555              		.thumb
+ 556              		.thumb_func
+ 557              		.fpu fpv4-sp-d16
+ 559              	_write:
+ 560              	.LVL34:
+ 561              	.LFB129:
+ 204:../../core/platform/octa/src/uart.c **** {
+ 562              		.loc 1 204 1 is_stmt 1 view -0
+ 563              		.cfi_startproc
+ 564              		@ args = 0, pretend = 0, frame = 0
+ 565              		@ frame_needed = 0, uses_anonymous_args = 0
+ 204:../../core/platform/octa/src/uart.c **** {
+ 566              		.loc 1 204 1 is_stmt 0 view .LVU159
+ 567 0000 70B5     		push	{r4, r5, r6, lr}
+ 568              	.LCFI9:
+ 569              		.cfi_def_cfa_offset 16
+ 570              		.cfi_offset 4, -16
+ 571              		.cfi_offset 5, -12
+ 572              		.cfi_offset 6, -8
+ 573              		.cfi_offset 14, -4
+ 574 0002 0C46     		mov	r4, r1
+ 575 0004 1646     		mov	r6, r2
+ 205:../../core/platform/octa/src/uart.c ****   int DataIdx;
+ 576              		.loc 1 205 3 is_stmt 1 view .LVU160
+ 207:../../core/platform/octa/src/uart.c ****   for (DataIdx = 0; DataIdx < len; DataIdx++)
+ 577              		.loc 1 207 3 view .LVU161
+ 578              	.LVL35:
+ 207:../../core/platform/octa/src/uart.c ****   for (DataIdx = 0; DataIdx < len; DataIdx++)
+ 579              		.loc 1 207 16 is_stmt 0 view .LVU162
+ 580 0006 0025     		movs	r5, #0
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s 			page 15
+
+
+ 581              	.LVL36:
+ 582              	.L40:
+ 207:../../core/platform/octa/src/uart.c ****   for (DataIdx = 0; DataIdx < len; DataIdx++)
+ 583              		.loc 1 207 3 discriminator 1 view .LVU163
+ 584 0008 B542     		cmp	r5, r6
+ 585 000a 05DA     		bge	.L43
+ 586              	.LBB7:
+ 209:../../core/platform/octa/src/uart.c ****     __io_putchar(*ptr++);
+ 587              		.loc 1 209 5 is_stmt 1 discriminator 3 view .LVU164
+ 209:../../core/platform/octa/src/uart.c ****     __io_putchar(*ptr++);
+ 588              		.loc 1 209 5 is_stmt 0 discriminator 3 view .LVU165
+ 589 000c 14F8010B 		ldrb	r0, [r4], #1	@ zero_extendqisi2
+ 590              	.LVL37:
+ 209:../../core/platform/octa/src/uart.c ****     __io_putchar(*ptr++);
+ 591              		.loc 1 209 5 discriminator 3 view .LVU166
+ 592 0010 FFF7FEFF 		bl	__io_putchar
+ 593              	.LVL38:
+ 594              	.LBE7:
+ 207:../../core/platform/octa/src/uart.c ****   for (DataIdx = 0; DataIdx < len; DataIdx++)
+ 595              		.loc 1 207 43 discriminator 3 view .LVU167
+ 596 0014 0135     		adds	r5, r5, #1
+ 597              	.LVL39:
+ 207:../../core/platform/octa/src/uart.c ****   for (DataIdx = 0; DataIdx < len; DataIdx++)
+ 598              		.loc 1 207 43 discriminator 3 view .LVU168
+ 599 0016 F7E7     		b	.L40
+ 600              	.LVL40:
+ 601              	.L43:
+ 211:../../core/platform/octa/src/uart.c ****   return len;
+ 602              		.loc 1 211 3 is_stmt 1 view .LVU169
+ 212:../../core/platform/octa/src/uart.c **** }
+ 603              		.loc 1 212 1 is_stmt 0 view .LVU170
+ 604 0018 3046     		mov	r0, r6
+ 605 001a 70BD     		pop	{r4, r5, r6, pc}
+ 212:../../core/platform/octa/src/uart.c **** }
+ 606              		.loc 1 212 1 view .LVU171
+ 607              		.cfi_endproc
+ 608              	.LFE129:
+ 610              		.comm	P3_UART,120,4
+ 611              		.comm	P2_UART,120,4
+ 612              		.comm	P1_UART,120,4
+ 613              		.comm	BLE_UART,120,4
+ 614              		.comm	USB_UART,120,4
+ 615              		.section	.rodata.HAL_UART_RxCpltCallback.str1.4,"aMS",%progbits,1
+ 616              		.align	2
+ 617              	.LC0:
+ 618 0000 75617274 		.ascii	"uart interrupt callback not implemented in applicat"
+ 618      20696E74 
+ 618      65727275 
+ 618      70742063 
+ 618      616C6C62 
+ 619 0033 696F6E0D 		.ascii	"ion\015\000"
+ 619      00
+ 620              		.text
+ 621              	.Letext0:
+ 622              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 623              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 624              		.file 4 "../../core/ST/CMSIS/Include/core_cm4.h"
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s 			page 16
+
+
+ 625              		.file 5 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/system_stm32l4xx.h"
+ 626              		.file 6 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/stm32l496xx.h"
+ 627              		.file 7 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h"
+ 628              		.file 8 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dma.h"
+ 629              		.file 9 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h"
+ 630              		.file 10 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h"
+ 631              		.file 11 "../../core/platform/octa/inc/uart.h"
+ 632              		.file 12 "<built-in>"
+ 633              		.file 13 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_cortex.h"
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s 			page 17
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 uart.c
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:18     .text.USB_UART_Init:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:26     .text.USB_UART_Init:00000000 USB_UART_Init
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:94     .text.USB_UART_Init:0000002c $d
+                            *COM*:00000078 USB_UART
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:100    .text.P1_UART_Init:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:107    .text.P1_UART_Init:00000000 P1_UART_Init
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:185    .text.P1_UART_Init:00000040 $d
+                            *COM*:00000078 P1_UART
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:192    .text.P2_UART_Init:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:199    .text.P2_UART_Init:00000000 P2_UART_Init
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:277    .text.P2_UART_Init:00000040 $d
+                            *COM*:00000078 P2_UART
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:284    .text.P3_UART_Init:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:291    .text.P3_UART_Init:00000000 P3_UART_Init
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:369    .text.P3_UART_Init:00000040 $d
+                            *COM*:00000078 P3_UART
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:376    .text.BLE_UART_Init:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:383    .text.BLE_UART_Init:00000000 BLE_UART_Init
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:461    .text.BLE_UART_Init:00000040 $d
+                            *COM*:00000078 BLE_UART
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:468    .text.HAL_UART_RxCpltCallback:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:475    .text.HAL_UART_RxCpltCallback:00000000 HAL_UART_RxCpltCallback
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:499    .text.HAL_UART_RxCpltCallback:0000000c $d
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:504    .text.__io_putchar:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:511    .text.__io_putchar:00000000 __io_putchar
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:547    .text.__io_putchar:0000001c $d
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:552    .text._write:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:559    .text._write:00000000 _write
+C:\Users\yvesk\AppData\Local\Temp\cc1Lgz4n.s:616    .rodata.HAL_UART_RxCpltCallback.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_UART_Init
+Error_Handler
+HAL_NVIC_SetPriority
+HAL_NVIC_EnableIRQ
+puts
+HAL_UART_Transmit

@@ -1,0 +1,1256 @@
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"fifo.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.skip,"ax",%progbits
+  18              		.align	1
+  19              		.arch armv7e-m
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  23              		.fpu fpv4-sp-d16
+  25              	skip:
+  26              	.LVL0:
+  27              	.LFB6:
+  28              		.file 1 "../../shields/Murata-dualstack/src/fifo.c"
+   1:../../shields/Murata-dualstack/src/fifo.c **** /* * OSS-7 - An opensource implementation of the DASH7 Alliance Protocol for ultra
+   2:../../shields/Murata-dualstack/src/fifo.c ****  * lowpower wireless sensor communication
+   3:../../shields/Murata-dualstack/src/fifo.c ****  *
+   4:../../shields/Murata-dualstack/src/fifo.c ****  * Copyright 2015 University of Antwerp
+   5:../../shields/Murata-dualstack/src/fifo.c ****  *
+   6:../../shields/Murata-dualstack/src/fifo.c ****  * Licensed under the Apache License, Version 2.0 (the "License");
+   7:../../shields/Murata-dualstack/src/fifo.c ****  * you may not use this file except in compliance with the License.
+   8:../../shields/Murata-dualstack/src/fifo.c ****  * You may obtain a copy of the License at
+   9:../../shields/Murata-dualstack/src/fifo.c ****  *
+  10:../../shields/Murata-dualstack/src/fifo.c ****  *   http://www.apache.org/licenses/LICENSE-2.0
+  11:../../shields/Murata-dualstack/src/fifo.c ****  *
+  12:../../shields/Murata-dualstack/src/fifo.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../../shields/Murata-dualstack/src/fifo.c ****  * distributed under the License is distributed on an "AS IS" BASIS,
+  14:../../shields/Murata-dualstack/src/fifo.c ****  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../../shields/Murata-dualstack/src/fifo.c ****  * See the License for the specific language governing permissions and
+  16:../../shields/Murata-dualstack/src/fifo.c ****  * limitations under the License.
+  17:../../shields/Murata-dualstack/src/fifo.c ****  */
+  18:../../shields/Murata-dualstack/src/fifo.c **** 
+  19:../../shields/Murata-dualstack/src/fifo.c **** /*! \file fifo.c
+  20:../../shields/Murata-dualstack/src/fifo.c ****  * \author glenn.ergeerts@uantwerpen.be
+  21:../../shields/Murata-dualstack/src/fifo.c ****  */
+  22:../../shields/Murata-dualstack/src/fifo.c **** 
+  23:../../shields/Murata-dualstack/src/fifo.c **** #include "fifo.h"
+  24:../../shields/Murata-dualstack/src/fifo.c **** #include "string.h"
+  25:../../shields/Murata-dualstack/src/fifo.c **** #include "errors.h"
+  26:../../shields/Murata-dualstack/src/fifo.c **** //#include "debug.h"
+  27:../../shields/Murata-dualstack/src/fifo.c **** 
+  28:../../shields/Murata-dualstack/src/fifo.c **** void fifo_init(fifo_t *fifo, uint8_t *buffer, uint16_t max_size)
+  29:../../shields/Murata-dualstack/src/fifo.c **** {
+  30:../../shields/Murata-dualstack/src/fifo.c ****     fifo_init_filled(fifo, buffer, 0, max_size);
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 2
+
+
+  31:../../shields/Murata-dualstack/src/fifo.c **** }
+  32:../../shields/Murata-dualstack/src/fifo.c **** 
+  33:../../shields/Murata-dualstack/src/fifo.c **** void fifo_init_filled(fifo_t *fifo, uint8_t *buffer, uint16_t filled_size, uint16_t max_size)
+  34:../../shields/Murata-dualstack/src/fifo.c **** {
+  35:../../shields/Murata-dualstack/src/fifo.c ****     fifo->buffer = buffer;
+  36:../../shields/Murata-dualstack/src/fifo.c ****     fifo->head_idx = 0;
+  37:../../shields/Murata-dualstack/src/fifo.c ****     fifo->max_size = max_size - 1;
+  38:../../shields/Murata-dualstack/src/fifo.c ****     fifo->tail_idx = filled_size;
+  39:../../shields/Murata-dualstack/src/fifo.c ****     fifo->is_subview = false;
+  40:../../shields/Murata-dualstack/src/fifo.c **** }
+  41:../../shields/Murata-dualstack/src/fifo.c **** 
+  42:../../shields/Murata-dualstack/src/fifo.c **** void fifo_init_subview(fifo_t *subset_fifo, fifo_t* original_fifo, uint16_t offset, uint16_t subset
+  43:../../shields/Murata-dualstack/src/fifo.c ****     //assert(subset_size <= fifo_get_size(original_fifo));
+  44:../../shields/Murata-dualstack/src/fifo.c ****     //assert(subset_size + offset <= original_fifo->max_size);
+  45:../../shields/Murata-dualstack/src/fifo.c **** 
+  46:../../shields/Murata-dualstack/src/fifo.c ****     subset_fifo->buffer = original_fifo->buffer;
+  47:../../shields/Murata-dualstack/src/fifo.c ****     subset_fifo->head_idx = original_fifo->head_idx + offset;
+  48:../../shields/Murata-dualstack/src/fifo.c ****     subset_fifo->tail_idx = original_fifo->head_idx + offset + subset_size;
+  49:../../shields/Murata-dualstack/src/fifo.c ****     if(subset_fifo->tail_idx > original_fifo->max_size) {
+  50:../../shields/Murata-dualstack/src/fifo.c ****       // wrap
+  51:../../shields/Murata-dualstack/src/fifo.c ****       subset_fifo->tail_idx = subset_fifo->tail_idx - original_fifo->max_size;
+  52:../../shields/Murata-dualstack/src/fifo.c ****     }
+  53:../../shields/Murata-dualstack/src/fifo.c **** 
+  54:../../shields/Murata-dualstack/src/fifo.c ****     subset_fifo->max_size = original_fifo->max_size;
+  55:../../shields/Murata-dualstack/src/fifo.c ****     subset_fifo->is_subview = true;
+  56:../../shields/Murata-dualstack/src/fifo.c **** }
+  57:../../shields/Murata-dualstack/src/fifo.c **** 
+  58:../../shields/Murata-dualstack/src/fifo.c **** error_t fifo_put(fifo_t *fifo, uint8_t *data, uint16_t len)
+  59:../../shields/Murata-dualstack/src/fifo.c **** {
+  60:../../shields/Murata-dualstack/src/fifo.c ****     if(fifo->is_subview)
+  61:../../shields/Murata-dualstack/src/fifo.c ****         return EINVAL;
+  62:../../shields/Murata-dualstack/src/fifo.c **** 
+  63:../../shields/Murata-dualstack/src/fifo.c ****     if(fifo->tail_idx < fifo->head_idx)
+  64:../../shields/Murata-dualstack/src/fifo.c ****     {
+  65:../../shields/Murata-dualstack/src/fifo.c ****         if(fifo->tail_idx + len >= fifo->head_idx)
+  66:../../shields/Murata-dualstack/src/fifo.c ****             return oss7ESIZE;
+  67:../../shields/Murata-dualstack/src/fifo.c ****         memcpy(fifo->buffer + fifo->tail_idx, data, len);
+  68:../../shields/Murata-dualstack/src/fifo.c ****         fifo->tail_idx += len;
+  69:../../shields/Murata-dualstack/src/fifo.c ****         return oss7SUCCESS;
+  70:../../shields/Murata-dualstack/src/fifo.c ****     }
+  71:../../shields/Murata-dualstack/src/fifo.c **** 
+  72:../../shields/Murata-dualstack/src/fifo.c ****     if(fifo->tail_idx + len <= fifo->max_size)
+  73:../../shields/Murata-dualstack/src/fifo.c ****     {
+  74:../../shields/Murata-dualstack/src/fifo.c ****         memcpy(fifo->buffer + fifo->tail_idx, data, len);
+  75:../../shields/Murata-dualstack/src/fifo.c ****         fifo->tail_idx += len;
+  76:../../shields/Murata-dualstack/src/fifo.c ****         return oss7SUCCESS;
+  77:../../shields/Murata-dualstack/src/fifo.c ****     }
+  78:../../shields/Murata-dualstack/src/fifo.c **** 
+  79:../../shields/Murata-dualstack/src/fifo.c ****     uint16_t space_left_before_max_size = fifo->max_size - fifo->tail_idx;
+  80:../../shields/Murata-dualstack/src/fifo.c ****     uint16_t space_needed_after_wrap = len - space_left_before_max_size;
+  81:../../shields/Murata-dualstack/src/fifo.c ****     if(fifo->head_idx > space_needed_after_wrap)
+  82:../../shields/Murata-dualstack/src/fifo.c ****     {
+  83:../../shields/Murata-dualstack/src/fifo.c ****         // wrap
+  84:../../shields/Murata-dualstack/src/fifo.c ****         memcpy(fifo->buffer + fifo->tail_idx, data, space_left_before_max_size);
+  85:../../shields/Murata-dualstack/src/fifo.c ****         memcpy(fifo->buffer, data + space_left_before_max_size, space_needed_after_wrap);
+  86:../../shields/Murata-dualstack/src/fifo.c ****         fifo->tail_idx = space_needed_after_wrap;
+  87:../../shields/Murata-dualstack/src/fifo.c ****         return oss7SUCCESS;
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 3
+
+
+  88:../../shields/Murata-dualstack/src/fifo.c ****     }
+  89:../../shields/Murata-dualstack/src/fifo.c ****     else
+  90:../../shields/Murata-dualstack/src/fifo.c ****         return oss7ESIZE;
+  91:../../shields/Murata-dualstack/src/fifo.c **** }
+  92:../../shields/Murata-dualstack/src/fifo.c **** 
+  93:../../shields/Murata-dualstack/src/fifo.c **** error_t fifo_put_byte(fifo_t* fifo, uint8_t byte)
+  94:../../shields/Murata-dualstack/src/fifo.c **** {
+  95:../../shields/Murata-dualstack/src/fifo.c ****     return fifo_put(fifo, &byte, 1);
+  96:../../shields/Murata-dualstack/src/fifo.c **** }
+  97:../../shields/Murata-dualstack/src/fifo.c **** 
+  98:../../shields/Murata-dualstack/src/fifo.c **** static error_t check_len(fifo_t* fifo, uint16_t len) {
+  99:../../shields/Murata-dualstack/src/fifo.c ****   // quickly bail out if requested length is zero, nothing to do
+ 100:../../shields/Murata-dualstack/src/fifo.c ****   if(len == 0) { return oss7SUCCESS; }
+ 101:../../shields/Murata-dualstack/src/fifo.c **** 
+ 102:../../shields/Murata-dualstack/src/fifo.c ****   // quick check if requested len doesn't exceed available data
+ 103:../../shields/Murata-dualstack/src/fifo.c ****   if(len > fifo_get_size(fifo)) { return oss7ESIZE; }
+ 104:../../shields/Murata-dualstack/src/fifo.c **** 
+ 105:../../shields/Murata-dualstack/src/fifo.c ****   return oss7SUCCESS;
+ 106:../../shields/Murata-dualstack/src/fifo.c **** }
+ 107:../../shields/Murata-dualstack/src/fifo.c **** 
+ 108:../../shields/Murata-dualstack/src/fifo.c **** static void skip(fifo_t* fifo, uint16_t len) {
+  29              		.loc 1 108 46 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+ 109:../../shields/Murata-dualstack/src/fifo.c ****   // progress head to implement popping behaviour
+ 110:../../shields/Murata-dualstack/src/fifo.c ****   fifo->head_idx = (fifo->head_idx + len);
+  34              		.loc 1 110 3 view .LVU1
+  35              		.loc 1 110 25 is_stmt 0 view .LVU2
+  36 0000 0388     		ldrh	r3, [r0]
+  37              		.loc 1 110 36 view .LVU3
+  38 0002 1944     		add	r1, r1, r3
+  39              	.LVL1:
+  40              		.loc 1 110 36 view .LVU4
+  41 0004 89B2     		uxth	r1, r1
+  42              		.loc 1 110 18 view .LVU5
+  43 0006 0180     		strh	r1, [r0]	@ movhi
+ 111:../../shields/Murata-dualstack/src/fifo.c ****   if(fifo->head_idx > fifo->max_size)
+  44              		.loc 1 111 3 is_stmt 1 view .LVU6
+  45              		.loc 1 111 27 is_stmt 0 view .LVU7
+  46 0008 8388     		ldrh	r3, [r0, #4]
+  47              		.loc 1 111 5 view .LVU8
+  48 000a 9942     		cmp	r1, r3
+  49 000c 04D9     		bls	.L1
+ 112:../../shields/Murata-dualstack/src/fifo.c ****     fifo->head_idx = fifo->head_idx % fifo->max_size; // when head_idx == max_size we do not want t
+  50              		.loc 1 112 5 is_stmt 1 view .LVU9
+  51              		.loc 1 112 20 is_stmt 0 view .LVU10
+  52 000e B1FBF3F2 		udiv	r2, r1, r3
+  53 0012 03FB1211 		mls	r1, r3, r2, r1
+  54 0016 0180     		strh	r1, [r0]	@ movhi
+  55              	.L1:
+ 113:../../shields/Murata-dualstack/src/fifo.c **** }
+  56              		.loc 1 113 1 view .LVU11
+  57 0018 7047     		bx	lr
+  58              		.cfi_endproc
+  59              	.LFE6:
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 4
+
+
+  61              		.section	.text.fifo_init_filled,"ax",%progbits
+  62              		.align	1
+  63              		.global	fifo_init_filled
+  64              		.syntax unified
+  65              		.thumb
+  66              		.thumb_func
+  67              		.fpu fpv4-sp-d16
+  69              	fifo_init_filled:
+  70              	.LVL2:
+  71              	.LFB1:
+  34:../../shields/Murata-dualstack/src/fifo.c ****     fifo->buffer = buffer;
+  72              		.loc 1 34 1 is_stmt 1 view -0
+  73              		.cfi_startproc
+  74              		@ args = 0, pretend = 0, frame = 0
+  75              		@ frame_needed = 0, uses_anonymous_args = 0
+  76              		@ link register save eliminated.
+  35:../../shields/Murata-dualstack/src/fifo.c ****     fifo->head_idx = 0;
+  77              		.loc 1 35 5 view .LVU13
+  35:../../shields/Murata-dualstack/src/fifo.c ****     fifo->head_idx = 0;
+  78              		.loc 1 35 18 is_stmt 0 view .LVU14
+  79 0000 8160     		str	r1, [r0, #8]
+  36:../../shields/Murata-dualstack/src/fifo.c ****     fifo->max_size = max_size - 1;
+  80              		.loc 1 36 5 is_stmt 1 view .LVU15
+  36:../../shields/Murata-dualstack/src/fifo.c ****     fifo->max_size = max_size - 1;
+  81              		.loc 1 36 20 is_stmt 0 view .LVU16
+  82 0002 0021     		movs	r1, #0
+  83              	.LVL3:
+  36:../../shields/Murata-dualstack/src/fifo.c ****     fifo->max_size = max_size - 1;
+  84              		.loc 1 36 20 view .LVU17
+  85 0004 0180     		strh	r1, [r0]	@ movhi
+  37:../../shields/Murata-dualstack/src/fifo.c ****     fifo->tail_idx = filled_size;
+  86              		.loc 1 37 5 is_stmt 1 view .LVU18
+  37:../../shields/Murata-dualstack/src/fifo.c ****     fifo->tail_idx = filled_size;
+  87              		.loc 1 37 31 is_stmt 0 view .LVU19
+  88 0006 013B     		subs	r3, r3, #1
+  89              	.LVL4:
+  37:../../shields/Murata-dualstack/src/fifo.c ****     fifo->tail_idx = filled_size;
+  90              		.loc 1 37 20 view .LVU20
+  91 0008 8380     		strh	r3, [r0, #4]	@ movhi
+  38:../../shields/Murata-dualstack/src/fifo.c ****     fifo->is_subview = false;
+  92              		.loc 1 38 5 is_stmt 1 view .LVU21
+  38:../../shields/Murata-dualstack/src/fifo.c ****     fifo->is_subview = false;
+  93              		.loc 1 38 20 is_stmt 0 view .LVU22
+  94 000a 4280     		strh	r2, [r0, #2]	@ movhi
+  39:../../shields/Murata-dualstack/src/fifo.c **** }
+  95              		.loc 1 39 5 is_stmt 1 view .LVU23
+  39:../../shields/Murata-dualstack/src/fifo.c **** }
+  96              		.loc 1 39 22 is_stmt 0 view .LVU24
+  97 000c 0173     		strb	r1, [r0, #12]
+  40:../../shields/Murata-dualstack/src/fifo.c **** 
+  98              		.loc 1 40 1 view .LVU25
+  99 000e 7047     		bx	lr
+ 100              		.cfi_endproc
+ 101              	.LFE1:
+ 103              		.section	.text.fifo_init,"ax",%progbits
+ 104              		.align	1
+ 105              		.global	fifo_init
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 5
+
+
+ 106              		.syntax unified
+ 107              		.thumb
+ 108              		.thumb_func
+ 109              		.fpu fpv4-sp-d16
+ 111              	fifo_init:
+ 112              	.LVL5:
+ 113              	.LFB0:
+  29:../../shields/Murata-dualstack/src/fifo.c ****     fifo_init_filled(fifo, buffer, 0, max_size);
+ 114              		.loc 1 29 1 is_stmt 1 view -0
+ 115              		.cfi_startproc
+ 116              		@ args = 0, pretend = 0, frame = 0
+ 117              		@ frame_needed = 0, uses_anonymous_args = 0
+  29:../../shields/Murata-dualstack/src/fifo.c ****     fifo_init_filled(fifo, buffer, 0, max_size);
+ 118              		.loc 1 29 1 is_stmt 0 view .LVU27
+ 119 0000 08B5     		push	{r3, lr}
+ 120              	.LCFI0:
+ 121              		.cfi_def_cfa_offset 8
+ 122              		.cfi_offset 3, -8
+ 123              		.cfi_offset 14, -4
+  30:../../shields/Murata-dualstack/src/fifo.c **** }
+ 124              		.loc 1 30 5 is_stmt 1 view .LVU28
+ 125 0002 1346     		mov	r3, r2
+ 126 0004 0022     		movs	r2, #0
+ 127              	.LVL6:
+  30:../../shields/Murata-dualstack/src/fifo.c **** }
+ 128              		.loc 1 30 5 is_stmt 0 view .LVU29
+ 129 0006 FFF7FEFF 		bl	fifo_init_filled
+ 130              	.LVL7:
+  31:../../shields/Murata-dualstack/src/fifo.c **** 
+ 131              		.loc 1 31 1 view .LVU30
+ 132 000a 08BD     		pop	{r3, pc}
+ 133              		.cfi_endproc
+ 134              	.LFE0:
+ 136              		.section	.text.fifo_init_subview,"ax",%progbits
+ 137              		.align	1
+ 138              		.global	fifo_init_subview
+ 139              		.syntax unified
+ 140              		.thumb
+ 141              		.thumb_func
+ 142              		.fpu fpv4-sp-d16
+ 144              	fifo_init_subview:
+ 145              	.LVL8:
+ 146              	.LFB2:
+  42:../../shields/Murata-dualstack/src/fifo.c ****     //assert(subset_size <= fifo_get_size(original_fifo));
+ 147              		.loc 1 42 107 is_stmt 1 view -0
+ 148              		.cfi_startproc
+ 149              		@ args = 0, pretend = 0, frame = 0
+ 150              		@ frame_needed = 0, uses_anonymous_args = 0
+ 151              		@ link register save eliminated.
+  42:../../shields/Murata-dualstack/src/fifo.c ****     //assert(subset_size <= fifo_get_size(original_fifo));
+ 152              		.loc 1 42 107 is_stmt 0 view .LVU32
+ 153 0000 30B4     		push	{r4, r5}
+ 154              	.LCFI1:
+ 155              		.cfi_def_cfa_offset 8
+ 156              		.cfi_offset 4, -8
+ 157              		.cfi_offset 5, -4
+  46:../../shields/Murata-dualstack/src/fifo.c ****     subset_fifo->head_idx = original_fifo->head_idx + offset;
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 6
+
+
+ 158              		.loc 1 46 5 is_stmt 1 view .LVU33
+  46:../../shields/Murata-dualstack/src/fifo.c ****     subset_fifo->head_idx = original_fifo->head_idx + offset;
+ 159              		.loc 1 46 40 is_stmt 0 view .LVU34
+ 160 0002 8C68     		ldr	r4, [r1, #8]
+  46:../../shields/Murata-dualstack/src/fifo.c ****     subset_fifo->head_idx = original_fifo->head_idx + offset;
+ 161              		.loc 1 46 25 view .LVU35
+ 162 0004 8460     		str	r4, [r0, #8]
+  47:../../shields/Murata-dualstack/src/fifo.c ****     subset_fifo->tail_idx = original_fifo->head_idx + offset + subset_size;
+ 163              		.loc 1 47 5 is_stmt 1 view .LVU36
+  47:../../shields/Murata-dualstack/src/fifo.c ****     subset_fifo->tail_idx = original_fifo->head_idx + offset + subset_size;
+ 164              		.loc 1 47 42 is_stmt 0 view .LVU37
+ 165 0006 0D88     		ldrh	r5, [r1]
+  47:../../shields/Murata-dualstack/src/fifo.c ****     subset_fifo->tail_idx = original_fifo->head_idx + offset + subset_size;
+ 166              		.loc 1 47 53 view .LVU38
+ 167 0008 1544     		add	r5, r5, r2
+  47:../../shields/Murata-dualstack/src/fifo.c ****     subset_fifo->tail_idx = original_fifo->head_idx + offset + subset_size;
+ 168              		.loc 1 47 27 view .LVU39
+ 169 000a 0580     		strh	r5, [r0]	@ movhi
+  48:../../shields/Murata-dualstack/src/fifo.c ****     if(subset_fifo->tail_idx > original_fifo->max_size) {
+ 170              		.loc 1 48 5 is_stmt 1 view .LVU40
+  48:../../shields/Murata-dualstack/src/fifo.c ****     if(subset_fifo->tail_idx > original_fifo->max_size) {
+ 171              		.loc 1 48 42 is_stmt 0 view .LVU41
+ 172 000c 0C88     		ldrh	r4, [r1]
+  48:../../shields/Murata-dualstack/src/fifo.c ****     if(subset_fifo->tail_idx > original_fifo->max_size) {
+ 173              		.loc 1 48 53 view .LVU42
+ 174 000e 1444     		add	r4, r4, r2
+  48:../../shields/Murata-dualstack/src/fifo.c ****     if(subset_fifo->tail_idx > original_fifo->max_size) {
+ 175              		.loc 1 48 62 view .LVU43
+ 176 0010 13FA84F3 		uxtah	r3, r3, r4
+ 177              	.LVL9:
+  48:../../shields/Murata-dualstack/src/fifo.c ****     if(subset_fifo->tail_idx > original_fifo->max_size) {
+ 178              		.loc 1 48 62 view .LVU44
+ 179 0014 9BB2     		uxth	r3, r3
+  48:../../shields/Murata-dualstack/src/fifo.c ****     if(subset_fifo->tail_idx > original_fifo->max_size) {
+ 180              		.loc 1 48 27 view .LVU45
+ 181 0016 4380     		strh	r3, [r0, #2]	@ movhi
+  49:../../shields/Murata-dualstack/src/fifo.c ****       // wrap
+ 182              		.loc 1 49 5 is_stmt 1 view .LVU46
+  49:../../shields/Murata-dualstack/src/fifo.c ****       // wrap
+ 183              		.loc 1 49 45 is_stmt 0 view .LVU47
+ 184 0018 8A88     		ldrh	r2, [r1, #4]
+ 185              	.LVL10:
+  49:../../shields/Murata-dualstack/src/fifo.c ****       // wrap
+ 186              		.loc 1 49 7 view .LVU48
+ 187 001a 9342     		cmp	r3, r2
+ 188 001c 01D9     		bls	.L7
+  51:../../shields/Murata-dualstack/src/fifo.c ****     }
+ 189              		.loc 1 51 7 is_stmt 1 view .LVU49
+  51:../../shields/Murata-dualstack/src/fifo.c ****     }
+ 190              		.loc 1 51 53 is_stmt 0 view .LVU50
+ 191 001e 9B1A     		subs	r3, r3, r2
+  51:../../shields/Murata-dualstack/src/fifo.c ****     }
+ 192              		.loc 1 51 29 view .LVU51
+ 193 0020 4380     		strh	r3, [r0, #2]	@ movhi
+ 194              	.L7:
+  54:../../shields/Murata-dualstack/src/fifo.c ****     subset_fifo->is_subview = true;
+ 195              		.loc 1 54 5 is_stmt 1 view .LVU52
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 7
+
+
+  54:../../shields/Murata-dualstack/src/fifo.c ****     subset_fifo->is_subview = true;
+ 196              		.loc 1 54 42 is_stmt 0 view .LVU53
+ 197 0022 8B88     		ldrh	r3, [r1, #4]
+  54:../../shields/Murata-dualstack/src/fifo.c ****     subset_fifo->is_subview = true;
+ 198              		.loc 1 54 27 view .LVU54
+ 199 0024 8380     		strh	r3, [r0, #4]	@ movhi
+  55:../../shields/Murata-dualstack/src/fifo.c **** }
+ 200              		.loc 1 55 5 is_stmt 1 view .LVU55
+  55:../../shields/Murata-dualstack/src/fifo.c **** }
+ 201              		.loc 1 55 29 is_stmt 0 view .LVU56
+ 202 0026 0123     		movs	r3, #1
+ 203 0028 0373     		strb	r3, [r0, #12]
+  56:../../shields/Murata-dualstack/src/fifo.c **** 
+ 204              		.loc 1 56 1 view .LVU57
+ 205 002a 30BC     		pop	{r4, r5}
+ 206              	.LCFI2:
+ 207              		.cfi_restore 5
+ 208              		.cfi_restore 4
+ 209              		.cfi_def_cfa_offset 0
+ 210 002c 7047     		bx	lr
+ 211              		.cfi_endproc
+ 212              	.LFE2:
+ 214              		.section	.text.fifo_put,"ax",%progbits
+ 215              		.align	1
+ 216              		.global	fifo_put
+ 217              		.syntax unified
+ 218              		.thumb
+ 219              		.thumb_func
+ 220              		.fpu fpv4-sp-d16
+ 222              	fifo_put:
+ 223              	.LVL11:
+ 224              	.LFB3:
+  59:../../shields/Murata-dualstack/src/fifo.c ****     if(fifo->is_subview)
+ 225              		.loc 1 59 1 is_stmt 1 view -0
+ 226              		.cfi_startproc
+ 227              		@ args = 0, pretend = 0, frame = 0
+ 228              		@ frame_needed = 0, uses_anonymous_args = 0
+  59:../../shields/Murata-dualstack/src/fifo.c ****     if(fifo->is_subview)
+ 229              		.loc 1 59 1 is_stmt 0 view .LVU59
+ 230 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 231              	.LCFI3:
+ 232              		.cfi_def_cfa_offset 24
+ 233              		.cfi_offset 3, -24
+ 234              		.cfi_offset 4, -20
+ 235              		.cfi_offset 5, -16
+ 236              		.cfi_offset 6, -12
+ 237              		.cfi_offset 7, -8
+ 238              		.cfi_offset 14, -4
+  60:../../shields/Murata-dualstack/src/fifo.c ****         return EINVAL;
+ 239              		.loc 1 60 5 is_stmt 1 view .LVU60
+  60:../../shields/Murata-dualstack/src/fifo.c ****         return EINVAL;
+ 240              		.loc 1 60 12 is_stmt 0 view .LVU61
+ 241 0002 037B     		ldrb	r3, [r0, #12]	@ zero_extendqisi2
+  60:../../shields/Murata-dualstack/src/fifo.c ****         return EINVAL;
+ 242              		.loc 1 60 7 view .LVU62
+ 243 0004 002B     		cmp	r3, #0
+ 244 0006 3ED1     		bne	.L13
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 8
+
+
+ 245 0008 1546     		mov	r5, r2
+ 246 000a 0E46     		mov	r6, r1
+ 247 000c 0446     		mov	r4, r0
+  63:../../shields/Murata-dualstack/src/fifo.c ****     {
+ 248              		.loc 1 63 5 is_stmt 1 view .LVU63
+  63:../../shields/Murata-dualstack/src/fifo.c ****     {
+ 249              		.loc 1 63 12 is_stmt 0 view .LVU64
+ 250 000e 4388     		ldrh	r3, [r0, #2]
+  63:../../shields/Murata-dualstack/src/fifo.c ****     {
+ 251              		.loc 1 63 29 view .LVU65
+ 252 0010 0188     		ldrh	r1, [r0]
+ 253              	.LVL12:
+  63:../../shields/Murata-dualstack/src/fifo.c ****     {
+ 254              		.loc 1 63 7 view .LVU66
+ 255 0012 8B42     		cmp	r3, r1
+ 256 0014 10D2     		bcs	.L11
+  65:../../shields/Murata-dualstack/src/fifo.c ****             return oss7ESIZE;
+ 257              		.loc 1 65 9 is_stmt 1 view .LVU67
+  65:../../shields/Murata-dualstack/src/fifo.c ****             return oss7ESIZE;
+ 258              		.loc 1 65 27 is_stmt 0 view .LVU68
+ 259 0016 1A44     		add	r2, r2, r3
+ 260              	.LVL13:
+  65:../../shields/Murata-dualstack/src/fifo.c ****             return oss7ESIZE;
+ 261              		.loc 1 65 11 view .LVU69
+ 262 0018 8A42     		cmp	r2, r1
+ 263 001a 02DB     		blt	.L17
+  66:../../shields/Murata-dualstack/src/fifo.c ****         memcpy(fifo->buffer + fifo->tail_idx, data, len);
+ 264              		.loc 1 66 20 view .LVU70
+ 265 001c 41F28A30 		movw	r0, #5002
+ 266              	.LVL14:
+  66:../../shields/Murata-dualstack/src/fifo.c ****         memcpy(fifo->buffer + fifo->tail_idx, data, len);
+ 267              		.loc 1 66 20 view .LVU71
+ 268 0020 32E0     		b	.L9
+ 269              	.LVL15:
+ 270              	.L17:
+  67:../../shields/Murata-dualstack/src/fifo.c ****         fifo->tail_idx += len;
+ 271              		.loc 1 67 9 is_stmt 1 view .LVU72
+  67:../../shields/Murata-dualstack/src/fifo.c ****         fifo->tail_idx += len;
+ 272              		.loc 1 67 20 is_stmt 0 view .LVU73
+ 273 0022 8068     		ldr	r0, [r0, #8]
+ 274              	.LVL16:
+  67:../../shields/Murata-dualstack/src/fifo.c ****         fifo->tail_idx += len;
+ 275              		.loc 1 67 9 view .LVU74
+ 276 0024 2A46     		mov	r2, r5
+ 277 0026 3146     		mov	r1, r6
+ 278 0028 1844     		add	r0, r0, r3
+ 279 002a FFF7FEFF 		bl	memcpy
+ 280              	.LVL17:
+  68:../../shields/Murata-dualstack/src/fifo.c ****         return oss7SUCCESS;
+ 281              		.loc 1 68 9 is_stmt 1 view .LVU75
+  68:../../shields/Murata-dualstack/src/fifo.c ****         return oss7SUCCESS;
+ 282              		.loc 1 68 24 is_stmt 0 view .LVU76
+ 283 002e 6288     		ldrh	r2, [r4, #2]
+ 284 0030 1544     		add	r5, r5, r2
+ 285 0032 6580     		strh	r5, [r4, #2]	@ movhi
+  69:../../shields/Murata-dualstack/src/fifo.c ****     }
+ 286              		.loc 1 69 9 is_stmt 1 view .LVU77
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 9
+
+
+  69:../../shields/Murata-dualstack/src/fifo.c ****     }
+ 287              		.loc 1 69 16 is_stmt 0 view .LVU78
+ 288 0034 0020     		movs	r0, #0
+ 289 0036 27E0     		b	.L9
+ 290              	.LVL18:
+ 291              	.L11:
+  72:../../shields/Murata-dualstack/src/fifo.c ****     {
+ 292              		.loc 1 72 5 is_stmt 1 view .LVU79
+  72:../../shields/Murata-dualstack/src/fifo.c ****     {
+ 293              		.loc 1 72 23 is_stmt 0 view .LVU80
+ 294 0038 D018     		adds	r0, r2, r3
+ 295              	.LVL19:
+  72:../../shields/Murata-dualstack/src/fifo.c ****     {
+ 296              		.loc 1 72 36 view .LVU81
+ 297 003a A288     		ldrh	r2, [r4, #4]
+ 298              	.LVL20:
+  72:../../shields/Murata-dualstack/src/fifo.c ****     {
+ 299              		.loc 1 72 7 view .LVU82
+ 300 003c 9042     		cmp	r0, r2
+ 301 003e 09DD     		ble	.L18
+  79:../../shields/Murata-dualstack/src/fifo.c ****     uint16_t space_needed_after_wrap = len - space_left_before_max_size;
+ 302              		.loc 1 79 5 is_stmt 1 view .LVU83
+  79:../../shields/Murata-dualstack/src/fifo.c ****     uint16_t space_needed_after_wrap = len - space_left_before_max_size;
+ 303              		.loc 1 79 14 is_stmt 0 view .LVU84
+ 304 0040 D71A     		subs	r7, r2, r3
+ 305 0042 BFB2     		uxth	r7, r7
+ 306              	.LVL21:
+  80:../../shields/Murata-dualstack/src/fifo.c ****     if(fifo->head_idx > space_needed_after_wrap)
+ 307              		.loc 1 80 5 is_stmt 1 view .LVU85
+  80:../../shields/Murata-dualstack/src/fifo.c ****     if(fifo->head_idx > space_needed_after_wrap)
+ 308              		.loc 1 80 14 is_stmt 0 view .LVU86
+ 309 0044 9A1A     		subs	r2, r3, r2
+ 310 0046 1544     		add	r5, r5, r2
+ 311 0048 ADB2     		uxth	r5, r5
+ 312              	.LVL22:
+  81:../../shields/Murata-dualstack/src/fifo.c ****     {
+ 313              		.loc 1 81 5 is_stmt 1 view .LVU87
+  81:../../shields/Murata-dualstack/src/fifo.c ****     {
+ 314              		.loc 1 81 7 is_stmt 0 view .LVU88
+ 315 004a A942     		cmp	r1, r5
+ 316 004c 0DD8     		bhi	.L19
+  90:../../shields/Murata-dualstack/src/fifo.c **** }
+ 317              		.loc 1 90 16 view .LVU89
+ 318 004e 41F28A30 		movw	r0, #5002
+ 319 0052 19E0     		b	.L9
+ 320              	.LVL23:
+ 321              	.L18:
+  74:../../shields/Murata-dualstack/src/fifo.c ****         fifo->tail_idx += len;
+ 322              		.loc 1 74 9 is_stmt 1 view .LVU90
+  74:../../shields/Murata-dualstack/src/fifo.c ****         fifo->tail_idx += len;
+ 323              		.loc 1 74 20 is_stmt 0 view .LVU91
+ 324 0054 A068     		ldr	r0, [r4, #8]
+  74:../../shields/Murata-dualstack/src/fifo.c ****         fifo->tail_idx += len;
+ 325              		.loc 1 74 9 view .LVU92
+ 326 0056 2A46     		mov	r2, r5
+ 327 0058 3146     		mov	r1, r6
+ 328 005a 1844     		add	r0, r0, r3
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 10
+
+
+ 329 005c FFF7FEFF 		bl	memcpy
+ 330              	.LVL24:
+  75:../../shields/Murata-dualstack/src/fifo.c ****         return oss7SUCCESS;
+ 331              		.loc 1 75 9 is_stmt 1 view .LVU93
+  75:../../shields/Murata-dualstack/src/fifo.c ****         return oss7SUCCESS;
+ 332              		.loc 1 75 24 is_stmt 0 view .LVU94
+ 333 0060 6288     		ldrh	r2, [r4, #2]
+ 334 0062 1544     		add	r5, r5, r2
+ 335 0064 6580     		strh	r5, [r4, #2]	@ movhi
+  76:../../shields/Murata-dualstack/src/fifo.c ****     }
+ 336              		.loc 1 76 9 is_stmt 1 view .LVU95
+  76:../../shields/Murata-dualstack/src/fifo.c ****     }
+ 337              		.loc 1 76 16 is_stmt 0 view .LVU96
+ 338 0066 0020     		movs	r0, #0
+ 339 0068 0EE0     		b	.L9
+ 340              	.LVL25:
+ 341              	.L19:
+  84:../../shields/Murata-dualstack/src/fifo.c ****         memcpy(fifo->buffer, data + space_left_before_max_size, space_needed_after_wrap);
+ 342              		.loc 1 84 9 is_stmt 1 view .LVU97
+  84:../../shields/Murata-dualstack/src/fifo.c ****         memcpy(fifo->buffer, data + space_left_before_max_size, space_needed_after_wrap);
+ 343              		.loc 1 84 20 is_stmt 0 view .LVU98
+ 344 006a A068     		ldr	r0, [r4, #8]
+  84:../../shields/Murata-dualstack/src/fifo.c ****         memcpy(fifo->buffer, data + space_left_before_max_size, space_needed_after_wrap);
+ 345              		.loc 1 84 9 view .LVU99
+ 346 006c 3A46     		mov	r2, r7
+ 347 006e 3146     		mov	r1, r6
+ 348 0070 1844     		add	r0, r0, r3
+ 349 0072 FFF7FEFF 		bl	memcpy
+ 350              	.LVL26:
+  85:../../shields/Murata-dualstack/src/fifo.c ****         fifo->tail_idx = space_needed_after_wrap;
+ 351              		.loc 1 85 9 is_stmt 1 view .LVU100
+ 352 0076 2A46     		mov	r2, r5
+ 353 0078 F119     		adds	r1, r6, r7
+ 354 007a A068     		ldr	r0, [r4, #8]
+ 355 007c FFF7FEFF 		bl	memcpy
+ 356              	.LVL27:
+  86:../../shields/Murata-dualstack/src/fifo.c ****         return oss7SUCCESS;
+ 357              		.loc 1 86 9 view .LVU101
+  86:../../shields/Murata-dualstack/src/fifo.c ****         return oss7SUCCESS;
+ 358              		.loc 1 86 24 is_stmt 0 view .LVU102
+ 359 0080 6580     		strh	r5, [r4, #2]	@ movhi
+  87:../../shields/Murata-dualstack/src/fifo.c ****     }
+ 360              		.loc 1 87 9 is_stmt 1 view .LVU103
+  87:../../shields/Murata-dualstack/src/fifo.c ****     }
+ 361              		.loc 1 87 16 is_stmt 0 view .LVU104
+ 362 0082 0020     		movs	r0, #0
+ 363 0084 00E0     		b	.L9
+ 364              	.LVL28:
+ 365              	.L13:
+  61:../../shields/Murata-dualstack/src/fifo.c **** 
+ 366              		.loc 1 61 16 view .LVU105
+ 367 0086 1620     		movs	r0, #22
+ 368              	.LVL29:
+ 369              	.L9:
+  91:../../shields/Murata-dualstack/src/fifo.c **** 
+ 370              		.loc 1 91 1 view .LVU106
+ 371 0088 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 11
+
+
+ 372              		.cfi_endproc
+ 373              	.LFE3:
+ 375              		.section	.text.fifo_put_byte,"ax",%progbits
+ 376              		.align	1
+ 377              		.global	fifo_put_byte
+ 378              		.syntax unified
+ 379              		.thumb
+ 380              		.thumb_func
+ 381              		.fpu fpv4-sp-d16
+ 383              	fifo_put_byte:
+ 384              	.LVL30:
+ 385              	.LFB4:
+  94:../../shields/Murata-dualstack/src/fifo.c ****     return fifo_put(fifo, &byte, 1);
+ 386              		.loc 1 94 1 is_stmt 1 view -0
+ 387              		.cfi_startproc
+ 388              		@ args = 0, pretend = 0, frame = 8
+ 389              		@ frame_needed = 0, uses_anonymous_args = 0
+  94:../../shields/Murata-dualstack/src/fifo.c ****     return fifo_put(fifo, &byte, 1);
+ 390              		.loc 1 94 1 is_stmt 0 view .LVU108
+ 391 0000 00B5     		push	{lr}
+ 392              	.LCFI4:
+ 393              		.cfi_def_cfa_offset 4
+ 394              		.cfi_offset 14, -4
+ 395 0002 83B0     		sub	sp, sp, #12
+ 396              	.LCFI5:
+ 397              		.cfi_def_cfa_offset 16
+ 398 0004 8DF80710 		strb	r1, [sp, #7]
+  95:../../shields/Murata-dualstack/src/fifo.c **** }
+ 399              		.loc 1 95 5 is_stmt 1 view .LVU109
+  95:../../shields/Murata-dualstack/src/fifo.c **** }
+ 400              		.loc 1 95 12 is_stmt 0 view .LVU110
+ 401 0008 0122     		movs	r2, #1
+ 402 000a 0DF10701 		add	r1, sp, #7
+ 403              	.LVL31:
+  95:../../shields/Murata-dualstack/src/fifo.c **** }
+ 404              		.loc 1 95 12 view .LVU111
+ 405 000e FFF7FEFF 		bl	fifo_put
+ 406              	.LVL32:
+  96:../../shields/Murata-dualstack/src/fifo.c **** 
+ 407              		.loc 1 96 1 view .LVU112
+ 408 0012 03B0     		add	sp, sp, #12
+ 409              	.LCFI6:
+ 410              		.cfi_def_cfa_offset 4
+ 411              		@ sp needed
+ 412 0014 5DF804FB 		ldr	pc, [sp], #4
+ 413              		.cfi_endproc
+ 414              	.LFE4:
+ 416              		.section	.text.fifo_get_size,"ax",%progbits
+ 417              		.align	1
+ 418              		.global	fifo_get_size
+ 419              		.syntax unified
+ 420              		.thumb
+ 421              		.thumb_func
+ 422              		.fpu fpv4-sp-d16
+ 424              	fifo_get_size:
+ 425              	.LVL33:
+ 426              	.LFB10:
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 12
+
+
+ 114:../../shields/Murata-dualstack/src/fifo.c **** 
+ 115:../../shields/Murata-dualstack/src/fifo.c **** error_t fifo_skip(fifo_t* fifo, uint16_t len) {
+ 116:../../shields/Murata-dualstack/src/fifo.c ****   error_t err = check_len(fifo, len);
+ 117:../../shields/Murata-dualstack/src/fifo.c ****   if(err != oss7SUCCESS)
+ 118:../../shields/Murata-dualstack/src/fifo.c ****     return err;
+ 119:../../shields/Murata-dualstack/src/fifo.c **** 
+ 120:../../shields/Murata-dualstack/src/fifo.c ****   skip(fifo, len);
+ 121:../../shields/Murata-dualstack/src/fifo.c **** 
+ 122:../../shields/Murata-dualstack/src/fifo.c ****   return oss7SUCCESS;
+ 123:../../shields/Murata-dualstack/src/fifo.c **** }
+ 124:../../shields/Murata-dualstack/src/fifo.c **** 
+ 125:../../shields/Murata-dualstack/src/fifo.c **** error_t fifo_peek(fifo_t* fifo, uint8_t* buffer, uint16_t offset, uint16_t len) {
+ 126:../../shields/Murata-dualstack/src/fifo.c ****   error_t err = check_len(fifo, len);
+ 127:../../shields/Murata-dualstack/src/fifo.c ****   if(err != oss7SUCCESS)
+ 128:../../shields/Murata-dualstack/src/fifo.c ****     return err;
+ 129:../../shields/Murata-dualstack/src/fifo.c **** 
+ 130:../../shields/Murata-dualstack/src/fifo.c ****   // determine start/end index (in circular buffer)
+ 131:../../shields/Murata-dualstack/src/fifo.c ****   uint16_t start_idx = (fifo->head_idx + offset) % fifo->max_size;
+ 132:../../shields/Murata-dualstack/src/fifo.c ****   uint16_t end_idx   = (start_idx      + len   ) % fifo->max_size;
+ 133:../../shields/Murata-dualstack/src/fifo.c **** 
+ 134:../../shields/Murata-dualstack/src/fifo.c ****   // simple case: the end doesn't wrap...
+ 135:../../shields/Murata-dualstack/src/fifo.c ****   // .............
+ 136:../../shields/Murata-dualstack/src/fifo.c ****   //     S-len->E
+ 137:../../shields/Murata-dualstack/src/fifo.c ****   if(end_idx >= start_idx) {
+ 138:../../shields/Murata-dualstack/src/fifo.c ****     memcpy(buffer, fifo->buffer + start_idx, len);
+ 139:../../shields/Murata-dualstack/src/fifo.c ****     return oss7SUCCESS;
+ 140:../../shields/Murata-dualstack/src/fifo.c ****   }
+ 141:../../shields/Murata-dualstack/src/fifo.c **** 
+ 142:../../shields/Murata-dualstack/src/fifo.c ****   // the end does wrap...
+ 143:../../shields/Murata-dualstack/src/fifo.c ****   // .............
+ 144:../../shields/Murata-dualstack/src/fifo.c ****   // ->E S--len-->
+ 145:../../shields/Murata-dualstack/src/fifo.c ****   //      <--p1-->
+ 146:../../shields/Murata-dualstack/src/fifo.c ****   uint16_t part1 = fifo->max_size - start_idx;
+ 147:../../shields/Murata-dualstack/src/fifo.c ****   // copy first part from start up to the end of the buffer
+ 148:../../shields/Murata-dualstack/src/fifo.c ****   memcpy(buffer,         fifo->buffer + start_idx, part1);
+ 149:../../shields/Murata-dualstack/src/fifo.c ****   // copy remaining (wrapped) bytes from start
+ 150:../../shields/Murata-dualstack/src/fifo.c ****   memcpy(buffer + part1, fifo->buffer,             len - part1);
+ 151:../../shields/Murata-dualstack/src/fifo.c **** 
+ 152:../../shields/Murata-dualstack/src/fifo.c ****   return oss7SUCCESS;
+ 153:../../shields/Murata-dualstack/src/fifo.c **** }
+ 154:../../shields/Murata-dualstack/src/fifo.c **** 
+ 155:../../shields/Murata-dualstack/src/fifo.c **** error_t fifo_pop(fifo_t* fifo, uint8_t* buffer, uint16_t len) {
+ 156:../../shields/Murata-dualstack/src/fifo.c ****   // use peek logic to retrieve data
+ 157:../../shields/Murata-dualstack/src/fifo.c ****   error_t err = fifo_peek(fifo, buffer, 0, len);
+ 158:../../shields/Murata-dualstack/src/fifo.c ****   if( err != oss7SUCCESS ) { return err; }
+ 159:../../shields/Murata-dualstack/src/fifo.c **** 
+ 160:../../shields/Murata-dualstack/src/fifo.c ****   skip(fifo, len);
+ 161:../../shields/Murata-dualstack/src/fifo.c **** 
+ 162:../../shields/Murata-dualstack/src/fifo.c ****   return oss7SUCCESS;
+ 163:../../shields/Murata-dualstack/src/fifo.c **** }
+ 164:../../shields/Murata-dualstack/src/fifo.c **** 
+ 165:../../shields/Murata-dualstack/src/fifo.c **** uint16_t fifo_get_size(fifo_t* fifo)
+ 166:../../shields/Murata-dualstack/src/fifo.c **** {
+ 427              		.loc 1 166 1 is_stmt 1 view -0
+ 428              		.cfi_startproc
+ 429              		@ args = 0, pretend = 0, frame = 0
+ 430              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 13
+
+
+ 431              		@ link register save eliminated.
+ 167:../../shields/Murata-dualstack/src/fifo.c ****     if(fifo->head_idx <= fifo->tail_idx)
+ 432              		.loc 1 167 5 view .LVU114
+ 433              		.loc 1 167 12 is_stmt 0 view .LVU115
+ 434 0000 0288     		ldrh	r2, [r0]
+ 435              		.loc 1 167 30 view .LVU116
+ 436 0002 4388     		ldrh	r3, [r0, #2]
+ 437              		.loc 1 167 7 view .LVU117
+ 438 0004 9A42     		cmp	r2, r3
+ 439 0006 02D8     		bhi	.L23
+ 168:../../shields/Murata-dualstack/src/fifo.c ****         return fifo->tail_idx - fifo->head_idx;
+ 440              		.loc 1 168 9 is_stmt 1 view .LVU118
+ 441              		.loc 1 168 31 is_stmt 0 view .LVU119
+ 442 0008 981A     		subs	r0, r3, r2
+ 443              	.LVL34:
+ 444              		.loc 1 168 31 view .LVU120
+ 445 000a 80B2     		uxth	r0, r0
+ 446 000c 7047     		bx	lr
+ 447              	.LVL35:
+ 448              	.L23:
+ 169:../../shields/Murata-dualstack/src/fifo.c ****     else
+ 170:../../shields/Murata-dualstack/src/fifo.c ****         return fifo->tail_idx + (fifo->max_size - fifo->head_idx);
+ 449              		.loc 1 170 9 is_stmt 1 view .LVU121
+ 450              		.loc 1 170 38 is_stmt 0 view .LVU122
+ 451 000e 8088     		ldrh	r0, [r0, #4]
+ 452              	.LVL36:
+ 453              		.loc 1 170 49 view .LVU123
+ 454 0010 801A     		subs	r0, r0, r2
+ 455              		.loc 1 170 31 view .LVU124
+ 456 0012 13FA80F0 		uxtah	r0, r3, r0
+ 457 0016 80B2     		uxth	r0, r0
+ 171:../../shields/Murata-dualstack/src/fifo.c **** }
+ 458              		.loc 1 171 1 view .LVU125
+ 459 0018 7047     		bx	lr
+ 460              		.cfi_endproc
+ 461              	.LFE10:
+ 463              		.section	.text.check_len,"ax",%progbits
+ 464              		.align	1
+ 465              		.syntax unified
+ 466              		.thumb
+ 467              		.thumb_func
+ 468              		.fpu fpv4-sp-d16
+ 470              	check_len:
+ 471              	.LVL37:
+ 472              	.LFB5:
+  98:../../shields/Murata-dualstack/src/fifo.c ****   // quickly bail out if requested length is zero, nothing to do
+ 473              		.loc 1 98 54 is_stmt 1 view -0
+ 474              		.cfi_startproc
+ 475              		@ args = 0, pretend = 0, frame = 0
+ 476              		@ frame_needed = 0, uses_anonymous_args = 0
+ 100:../../shields/Murata-dualstack/src/fifo.c **** 
+ 477              		.loc 1 100 3 view .LVU127
+ 100:../../shields/Murata-dualstack/src/fifo.c **** 
+ 478              		.loc 1 100 5 is_stmt 0 view .LVU128
+ 479 0000 39B1     		cbz	r1, .L27
+  98:../../shields/Murata-dualstack/src/fifo.c ****   // quickly bail out if requested length is zero, nothing to do
+ 480              		.loc 1 98 54 view .LVU129
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 14
+
+
+ 481 0002 10B5     		push	{r4, lr}
+ 482              	.LCFI7:
+ 483              		.cfi_def_cfa_offset 8
+ 484              		.cfi_offset 4, -8
+ 485              		.cfi_offset 14, -4
+ 486 0004 0C46     		mov	r4, r1
+ 103:../../shields/Murata-dualstack/src/fifo.c **** 
+ 487              		.loc 1 103 3 is_stmt 1 view .LVU130
+ 103:../../shields/Murata-dualstack/src/fifo.c **** 
+ 488              		.loc 1 103 12 is_stmt 0 view .LVU131
+ 489 0006 FFF7FEFF 		bl	fifo_get_size
+ 490              	.LVL38:
+ 103:../../shields/Murata-dualstack/src/fifo.c **** 
+ 491              		.loc 1 103 5 view .LVU132
+ 492 000a A042     		cmp	r0, r4
+ 493 000c 03D3     		bcc	.L28
+ 105:../../shields/Murata-dualstack/src/fifo.c **** }
+ 494              		.loc 1 105 10 view .LVU133
+ 495 000e 0020     		movs	r0, #0
+ 496              	.L25:
+ 106:../../shields/Murata-dualstack/src/fifo.c **** 
+ 497              		.loc 1 106 1 view .LVU134
+ 498 0010 10BD     		pop	{r4, pc}
+ 499              	.LVL39:
+ 500              	.L27:
+ 501              	.LCFI8:
+ 502              		.cfi_def_cfa_offset 0
+ 503              		.cfi_restore 4
+ 504              		.cfi_restore 14
+ 100:../../shields/Murata-dualstack/src/fifo.c **** 
+ 505              		.loc 1 100 25 view .LVU135
+ 506 0012 0020     		movs	r0, #0
+ 507              	.LVL40:
+ 106:../../shields/Murata-dualstack/src/fifo.c **** 
+ 508              		.loc 1 106 1 view .LVU136
+ 509 0014 7047     		bx	lr
+ 510              	.LVL41:
+ 511              	.L28:
+ 512              	.LCFI9:
+ 513              		.cfi_def_cfa_offset 8
+ 514              		.cfi_offset 4, -8
+ 515              		.cfi_offset 14, -4
+ 103:../../shields/Murata-dualstack/src/fifo.c **** 
+ 516              		.loc 1 103 42 view .LVU137
+ 517 0016 41F28A30 		movw	r0, #5002
+ 518 001a F9E7     		b	.L25
+ 519              		.cfi_endproc
+ 520              	.LFE5:
+ 522              		.section	.text.fifo_skip,"ax",%progbits
+ 523              		.align	1
+ 524              		.global	fifo_skip
+ 525              		.syntax unified
+ 526              		.thumb
+ 527              		.thumb_func
+ 528              		.fpu fpv4-sp-d16
+ 530              	fifo_skip:
+ 531              	.LVL42:
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 15
+
+
+ 532              	.LFB7:
+ 115:../../shields/Murata-dualstack/src/fifo.c ****   error_t err = check_len(fifo, len);
+ 533              		.loc 1 115 47 is_stmt 1 view -0
+ 534              		.cfi_startproc
+ 535              		@ args = 0, pretend = 0, frame = 0
+ 536              		@ frame_needed = 0, uses_anonymous_args = 0
+ 115:../../shields/Murata-dualstack/src/fifo.c ****   error_t err = check_len(fifo, len);
+ 537              		.loc 1 115 47 is_stmt 0 view .LVU139
+ 538 0000 70B5     		push	{r4, r5, r6, lr}
+ 539              	.LCFI10:
+ 540              		.cfi_def_cfa_offset 16
+ 541              		.cfi_offset 4, -16
+ 542              		.cfi_offset 5, -12
+ 543              		.cfi_offset 6, -8
+ 544              		.cfi_offset 14, -4
+ 545 0002 0546     		mov	r5, r0
+ 546 0004 0E46     		mov	r6, r1
+ 116:../../shields/Murata-dualstack/src/fifo.c ****   if(err != oss7SUCCESS)
+ 547              		.loc 1 116 3 is_stmt 1 view .LVU140
+ 116:../../shields/Murata-dualstack/src/fifo.c ****   if(err != oss7SUCCESS)
+ 548              		.loc 1 116 17 is_stmt 0 view .LVU141
+ 549 0006 FFF7FEFF 		bl	check_len
+ 550              	.LVL43:
+ 117:../../shields/Murata-dualstack/src/fifo.c ****     return err;
+ 551              		.loc 1 117 3 is_stmt 1 view .LVU142
+ 117:../../shields/Murata-dualstack/src/fifo.c ****     return err;
+ 552              		.loc 1 117 5 is_stmt 0 view .LVU143
+ 553 000a 0446     		mov	r4, r0
+ 554 000c 08B1     		cbz	r0, .L36
+ 555              	.LVL44:
+ 556              	.L33:
+ 123:../../shields/Murata-dualstack/src/fifo.c **** 
+ 557              		.loc 1 123 1 view .LVU144
+ 558 000e 2046     		mov	r0, r4
+ 559 0010 70BD     		pop	{r4, r5, r6, pc}
+ 560              	.LVL45:
+ 561              	.L36:
+ 120:../../shields/Murata-dualstack/src/fifo.c **** 
+ 562              		.loc 1 120 3 is_stmt 1 view .LVU145
+ 563 0012 3146     		mov	r1, r6
+ 564 0014 2846     		mov	r0, r5
+ 565              	.LVL46:
+ 120:../../shields/Murata-dualstack/src/fifo.c **** 
+ 566              		.loc 1 120 3 is_stmt 0 view .LVU146
+ 567 0016 FFF7FEFF 		bl	skip
+ 568              	.LVL47:
+ 122:../../shields/Murata-dualstack/src/fifo.c **** }
+ 569              		.loc 1 122 3 is_stmt 1 view .LVU147
+ 122:../../shields/Murata-dualstack/src/fifo.c **** }
+ 570              		.loc 1 122 10 is_stmt 0 view .LVU148
+ 571 001a F8E7     		b	.L33
+ 572              		.cfi_endproc
+ 573              	.LFE7:
+ 575              		.section	.text.fifo_peek,"ax",%progbits
+ 576              		.align	1
+ 577              		.global	fifo_peek
+ 578              		.syntax unified
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 16
+
+
+ 579              		.thumb
+ 580              		.thumb_func
+ 581              		.fpu fpv4-sp-d16
+ 583              	fifo_peek:
+ 584              	.LVL48:
+ 585              	.LFB8:
+ 125:../../shields/Murata-dualstack/src/fifo.c ****   error_t err = check_len(fifo, len);
+ 586              		.loc 1 125 81 is_stmt 1 view -0
+ 587              		.cfi_startproc
+ 588              		@ args = 0, pretend = 0, frame = 0
+ 589              		@ frame_needed = 0, uses_anonymous_args = 0
+ 125:../../shields/Murata-dualstack/src/fifo.c ****   error_t err = check_len(fifo, len);
+ 590              		.loc 1 125 81 is_stmt 0 view .LVU150
+ 591 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 592              	.LCFI11:
+ 593              		.cfi_def_cfa_offset 24
+ 594              		.cfi_offset 4, -24
+ 595              		.cfi_offset 5, -20
+ 596              		.cfi_offset 6, -16
+ 597              		.cfi_offset 7, -12
+ 598              		.cfi_offset 8, -8
+ 599              		.cfi_offset 14, -4
+ 600 0004 0546     		mov	r5, r0
+ 601 0006 0F46     		mov	r7, r1
+ 602 0008 1446     		mov	r4, r2
+ 603 000a 1E46     		mov	r6, r3
+ 126:../../shields/Murata-dualstack/src/fifo.c ****   if(err != oss7SUCCESS)
+ 604              		.loc 1 126 3 is_stmt 1 view .LVU151
+ 126:../../shields/Murata-dualstack/src/fifo.c ****   if(err != oss7SUCCESS)
+ 605              		.loc 1 126 17 is_stmt 0 view .LVU152
+ 606 000c 1946     		mov	r1, r3
+ 607              	.LVL49:
+ 126:../../shields/Murata-dualstack/src/fifo.c ****   if(err != oss7SUCCESS)
+ 608              		.loc 1 126 17 view .LVU153
+ 609 000e FFF7FEFF 		bl	check_len
+ 610              	.LVL50:
+ 127:../../shields/Murata-dualstack/src/fifo.c ****     return err;
+ 611              		.loc 1 127 3 is_stmt 1 view .LVU154
+ 127:../../shields/Murata-dualstack/src/fifo.c ****     return err;
+ 612              		.loc 1 127 5 is_stmt 0 view .LVU155
+ 613 0012 8046     		mov	r8, r0
+ 614 0014 E0B9     		cbnz	r0, .L37
+ 131:../../shields/Murata-dualstack/src/fifo.c ****   uint16_t end_idx   = (start_idx      + len   ) % fifo->max_size;
+ 615              		.loc 1 131 3 is_stmt 1 view .LVU156
+ 131:../../shields/Murata-dualstack/src/fifo.c ****   uint16_t end_idx   = (start_idx      + len   ) % fifo->max_size;
+ 616              		.loc 1 131 29 is_stmt 0 view .LVU157
+ 617 0016 2A88     		ldrh	r2, [r5]
+ 131:../../shields/Murata-dualstack/src/fifo.c ****   uint16_t end_idx   = (start_idx      + len   ) % fifo->max_size;
+ 618              		.loc 1 131 40 view .LVU158
+ 619 0018 2244     		add	r2, r2, r4
+ 131:../../shields/Murata-dualstack/src/fifo.c ****   uint16_t end_idx   = (start_idx      + len   ) % fifo->max_size;
+ 620              		.loc 1 131 56 view .LVU159
+ 621 001a AB88     		ldrh	r3, [r5, #4]
+ 131:../../shields/Murata-dualstack/src/fifo.c ****   uint16_t end_idx   = (start_idx      + len   ) % fifo->max_size;
+ 622              		.loc 1 131 50 view .LVU160
+ 623 001c 92FBF3F1 		sdiv	r1, r2, r3
+ 624 0020 03FB1121 		mls	r1, r3, r1, r2
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 17
+
+
+ 131:../../shields/Murata-dualstack/src/fifo.c ****   uint16_t end_idx   = (start_idx      + len   ) % fifo->max_size;
+ 625              		.loc 1 131 12 view .LVU161
+ 626 0024 89B2     		uxth	r1, r1
+ 627              	.LVL51:
+ 132:../../shields/Murata-dualstack/src/fifo.c **** 
+ 628              		.loc 1 132 3 is_stmt 1 view .LVU162
+ 132:../../shields/Murata-dualstack/src/fifo.c **** 
+ 629              		.loc 1 132 40 is_stmt 0 view .LVU163
+ 630 0026 7018     		adds	r0, r6, r1
+ 631              	.LVL52:
+ 132:../../shields/Murata-dualstack/src/fifo.c **** 
+ 632              		.loc 1 132 50 view .LVU164
+ 633 0028 90FBF3F2 		sdiv	r2, r0, r3
+ 634 002c 03FB1202 		mls	r2, r3, r2, r0
+ 132:../../shields/Murata-dualstack/src/fifo.c **** 
+ 635              		.loc 1 132 12 view .LVU165
+ 636 0030 92B2     		uxth	r2, r2
+ 637              	.LVL53:
+ 137:../../shields/Murata-dualstack/src/fifo.c ****     memcpy(buffer, fifo->buffer + start_idx, len);
+ 638              		.loc 1 137 3 is_stmt 1 view .LVU166
+ 137:../../shields/Murata-dualstack/src/fifo.c ****     memcpy(buffer, fifo->buffer + start_idx, len);
+ 639              		.loc 1 137 5 is_stmt 0 view .LVU167
+ 640 0032 9142     		cmp	r1, r2
+ 641 0034 0FD9     		bls	.L41
+ 146:../../shields/Murata-dualstack/src/fifo.c ****   // copy first part from start up to the end of the buffer
+ 642              		.loc 1 146 3 is_stmt 1 view .LVU168
+ 146:../../shields/Murata-dualstack/src/fifo.c ****   // copy first part from start up to the end of the buffer
+ 643              		.loc 1 146 12 is_stmt 0 view .LVU169
+ 644 0036 5B1A     		subs	r3, r3, r1
+ 645 0038 9CB2     		uxth	r4, r3
+ 646              	.LVL54:
+ 148:../../shields/Murata-dualstack/src/fifo.c ****   // copy remaining (wrapped) bytes from start
+ 647              		.loc 1 148 3 is_stmt 1 view .LVU170
+ 148:../../shields/Murata-dualstack/src/fifo.c ****   // copy remaining (wrapped) bytes from start
+ 648              		.loc 1 148 30 is_stmt 0 view .LVU171
+ 649 003a AB68     		ldr	r3, [r5, #8]
+ 148:../../shields/Murata-dualstack/src/fifo.c ****   // copy remaining (wrapped) bytes from start
+ 650              		.loc 1 148 3 view .LVU172
+ 651 003c 2246     		mov	r2, r4
+ 652              	.LVL55:
+ 148:../../shields/Murata-dualstack/src/fifo.c ****   // copy remaining (wrapped) bytes from start
+ 653              		.loc 1 148 3 view .LVU173
+ 654 003e 1944     		add	r1, r1, r3
+ 655              	.LVL56:
+ 148:../../shields/Murata-dualstack/src/fifo.c ****   // copy remaining (wrapped) bytes from start
+ 656              		.loc 1 148 3 view .LVU174
+ 657 0040 3846     		mov	r0, r7
+ 658              	.LVL57:
+ 148:../../shields/Murata-dualstack/src/fifo.c ****   // copy remaining (wrapped) bytes from start
+ 659              		.loc 1 148 3 view .LVU175
+ 660 0042 FFF7FEFF 		bl	memcpy
+ 661              	.LVL58:
+ 150:../../shields/Murata-dualstack/src/fifo.c **** 
+ 662              		.loc 1 150 3 is_stmt 1 view .LVU176
+ 663 0046 321B     		subs	r2, r6, r4
+ 664 0048 A968     		ldr	r1, [r5, #8]
+ 665 004a 3819     		adds	r0, r7, r4
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 18
+
+
+ 666 004c FFF7FEFF 		bl	memcpy
+ 667              	.LVL59:
+ 152:../../shields/Murata-dualstack/src/fifo.c **** }
+ 668              		.loc 1 152 3 view .LVU177
+ 669              	.L37:
+ 153:../../shields/Murata-dualstack/src/fifo.c **** 
+ 670              		.loc 1 153 1 is_stmt 0 view .LVU178
+ 671 0050 4046     		mov	r0, r8
+ 672 0052 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 673              	.LVL60:
+ 674              	.L41:
+ 138:../../shields/Murata-dualstack/src/fifo.c ****     return oss7SUCCESS;
+ 675              		.loc 1 138 5 is_stmt 1 view .LVU179
+ 138:../../shields/Murata-dualstack/src/fifo.c ****     return oss7SUCCESS;
+ 676              		.loc 1 138 24 is_stmt 0 view .LVU180
+ 677 0056 AB68     		ldr	r3, [r5, #8]
+ 138:../../shields/Murata-dualstack/src/fifo.c ****     return oss7SUCCESS;
+ 678              		.loc 1 138 5 view .LVU181
+ 679 0058 3246     		mov	r2, r6
+ 680              	.LVL61:
+ 138:../../shields/Murata-dualstack/src/fifo.c ****     return oss7SUCCESS;
+ 681              		.loc 1 138 5 view .LVU182
+ 682 005a 1944     		add	r1, r1, r3
+ 683              	.LVL62:
+ 138:../../shields/Murata-dualstack/src/fifo.c ****     return oss7SUCCESS;
+ 684              		.loc 1 138 5 view .LVU183
+ 685 005c 3846     		mov	r0, r7
+ 686              	.LVL63:
+ 138:../../shields/Murata-dualstack/src/fifo.c ****     return oss7SUCCESS;
+ 687              		.loc 1 138 5 view .LVU184
+ 688 005e FFF7FEFF 		bl	memcpy
+ 689              	.LVL64:
+ 139:../../shields/Murata-dualstack/src/fifo.c ****   }
+ 690              		.loc 1 139 5 is_stmt 1 view .LVU185
+ 139:../../shields/Murata-dualstack/src/fifo.c ****   }
+ 691              		.loc 1 139 12 is_stmt 0 view .LVU186
+ 692 0062 F5E7     		b	.L37
+ 693              		.cfi_endproc
+ 694              	.LFE8:
+ 696              		.section	.text.fifo_pop,"ax",%progbits
+ 697              		.align	1
+ 698              		.global	fifo_pop
+ 699              		.syntax unified
+ 700              		.thumb
+ 701              		.thumb_func
+ 702              		.fpu fpv4-sp-d16
+ 704              	fifo_pop:
+ 705              	.LVL65:
+ 706              	.LFB9:
+ 155:../../shields/Murata-dualstack/src/fifo.c ****   // use peek logic to retrieve data
+ 707              		.loc 1 155 63 is_stmt 1 view -0
+ 708              		.cfi_startproc
+ 709              		@ args = 0, pretend = 0, frame = 0
+ 710              		@ frame_needed = 0, uses_anonymous_args = 0
+ 155:../../shields/Murata-dualstack/src/fifo.c ****   // use peek logic to retrieve data
+ 711              		.loc 1 155 63 is_stmt 0 view .LVU188
+ 712 0000 70B5     		push	{r4, r5, r6, lr}
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 19
+
+
+ 713              	.LCFI12:
+ 714              		.cfi_def_cfa_offset 16
+ 715              		.cfi_offset 4, -16
+ 716              		.cfi_offset 5, -12
+ 717              		.cfi_offset 6, -8
+ 718              		.cfi_offset 14, -4
+ 719 0002 0646     		mov	r6, r0
+ 720 0004 1446     		mov	r4, r2
+ 157:../../shields/Murata-dualstack/src/fifo.c ****   if( err != oss7SUCCESS ) { return err; }
+ 721              		.loc 1 157 3 is_stmt 1 view .LVU189
+ 157:../../shields/Murata-dualstack/src/fifo.c ****   if( err != oss7SUCCESS ) { return err; }
+ 722              		.loc 1 157 17 is_stmt 0 view .LVU190
+ 723 0006 1346     		mov	r3, r2
+ 724 0008 0022     		movs	r2, #0
+ 725              	.LVL66:
+ 157:../../shields/Murata-dualstack/src/fifo.c ****   if( err != oss7SUCCESS ) { return err; }
+ 726              		.loc 1 157 17 view .LVU191
+ 727 000a FFF7FEFF 		bl	fifo_peek
+ 728              	.LVL67:
+ 158:../../shields/Murata-dualstack/src/fifo.c **** 
+ 729              		.loc 1 158 3 is_stmt 1 view .LVU192
+ 158:../../shields/Murata-dualstack/src/fifo.c **** 
+ 730              		.loc 1 158 5 is_stmt 0 view .LVU193
+ 731 000e 0546     		mov	r5, r0
+ 732 0010 08B1     		cbz	r0, .L45
+ 733              	.LVL68:
+ 734              	.L42:
+ 163:../../shields/Murata-dualstack/src/fifo.c **** 
+ 735              		.loc 1 163 1 view .LVU194
+ 736 0012 2846     		mov	r0, r5
+ 737 0014 70BD     		pop	{r4, r5, r6, pc}
+ 738              	.LVL69:
+ 739              	.L45:
+ 160:../../shields/Murata-dualstack/src/fifo.c **** 
+ 740              		.loc 1 160 3 is_stmt 1 view .LVU195
+ 741 0016 2146     		mov	r1, r4
+ 742 0018 3046     		mov	r0, r6
+ 743              	.LVL70:
+ 160:../../shields/Murata-dualstack/src/fifo.c **** 
+ 744              		.loc 1 160 3 is_stmt 0 view .LVU196
+ 745 001a FFF7FEFF 		bl	skip
+ 746              	.LVL71:
+ 162:../../shields/Murata-dualstack/src/fifo.c **** }
+ 747              		.loc 1 162 3 is_stmt 1 view .LVU197
+ 162:../../shields/Murata-dualstack/src/fifo.c **** }
+ 748              		.loc 1 162 10 is_stmt 0 view .LVU198
+ 749 001e F8E7     		b	.L42
+ 750              		.cfi_endproc
+ 751              	.LFE9:
+ 753              		.section	.text.fifo_clear,"ax",%progbits
+ 754              		.align	1
+ 755              		.global	fifo_clear
+ 756              		.syntax unified
+ 757              		.thumb
+ 758              		.thumb_func
+ 759              		.fpu fpv4-sp-d16
+ 761              	fifo_clear:
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 20
+
+
+ 762              	.LVL72:
+ 763              	.LFB11:
+ 172:../../shields/Murata-dualstack/src/fifo.c **** 
+ 173:../../shields/Murata-dualstack/src/fifo.c **** void fifo_clear(fifo_t* fifo)
+ 174:../../shields/Murata-dualstack/src/fifo.c **** {
+ 764              		.loc 1 174 1 is_stmt 1 view -0
+ 765              		.cfi_startproc
+ 766              		@ args = 0, pretend = 0, frame = 0
+ 767              		@ frame_needed = 0, uses_anonymous_args = 0
+ 768              		@ link register save eliminated.
+ 175:../../shields/Murata-dualstack/src/fifo.c ****     fifo->head_idx = 0;
+ 769              		.loc 1 175 5 view .LVU200
+ 770              		.loc 1 175 20 is_stmt 0 view .LVU201
+ 771 0000 0023     		movs	r3, #0
+ 772 0002 0380     		strh	r3, [r0]	@ movhi
+ 176:../../shields/Murata-dualstack/src/fifo.c ****     fifo->tail_idx = 0;
+ 773              		.loc 1 176 5 is_stmt 1 view .LVU202
+ 774              		.loc 1 176 20 is_stmt 0 view .LVU203
+ 775 0004 4380     		strh	r3, [r0, #2]	@ movhi
+ 177:../../shields/Murata-dualstack/src/fifo.c **** }
+ 776              		.loc 1 177 1 view .LVU204
+ 777 0006 7047     		bx	lr
+ 778              		.cfi_endproc
+ 779              	.LFE11:
+ 781              		.section	.text.fifo_is_full,"ax",%progbits
+ 782              		.align	1
+ 783              		.global	fifo_is_full
+ 784              		.syntax unified
+ 785              		.thumb
+ 786              		.thumb_func
+ 787              		.fpu fpv4-sp-d16
+ 789              	fifo_is_full:
+ 790              	.LVL73:
+ 791              	.LFB12:
+ 178:../../shields/Murata-dualstack/src/fifo.c **** 
+ 179:../../shields/Murata-dualstack/src/fifo.c **** bool fifo_is_full(fifo_t* fifo) {
+ 792              		.loc 1 179 33 is_stmt 1 view -0
+ 793              		.cfi_startproc
+ 794              		@ args = 0, pretend = 0, frame = 0
+ 795              		@ frame_needed = 0, uses_anonymous_args = 0
+ 796              		.loc 1 179 33 is_stmt 0 view .LVU206
+ 797 0000 10B5     		push	{r4, lr}
+ 798              	.LCFI13:
+ 799              		.cfi_def_cfa_offset 8
+ 800              		.cfi_offset 4, -8
+ 801              		.cfi_offset 14, -4
+ 802 0002 0446     		mov	r4, r0
+ 180:../../shields/Murata-dualstack/src/fifo.c ****     return fifo_get_size(fifo) == fifo->max_size;
+ 803              		.loc 1 180 5 is_stmt 1 view .LVU207
+ 804              		.loc 1 180 12 is_stmt 0 view .LVU208
+ 805 0004 FFF7FEFF 		bl	fifo_get_size
+ 806              	.LVL74:
+ 807              		.loc 1 180 39 view .LVU209
+ 808 0008 A388     		ldrh	r3, [r4, #4]
+ 181:../../shields/Murata-dualstack/src/fifo.c **** }
+ 809              		.loc 1 181 1 view .LVU210
+ 810 000a 9842     		cmp	r0, r3
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 21
+
+
+ 811 000c 14BF     		ite	ne
+ 812 000e 0020     		movne	r0, #0
+ 813 0010 0120     		moveq	r0, #1
+ 814 0012 10BD     		pop	{r4, pc}
+ 815              		.loc 1 181 1 view .LVU211
+ 816              		.cfi_endproc
+ 817              	.LFE12:
+ 819              		.text
+ 820              	.Letext0:
+ 821              		.file 2 "d:\\softwareunif\\toolchainkit\\8 2019-q3-update\\arm-none-eabi\\include\\machine\\_defau
+ 822              		.file 3 "d:\\softwareunif\\toolchainkit\\8 2019-q3-update\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 823              		.file 4 "../../shields/Murata-dualstack/inc/types.h"
+ 824              		.file 5 "../../shields/Murata-dualstack/inc/fifo.h"
+ 825              		.file 6 "d:\\softwareunif\\toolchainkit\\8 2019-q3-update\\lib\\gcc\\arm-none-eabi\\8.3.1\\include
+ 826              		.file 7 "d:\\softwareunif\\toolchainkit\\8 2019-q3-update\\arm-none-eabi\\include\\sys\\_types.h"
+ 827              		.file 8 "d:\\softwareunif\\toolchainkit\\8 2019-q3-update\\arm-none-eabi\\include\\sys\\reent.h"
+ 828              		.file 9 "d:\\softwareunif\\toolchainkit\\8 2019-q3-update\\arm-none-eabi\\include\\sys\\lock.h"
+ 829              		.file 10 "d:\\softwareunif\\toolchainkit\\8 2019-q3-update\\arm-none-eabi\\include\\sys\\errno.h"
+ 830              		.file 11 "<built-in>"
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s 			page 22
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 fifo.c
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:18     .text.skip:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:25     .text.skip:00000000 skip
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:62     .text.fifo_init_filled:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:69     .text.fifo_init_filled:00000000 fifo_init_filled
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:104    .text.fifo_init:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:111    .text.fifo_init:00000000 fifo_init
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:137    .text.fifo_init_subview:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:144    .text.fifo_init_subview:00000000 fifo_init_subview
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:215    .text.fifo_put:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:222    .text.fifo_put:00000000 fifo_put
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:376    .text.fifo_put_byte:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:383    .text.fifo_put_byte:00000000 fifo_put_byte
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:417    .text.fifo_get_size:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:424    .text.fifo_get_size:00000000 fifo_get_size
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:464    .text.check_len:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:470    .text.check_len:00000000 check_len
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:523    .text.fifo_skip:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:530    .text.fifo_skip:00000000 fifo_skip
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:576    .text.fifo_peek:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:583    .text.fifo_peek:00000000 fifo_peek
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:697    .text.fifo_pop:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:704    .text.fifo_pop:00000000 fifo_pop
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:754    .text.fifo_clear:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:761    .text.fifo_clear:00000000 fifo_clear
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:782    .text.fifo_is_full:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccPRu5Af.s:789    .text.fifo_is_full:00000000 fifo_is_full
+
+UNDEFINED SYMBOLS
+memcpy

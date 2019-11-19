@@ -1,0 +1,970 @@
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"gps-firefly-example.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.printWelcome,"ax",%progbits
+  18              		.align	1
+  19              		.global	printWelcome
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	printWelcome:
+  27              	.LFB129:
+  28              		.file 1 "../../applications/gps-firefly-example/src/gps-firefly-example.c"
+   1:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /* USER CODE BEGIN Header */
+   2:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /**
+   3:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   ******************************************************************************
+   4:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * @file           : main.c
+   5:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * @brief          : Main program body
+   6:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   ******************************************************************************
+   7:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * This notice applies to any and all portions of this file
+   8:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * that are not between comment pairs USER CODE BEGIN and
+   9:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * USER CODE END. Other portions of this file, whether 
+  10:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * inserted by the user or by software development tools
+  11:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * are owned by their respective copyright owners.
+  12:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   *
+  13:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * Copyright (c) 2019 STMicroelectronics International N.V. 
+  14:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * All rights reserved.
+  15:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   *
+  16:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * Redistribution and use in source and binary forms, with or without 
+  17:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * modification, are permitted, provided that the following conditions are met:
+  18:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   *
+  19:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * 1. Redistribution of source code must retain the above copyright notice, 
+  20:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   *    this list of conditions and the following disclaimer.
+  21:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * 2. Redistributions in binary form must reproduce the above copyright notice,
+  22:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   *    this list of conditions and the following disclaimer in the documentation
+  23:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   *    and/or other materials provided with the distribution.
+  24:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * 3. Neither the name of STMicroelectronics nor the names of other 
+  25:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   *    contributors to this software may be used to endorse or promote products 
+  26:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   *    derived from this software without specific written permission.
+  27:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * 4. This software, including modifications and/or derivative works of this 
+  28:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   *    software, must execute solely and exclusively on microcontroller or
+  29:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   *    microprocessor devices manufactured by or for STMicroelectronics.
+  30:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * 5. Redistribution and use of this software other than as permitted under 
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s 			page 2
+
+
+  31:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   *    this license is void and will automatically terminate your rights under 
+  32:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   *    this license. 
+  33:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   *
+  34:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS IS" 
+  35:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT 
+  36:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+  37:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * PARTICULAR PURPOSE AND NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY
+  38:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * RIGHTS ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT 
+  39:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * SHALL STMICROELECTRONICS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+  40:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  41:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
+  42:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+  43:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+  44:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+  45:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  46:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   *
+  47:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   ******************************************************************************
+  48:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   */
+  49:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /* USER CODE END Header */
+  50:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+  51:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /* Includes ------------------------------------------------------------------*/
+  52:../../applications/gps-firefly-example/src/gps-firefly-example.c **** #include "gps-firefly-example.h"
+  53:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /* Private includes ----------------------------------------------------------*/
+  54:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /* USER CODE BEGIN Includes */
+  55:../../applications/gps-firefly-example/src/gps-firefly-example.c **** #include "fireflyx1.h"
+  56:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+  57:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /* USER CODE END Includes */
+  58:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+  59:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /* Private typedef -----------------------------------------------------------*/
+  60:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /* USER CODE BEGIN PTD */
+  61:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+  62:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /* USER CODE END PTD */
+  63:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+  64:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /* Private define ------------------------------------------------------------*/
+  65:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /* USER CODE BEGIN PD */
+  66:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+  67:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /* USER CODE END PD */
+  68:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+  69:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /* Private macro -------------------------------------------------------------*/
+  70:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /* USER CODE BEGIN PM */
+  71:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+  72:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /* USER CODE END PM */
+  73:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+  74:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /* Private user code ---------------------------------------------------------*/
+  75:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /* USER CODE BEGIN 0 */
+  76:../../applications/gps-firefly-example/src/gps-firefly-example.c **** float locationArray[3];
+  77:../../applications/gps-firefly-example/src/gps-firefly-example.c **** uint8_t locationArrayHex[32];
+  78:../../applications/gps-firefly-example/src/gps-firefly-example.c **** uint8_t hasGPSFix = 0;
+  79:../../applications/gps-firefly-example/src/gps-firefly-example.c **** gps_position_dd_t currentLocation={0,0,0};
+  80:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /* USER CODE END 0 */
+  81:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+  82:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /**
+  83:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * @brief  The application entry point.
+  84:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * @retval int
+  85:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   */
+  86:../../applications/gps-firefly-example/src/gps-firefly-example.c **** int main(void)
+  87:../../applications/gps-firefly-example/src/gps-firefly-example.c **** {
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s 			page 3
+
+
+  88:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE BEGIN 1 */
+  89:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+  90:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE END 1 */
+  91:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+  92:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* MCU Configuration--------------------------------------------------------*/
+  93:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+  94:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  95:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   HAL_Init();
+  96:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+  97:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE BEGIN Init */
+  98:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+  99:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE END Init */
+ 100:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 101:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* Configure the system clock */
+ 102:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   SystemClock_Config();
+ 103:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 104:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE BEGIN SysInit */
+ 105:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 106:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE END SysInit */
+ 107:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 108:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* Initialize theplatform */
+ 109:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   Initialize_Platform();
+ 110:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE BEGIN 2 */
+ 111:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 112:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   printWelcome();
+ 113:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 114:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   // Firefly-GPS
+ 115:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   Firefly_Initialize();
+ 116:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   memset(locationArrayHex, 1, 32); // init location array to 0
+ 117:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 118:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE END 2 */
+ 119:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 120:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE BEGIN RTOS_MUTEX */
+ 121:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* add mutexes, ... */
+ 122:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   printf("Initializing RTOS timers, threads and mutex\r\n");
+ 123:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 124:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 125:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE END RTOS_MUTEX */
+ 126:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 127:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE BEGIN RTOS_SEMAPHORES */
+ 128:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* add semaphores, ... */
+ 129:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE END RTOS_SEMAPHORES */
+ 130:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 131:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* Create the thread(s) */
+ 132:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* definition and creation of defaultTask */
+ 133:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE BEGIN RTOS_TIMERS */
+ 134:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* start timers, add new ones, ... */
+ 135:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 136:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   //feed IWDG every 5 seconds
+ 137:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   IWDG_feed(NULL);
+ 138:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   osTimerDef(iwdgTim, IWDG_feed);
+ 139:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   iwdgTimId = osTimerCreate(osTimer(iwdgTim), osTimerPeriodic, NULL);
+ 140:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   osTimerStart(iwdgTimId, 5 * 1000);
+ 141:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 142:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   osTimerDef(GPSTim, GPS_Read);
+ 143:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   gpsTimId = osTimerCreate(osTimer(GPSTim), osTimerPeriodic, NULL);
+ 144:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   osTimerStart(gpsTimId, 10 * 1000);
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s 			page 4
+
+
+ 145:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 146:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE END RTOS_TIMERS */
+ 147:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 148:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE BEGIN RTOS_THREADS */
+ 149:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* add threads, ... */
+ 150:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 151:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE END RTOS_THREADS */
+ 152:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 153:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE BEGIN RTOS_QUEUES */
+ 154:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* add queues, ... */
+ 155:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE END RTOS_QUEUES */
+ 156:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 157:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* Start scheduler */
+ 158:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   osKernelStart();
+ 159:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 160:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* We should never get here as control is now taken by the scheduler */
+ 161:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 162:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* Infinite loop */
+ 163:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE BEGIN WHILE */
+ 164:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   while (1)
+ 165:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   {
+ 166:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     /* USER CODE END WHILE */
+ 167:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 168:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     /* USER CODE BEGIN 3 */
+ 169:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   }
+ 170:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE END 3 */
+ 171:../../applications/gps-firefly-example/src/gps-firefly-example.c **** }
+ 172:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 173:../../applications/gps-firefly-example/src/gps-firefly-example.c **** void printWelcome(void)
+ 174:../../applications/gps-firefly-example/src/gps-firefly-example.c **** {
+  29              		.loc 1 174 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 38B5     		push	{r3, r4, r5, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 16
+  36              		.cfi_offset 3, -16
+  37              		.cfi_offset 4, -12
+  38              		.cfi_offset 5, -8
+  39              		.cfi_offset 14, -4
+ 175:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   printf("\r\n");
+  40              		.loc 1 175 3 view .LVU1
+  41 0002 104C     		ldr	r4, .L3
+  42 0004 2046     		mov	r0, r4
+  43 0006 FFF7FEFF 		bl	puts
+  44              	.LVL0:
+ 176:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   printf("*****************************************\r\n");
+  45              		.loc 1 176 3 view .LVU2
+  46 000a 0F4D     		ldr	r5, .L3+4
+  47 000c 2846     		mov	r0, r5
+  48 000e FFF7FEFF 		bl	puts
+  49              	.LVL1:
+ 177:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   printf("Firefly GPS Module example\r\n");
+  50              		.loc 1 177 3 view .LVU3
+  51 0012 0E48     		ldr	r0, .L3+8
+  52 0014 FFF7FEFF 		bl	puts
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s 			page 5
+
+
+  53              	.LVL2:
+ 178:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   printf("*****************************************\r\n");
+  54              		.loc 1 178 3 view .LVU4
+  55 0018 2846     		mov	r0, r5
+  56 001a FFF7FEFF 		bl	puts
+  57              	.LVL3:
+ 179:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   printf("\r\n");
+  58              		.loc 1 179 3 view .LVU5
+  59 001e 2046     		mov	r0, r4
+  60 0020 FFF7FEFF 		bl	puts
+  61              	.LVL4:
+ 180:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin);
+  62              		.loc 1 180 3 view .LVU6
+  63 0024 0A4C     		ldr	r4, .L3+12
+  64 0026 4FF40041 		mov	r1, #32768
+  65 002a 2046     		mov	r0, r4
+  66 002c FFF7FEFF 		bl	HAL_GPIO_TogglePin
+  67              	.LVL5:
+ 181:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   HAL_Delay(2000);
+  68              		.loc 1 181 3 view .LVU7
+  69 0030 4FF4FA60 		mov	r0, #2000
+  70 0034 FFF7FEFF 		bl	HAL_Delay
+  71              	.LVL6:
+ 182:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin);
+  72              		.loc 1 182 3 view .LVU8
+  73 0038 4FF40041 		mov	r1, #32768
+  74 003c 2046     		mov	r0, r4
+  75 003e FFF7FEFF 		bl	HAL_GPIO_TogglePin
+  76              	.LVL7:
+ 183:../../applications/gps-firefly-example/src/gps-firefly-example.c **** }
+  77              		.loc 1 183 1 is_stmt 0 view .LVU9
+  78 0042 38BD     		pop	{r3, r4, r5, pc}
+  79              	.L4:
+  80              		.align	2
+  81              	.L3:
+  82 0044 00000000 		.word	.LC0
+  83 0048 04000000 		.word	.LC1
+  84 004c 30000000 		.word	.LC2
+  85 0050 000C0048 		.word	1207962624
+  86              		.cfi_endproc
+  87              	.LFE129:
+  89              		.section	.text.main,"ax",%progbits
+  90              		.align	1
+  91              		.global	main
+  92              		.syntax unified
+  93              		.thumb
+  94              		.thumb_func
+  95              		.fpu fpv4-sp-d16
+  97              	main:
+  98              	.LFB128:
+  87:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE BEGIN 1 */
+  99              		.loc 1 87 1 is_stmt 1 view -0
+ 100              		.cfi_startproc
+ 101              		@ Volatile: function does not return.
+ 102              		@ args = 0, pretend = 0, frame = 8
+ 103              		@ frame_needed = 0, uses_anonymous_args = 0
+ 104 0000 00B5     		push	{lr}
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s 			page 6
+
+
+ 105              	.LCFI1:
+ 106              		.cfi_def_cfa_offset 4
+ 107              		.cfi_offset 14, -4
+ 108 0002 83B0     		sub	sp, sp, #12
+ 109              	.LCFI2:
+ 110              		.cfi_def_cfa_offset 16
+  95:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 111              		.loc 1 95 3 view .LVU11
+ 112 0004 FFF7FEFF 		bl	HAL_Init
+ 113              	.LVL8:
+ 102:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 114              		.loc 1 102 3 view .LVU12
+ 115 0008 FFF7FEFF 		bl	SystemClock_Config
+ 116              	.LVL9:
+ 109:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE BEGIN 2 */
+ 117              		.loc 1 109 3 view .LVU13
+ 118 000c FFF7FEFF 		bl	Initialize_Platform
+ 119              	.LVL10:
+ 112:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 120              		.loc 1 112 3 view .LVU14
+ 121 0010 FFF7FEFF 		bl	printWelcome
+ 122              	.LVL11:
+ 115:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   memset(locationArrayHex, 1, 32); // init location array to 0
+ 123              		.loc 1 115 3 view .LVU15
+ 124 0014 FFF7FEFF 		bl	Firefly_Initialize
+ 125              	.LVL12:
+ 116:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 126              		.loc 1 116 3 view .LVU16
+ 127 0018 2022     		movs	r2, #32
+ 128 001a 0121     		movs	r1, #1
+ 129 001c 1248     		ldr	r0, .L8
+ 130 001e FFF7FEFF 		bl	memset
+ 131              	.LVL13:
+ 122:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 132              		.loc 1 122 3 view .LVU17
+ 133 0022 1248     		ldr	r0, .L8+4
+ 134 0024 FFF7FEFF 		bl	puts
+ 135              	.LVL14:
+ 137:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   osTimerDef(iwdgTim, IWDG_feed);
+ 136              		.loc 1 137 3 view .LVU18
+ 137 0028 0020     		movs	r0, #0
+ 138 002a FFF7FEFF 		bl	IWDG_feed
+ 139              	.LVL15:
+ 138:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   iwdgTimId = osTimerCreate(osTimer(iwdgTim), osTimerPeriodic, NULL);
+ 140              		.loc 1 138 3 view .LVU19
+ 141 002e 104B     		ldr	r3, .L8+8
+ 142 0030 0193     		str	r3, [sp, #4]
+ 139:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   osTimerStart(iwdgTimId, 5 * 1000);
+ 143              		.loc 1 139 3 view .LVU20
+ 139:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   osTimerStart(iwdgTimId, 5 * 1000);
+ 144              		.loc 1 139 15 is_stmt 0 view .LVU21
+ 145 0032 0022     		movs	r2, #0
+ 146 0034 0121     		movs	r1, #1
+ 147 0036 01A8     		add	r0, sp, #4
+ 148 0038 FFF7FEFF 		bl	osTimerCreate
+ 149              	.LVL16:
+ 139:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   osTimerStart(iwdgTimId, 5 * 1000);
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s 			page 7
+
+
+ 150              		.loc 1 139 13 view .LVU22
+ 151 003c 0D4B     		ldr	r3, .L8+12
+ 152 003e 1860     		str	r0, [r3]
+ 140:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 153              		.loc 1 140 3 is_stmt 1 view .LVU23
+ 154 0040 41F28831 		movw	r1, #5000
+ 155 0044 FFF7FEFF 		bl	osTimerStart
+ 156              	.LVL17:
+ 142:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   gpsTimId = osTimerCreate(osTimer(GPSTim), osTimerPeriodic, NULL);
+ 157              		.loc 1 142 3 view .LVU24
+ 158 0048 0B4B     		ldr	r3, .L8+16
+ 159 004a 0093     		str	r3, [sp]
+ 143:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   osTimerStart(gpsTimId, 10 * 1000);
+ 160              		.loc 1 143 3 view .LVU25
+ 143:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   osTimerStart(gpsTimId, 10 * 1000);
+ 161              		.loc 1 143 14 is_stmt 0 view .LVU26
+ 162 004c 0022     		movs	r2, #0
+ 163 004e 0121     		movs	r1, #1
+ 164 0050 6846     		mov	r0, sp
+ 165 0052 FFF7FEFF 		bl	osTimerCreate
+ 166              	.LVL18:
+ 143:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   osTimerStart(gpsTimId, 10 * 1000);
+ 167              		.loc 1 143 12 view .LVU27
+ 168 0056 094B     		ldr	r3, .L8+20
+ 169 0058 1860     		str	r0, [r3]
+ 144:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 170              		.loc 1 144 3 is_stmt 1 view .LVU28
+ 171 005a 42F21071 		movw	r1, #10000
+ 172 005e FFF7FEFF 		bl	osTimerStart
+ 173              	.LVL19:
+ 158:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 174              		.loc 1 158 3 view .LVU29
+ 175 0062 FFF7FEFF 		bl	osKernelStart
+ 176              	.LVL20:
+ 177              	.L6:
+ 164:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   {
+ 178              		.loc 1 164 3 discriminator 1 view .LVU30
+ 169:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE END 3 */
+ 179              		.loc 1 169 3 discriminator 1 view .LVU31
+ 180 0066 FEE7     		b	.L6
+ 181              	.L9:
+ 182              		.align	2
+ 183              	.L8:
+ 184 0068 00000000 		.word	locationArrayHex
+ 185 006c 00000000 		.word	.LC3
+ 186 0070 00000000 		.word	IWDG_feed
+ 187 0074 00000000 		.word	iwdgTimId
+ 188 0078 00000000 		.word	GPS_Read
+ 189 007c 00000000 		.word	gpsTimId
+ 190              		.cfi_endproc
+ 191              	.LFE128:
+ 193              		.global	__aeabi_f2d
+ 194              		.section	.text.setGPSCoordinates,"ax",%progbits
+ 195              		.align	1
+ 196              		.global	setGPSCoordinates
+ 197              		.syntax unified
+ 198              		.thumb
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s 			page 8
+
+
+ 199              		.thumb_func
+ 200              		.fpu fpv4-sp-d16
+ 202              	setGPSCoordinates:
+ 203              	.LFB131:
+ 184:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 185:../../applications/gps-firefly-example/src/gps-firefly-example.c **** void GPS_Read(void const *argument)
+ 186:../../applications/gps-firefly-example/src/gps-firefly-example.c **** {
+ 187:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     uint8_t response[255];
+ 188:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     uint8_t quality = Firefly_receive(response);
+ 189:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     if(quality==1)
+ 190:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     {   
+ 191:../../applications/gps-firefly-example/src/gps-firefly-example.c ****         printf("GPS FIX\r\n");
+ 192:../../applications/gps-firefly-example/src/gps-firefly-example.c ****         setGPSCoordinates();
+ 193:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     }
+ 194:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     else
+ 195:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     {
+ 196:../../applications/gps-firefly-example/src/gps-firefly-example.c ****         hasGPSFix=0;
+ 197:../../applications/gps-firefly-example/src/gps-firefly-example.c ****         printf("NO GPS FIX\r\n");
+ 198:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     }
+ 199:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     
+ 200:../../applications/gps-firefly-example/src/gps-firefly-example.c **** }
+ 201:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 202:../../applications/gps-firefly-example/src/gps-firefly-example.c **** void setGPSCoordinates(void)
+ 203:../../applications/gps-firefly-example/src/gps-firefly-example.c **** {
+ 204              		.loc 1 203 1 view -0
+ 205              		.cfi_startproc
+ 206              		@ args = 0, pretend = 0, frame = 0
+ 207              		@ frame_needed = 0, uses_anonymous_args = 0
+ 208 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 209              	.LCFI3:
+ 210              		.cfi_def_cfa_offset 20
+ 211              		.cfi_offset 4, -20
+ 212              		.cfi_offset 5, -16
+ 213              		.cfi_offset 6, -12
+ 214              		.cfi_offset 7, -8
+ 215              		.cfi_offset 14, -4
+ 216 0002 85B0     		sub	sp, sp, #20
+ 217              	.LCFI4:
+ 218              		.cfi_def_cfa_offset 40
+ 204:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 	hasGPSFix=1;
+ 219              		.loc 1 204 2 view .LVU33
+ 220              		.loc 1 204 11 is_stmt 0 view .LVU34
+ 221 0004 164B     		ldr	r3, .L12
+ 222 0006 0122     		movs	r2, #1
+ 223 0008 1A70     		strb	r2, [r3]
+ 205:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 	currentLocation=gps_get_position_dd();
+ 224              		.loc 1 205 2 is_stmt 1 view .LVU35
+ 225              		.loc 1 205 18 is_stmt 0 view .LVU36
+ 226 000a FFF7FEFF 		bl	gps_get_position_dd
+ 227              	.LVL21:
+ 228 000e 10EE100A 		vmov	r0, s0
+ 229 0012 10EE904A 		vmov	r4, s1
+ 230 0016 11EE105A 		vmov	r5, s2
+ 231 001a 124B     		ldr	r3, .L12+4
+ 232 001c 83ED000A 		vstr.32	s0, [r3]
+ 233 0020 C3ED010A 		vstr.32	s1, [r3, #4]
+ 234 0024 83ED021A 		vstr.32	s2, [r3, #8]
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s 			page 9
+
+
+ 206:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 	locationArray[0]=currentLocation.latitude;
+ 235              		.loc 1 206 2 is_stmt 1 view .LVU37
+ 236              		.loc 1 206 18 is_stmt 0 view .LVU38
+ 237 0028 0F4B     		ldr	r3, .L12+8
+ 238 002a 83ED000A 		vstr.32	s0, [r3]
+ 207:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 	locationArray[1]=currentLocation.longitude;
+ 239              		.loc 1 207 2 is_stmt 1 view .LVU39
+ 240              		.loc 1 207 18 is_stmt 0 view .LVU40
+ 241 002e C3ED010A 		vstr.32	s1, [r3, #4]
+ 208:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 	locationArray[2]=currentLocation.hdop;
+ 242              		.loc 1 208 2 is_stmt 1 view .LVU41
+ 243              		.loc 1 208 18 is_stmt 0 view .LVU42
+ 244 0032 83ED021A 		vstr.32	s2, [r3, #8]
+ 209:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     printf("Location lat: %f, long: %f, hdop: %f \r\n", locationArray[0], locationArray[1], locatio
+ 245              		.loc 1 209 5 is_stmt 1 view .LVU43
+ 246 0036 FFF7FEFF 		bl	__aeabi_f2d
+ 247              	.LVL22:
+ 248 003a 0646     		mov	r6, r0
+ 249 003c 0F46     		mov	r7, r1
+ 250 003e 2846     		mov	r0, r5	@ float
+ 251 0040 FFF7FEFF 		bl	__aeabi_f2d
+ 252              	.LVL23:
+ 253 0044 CDE90201 		strd	r0, [sp, #8]
+ 254 0048 2046     		mov	r0, r4	@ float
+ 255 004a FFF7FEFF 		bl	__aeabi_f2d
+ 256              	.LVL24:
+ 257 004e CDE90001 		strd	r0, [sp]
+ 258 0052 3246     		mov	r2, r6
+ 259 0054 3B46     		mov	r3, r7
+ 260 0056 0548     		ldr	r0, .L12+12
+ 261 0058 FFF7FEFF 		bl	printf
+ 262              	.LVL25:
+ 210:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 	//hexify2(&locationArray[0],3,&locationArrayHex,24); //32->24
+ 211:../../applications/gps-firefly-example/src/gps-firefly-example.c **** }
+ 263              		.loc 1 211 1 is_stmt 0 view .LVU44
+ 264 005c 05B0     		add	sp, sp, #20
+ 265              	.LCFI5:
+ 266              		.cfi_def_cfa_offset 20
+ 267              		@ sp needed
+ 268 005e F0BD     		pop	{r4, r5, r6, r7, pc}
+ 269              	.L13:
+ 270              		.align	2
+ 271              	.L12:
+ 272 0060 00000000 		.word	.LANCHOR0
+ 273 0064 00000000 		.word	.LANCHOR1
+ 274 0068 00000000 		.word	locationArray
+ 275 006c 00000000 		.word	.LC4
+ 276              		.cfi_endproc
+ 277              	.LFE131:
+ 279              		.section	.text.GPS_Read,"ax",%progbits
+ 280              		.align	1
+ 281              		.global	GPS_Read
+ 282              		.syntax unified
+ 283              		.thumb
+ 284              		.thumb_func
+ 285              		.fpu fpv4-sp-d16
+ 287              	GPS_Read:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s 			page 10
+
+
+ 288              	.LVL26:
+ 289              	.LFB130:
+ 186:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     uint8_t response[255];
+ 290              		.loc 1 186 1 is_stmt 1 view -0
+ 291              		.cfi_startproc
+ 292              		@ args = 0, pretend = 0, frame = 256
+ 293              		@ frame_needed = 0, uses_anonymous_args = 0
+ 186:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     uint8_t response[255];
+ 294              		.loc 1 186 1 is_stmt 0 view .LVU46
+ 295 0000 00B5     		push	{lr}
+ 296              	.LCFI6:
+ 297              		.cfi_def_cfa_offset 4
+ 298              		.cfi_offset 14, -4
+ 299 0002 C1B0     		sub	sp, sp, #260
+ 300              	.LCFI7:
+ 301              		.cfi_def_cfa_offset 264
+ 187:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     uint8_t quality = Firefly_receive(response);
+ 302              		.loc 1 187 5 is_stmt 1 view .LVU47
+ 188:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     if(quality==1)
+ 303              		.loc 1 188 5 view .LVU48
+ 188:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     if(quality==1)
+ 304              		.loc 1 188 23 is_stmt 0 view .LVU49
+ 305 0004 6846     		mov	r0, sp
+ 306              	.LVL27:
+ 188:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     if(quality==1)
+ 307              		.loc 1 188 23 view .LVU50
+ 308 0006 FFF7FEFF 		bl	Firefly_receive
+ 309              	.LVL28:
+ 189:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     {   
+ 310              		.loc 1 189 5 is_stmt 1 view .LVU51
+ 189:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     {   
+ 311              		.loc 1 189 7 is_stmt 0 view .LVU52
+ 312 000a 0128     		cmp	r0, #1
+ 313 000c 08D0     		beq	.L18
+ 314              	.LBB2:
+ 196:../../applications/gps-firefly-example/src/gps-firefly-example.c ****         printf("NO GPS FIX\r\n");
+ 315              		.loc 1 196 9 is_stmt 1 view .LVU53
+ 196:../../applications/gps-firefly-example/src/gps-firefly-example.c ****         printf("NO GPS FIX\r\n");
+ 316              		.loc 1 196 18 is_stmt 0 view .LVU54
+ 317 000e 074B     		ldr	r3, .L19
+ 318 0010 0022     		movs	r2, #0
+ 319 0012 1A70     		strb	r2, [r3]
+ 197:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     }
+ 320              		.loc 1 197 9 is_stmt 1 view .LVU55
+ 321 0014 0648     		ldr	r0, .L19+4
+ 322              	.LVL29:
+ 197:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     }
+ 323              		.loc 1 197 9 is_stmt 0 view .LVU56
+ 324 0016 FFF7FEFF 		bl	puts
+ 325              	.LVL30:
+ 326              	.L14:
+ 327              	.LBE2:
+ 200:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 328              		.loc 1 200 1 view .LVU57
+ 329 001a 41B0     		add	sp, sp, #260
+ 330              	.LCFI8:
+ 331              		.cfi_remember_state
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s 			page 11
+
+
+ 332              		.cfi_def_cfa_offset 4
+ 333              		@ sp needed
+ 334 001c 5DF804FB 		ldr	pc, [sp], #4
+ 335              	.LVL31:
+ 336              	.L18:
+ 337              	.LCFI9:
+ 338              		.cfi_restore_state
+ 339              	.LBB3:
+ 191:../../applications/gps-firefly-example/src/gps-firefly-example.c ****         setGPSCoordinates();
+ 340              		.loc 1 191 9 is_stmt 1 view .LVU58
+ 341 0020 0448     		ldr	r0, .L19+8
+ 342              	.LVL32:
+ 191:../../applications/gps-firefly-example/src/gps-firefly-example.c ****         setGPSCoordinates();
+ 343              		.loc 1 191 9 is_stmt 0 view .LVU59
+ 344 0022 FFF7FEFF 		bl	puts
+ 345              	.LVL33:
+ 192:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     }
+ 346              		.loc 1 192 9 is_stmt 1 view .LVU60
+ 347 0026 FFF7FEFF 		bl	setGPSCoordinates
+ 348              	.LVL34:
+ 349              	.LBE3:
+ 350 002a F6E7     		b	.L14
+ 351              	.L20:
+ 352              		.align	2
+ 353              	.L19:
+ 354 002c 00000000 		.word	.LANCHOR0
+ 355 0030 0C000000 		.word	.LC6
+ 356 0034 00000000 		.word	.LC5
+ 357              		.cfi_endproc
+ 358              	.LFE130:
+ 360              		.section	.text.HAL_TIM_PeriodElapsedCallback,"ax",%progbits
+ 361              		.align	1
+ 362              		.global	HAL_TIM_PeriodElapsedCallback
+ 363              		.syntax unified
+ 364              		.thumb
+ 365              		.thumb_func
+ 366              		.fpu fpv4-sp-d16
+ 368              	HAL_TIM_PeriodElapsedCallback:
+ 369              	.LVL35:
+ 370              	.LFB132:
+ 212:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 213:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /* USER CODE END 4 */
+ 214:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 215:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 216:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 217:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /**
+ 218:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * @brief  Period elapsed callback in non blocking mode
+ 219:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * @note   This function is called  when TIM1 interrupt took place, inside
+ 220:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+ 221:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * a global variable "uwTick" used as application time base.
+ 222:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * @param  htim : TIM handle
+ 223:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * @retval None
+ 224:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   */
+ 225:../../applications/gps-firefly-example/src/gps-firefly-example.c **** void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+ 226:../../applications/gps-firefly-example/src/gps-firefly-example.c **** {
+ 371              		.loc 1 226 1 view -0
+ 372              		.cfi_startproc
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s 			page 12
+
+
+ 373              		@ args = 0, pretend = 0, frame = 0
+ 374              		@ frame_needed = 0, uses_anonymous_args = 0
+ 375              		.loc 1 226 1 is_stmt 0 view .LVU62
+ 376 0000 08B5     		push	{r3, lr}
+ 377              	.LCFI10:
+ 378              		.cfi_def_cfa_offset 8
+ 379              		.cfi_offset 3, -8
+ 380              		.cfi_offset 14, -4
+ 227:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE BEGIN Callback 0 */
+ 228:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 229:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE END Callback 0 */
+ 230:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   if (htim->Instance == TIM1)
+ 381              		.loc 1 230 3 is_stmt 1 view .LVU63
+ 382              		.loc 1 230 11 is_stmt 0 view .LVU64
+ 383 0002 0268     		ldr	r2, [r0]
+ 384              		.loc 1 230 6 view .LVU65
+ 385 0004 034B     		ldr	r3, .L25
+ 386 0006 9A42     		cmp	r2, r3
+ 387 0008 00D0     		beq	.L24
+ 388              	.LVL36:
+ 389              	.L21:
+ 231:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   {
+ 232:../../applications/gps-firefly-example/src/gps-firefly-example.c ****     HAL_IncTick();
+ 233:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   }
+ 234:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE BEGIN Callback 1 */
+ 235:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 236:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE END Callback 1 */
+ 237:../../applications/gps-firefly-example/src/gps-firefly-example.c **** }
+ 390              		.loc 1 237 1 view .LVU66
+ 391 000a 08BD     		pop	{r3, pc}
+ 392              	.LVL37:
+ 393              	.L24:
+ 232:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   }
+ 394              		.loc 1 232 5 is_stmt 1 view .LVU67
+ 395 000c FFF7FEFF 		bl	HAL_IncTick
+ 396              	.LVL38:
+ 397              		.loc 1 237 1 is_stmt 0 view .LVU68
+ 398 0010 FBE7     		b	.L21
+ 399              	.L26:
+ 400 0012 00BF     		.align	2
+ 401              	.L25:
+ 402 0014 002C0140 		.word	1073818624
+ 403              		.cfi_endproc
+ 404              	.LFE132:
+ 406              		.section	.text.Error_Handler,"ax",%progbits
+ 407              		.align	1
+ 408              		.global	Error_Handler
+ 409              		.syntax unified
+ 410              		.thumb
+ 411              		.thumb_func
+ 412              		.fpu fpv4-sp-d16
+ 414              	Error_Handler:
+ 415              	.LFB133:
+ 238:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 239:../../applications/gps-firefly-example/src/gps-firefly-example.c **** /**
+ 240:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * @brief  This function is executed in case of error occurrence.
+ 241:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   * @retval None
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s 			page 13
+
+
+ 242:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   */
+ 243:../../applications/gps-firefly-example/src/gps-firefly-example.c **** void Error_Handler(void)
+ 244:../../applications/gps-firefly-example/src/gps-firefly-example.c **** {
+ 416              		.loc 1 244 1 is_stmt 1 view -0
+ 417              		.cfi_startproc
+ 418              		@ args = 0, pretend = 0, frame = 0
+ 419              		@ frame_needed = 0, uses_anonymous_args = 0
+ 420              		@ link register save eliminated.
+ 245:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE BEGIN Error_Handler_Debug */
+ 246:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* User can add his own implementation to report the HAL error return state */
+ 247:../../applications/gps-firefly-example/src/gps-firefly-example.c **** 
+ 248:../../applications/gps-firefly-example/src/gps-firefly-example.c ****   /* USER CODE END Error_Handler_Debug */
+ 249:../../applications/gps-firefly-example/src/gps-firefly-example.c **** }
+ 421              		.loc 1 249 1 view .LVU70
+ 422 0000 7047     		bx	lr
+ 423              		.cfi_endproc
+ 424              	.LFE133:
+ 426              		.global	currentLocation
+ 427              		.global	hasGPSFix
+ 428              		.comm	locationArrayHex,32,4
+ 429              		.comm	locationArray,12,4
+ 430              		.comm	currentHdop,4,4
+ 431              		.comm	currentLongitude,4,4
+ 432              		.comm	currentLatitude,4,4
+ 433              		.comm	gpsTimId,4,4
+ 434              		.comm	iwdgTimId,4,4
+ 435              		.comm	P3_header,44,4
+ 436              		.comm	P2_header,44,4
+ 437              		.comm	P1_header,44,4
+ 438              		.comm	FLASH_SPI,100,4
+ 439              		.comm	P3_SPI,100,4
+ 440              		.comm	P2_SPI,100,4
+ 441              		.comm	P1_SPI,100,4
+ 442              		.comm	P3_I2C,76,4
+ 443              		.comm	P2_I2C,76,4
+ 444              		.comm	P1_I2C,76,4
+ 445              		.comm	common_I2C,76,4
+ 446              		.comm	P3_UART,120,4
+ 447              		.comm	P2_UART,120,4
+ 448              		.comm	P1_UART,120,4
+ 449              		.comm	BLE_UART,120,4
+ 450              		.comm	USB_UART,120,4
+ 451              		.comm	hiwdg,16,4
+ 452              		.comm	P3_DIO6,8,4
+ 453              		.comm	P3_DIO5,8,4
+ 454              		.comm	P3_DIO4,8,4
+ 455              		.comm	P3_DIO3,8,4
+ 456              		.comm	P3_DIO2,8,4
+ 457              		.comm	P3_DIO1,8,4
+ 458              		.comm	P2_DIO6,8,4
+ 459              		.comm	P2_DIO5,8,4
+ 460              		.comm	P2_DIO4,8,4
+ 461              		.comm	P2_DIO3,8,4
+ 462              		.comm	P2_DIO2,8,4
+ 463              		.comm	P2_DIO1,8,4
+ 464              		.comm	P1_DIO6,8,4
+ 465              		.comm	P1_DIO5,8,4
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s 			page 14
+
+
+ 466              		.comm	P1_DIO4,8,4
+ 467              		.comm	P1_DIO3,8,4
+ 468              		.comm	P1_DIO2,8,4
+ 469              		.comm	P1_DIO1,8,4
+ 470              		.section	.bss.currentLocation,"aw",%nobits
+ 471              		.align	2
+ 472              		.set	.LANCHOR1,. + 0
+ 475              	currentLocation:
+ 476 0000 00000000 		.space	12
+ 476      00000000 
+ 476      00000000 
+ 477              		.section	.bss.hasGPSFix,"aw",%nobits
+ 478              		.set	.LANCHOR0,. + 0
+ 481              	hasGPSFix:
+ 482 0000 00       		.space	1
+ 483              		.section	.rodata.GPS_Read.str1.4,"aMS",%progbits,1
+ 484              		.align	2
+ 485              	.LC5:
+ 486 0000 47505320 		.ascii	"GPS FIX\015\000"
+ 486      4649580D 
+ 486      00
+ 487 0009 000000   		.space	3
+ 488              	.LC6:
+ 489 000c 4E4F2047 		.ascii	"NO GPS FIX\015\000"
+ 489      50532046 
+ 489      49580D00 
+ 490              		.section	.rodata.main.str1.4,"aMS",%progbits,1
+ 491              		.align	2
+ 492              	.LC3:
+ 493 0000 496E6974 		.ascii	"Initializing RTOS timers, threads and mutex\015\000"
+ 493      69616C69 
+ 493      7A696E67 
+ 493      2052544F 
+ 493      53207469 
+ 494              		.section	.rodata.printWelcome.str1.4,"aMS",%progbits,1
+ 495              		.align	2
+ 496              	.LC0:
+ 497 0000 0D00     		.ascii	"\015\000"
+ 498 0002 0000     		.space	2
+ 499              	.LC1:
+ 500 0004 2A2A2A2A 		.ascii	"*****************************************\015\000"
+ 500      2A2A2A2A 
+ 500      2A2A2A2A 
+ 500      2A2A2A2A 
+ 500      2A2A2A2A 
+ 501 002f 00       		.space	1
+ 502              	.LC2:
+ 503 0030 46697265 		.ascii	"Firefly GPS Module example\015\000"
+ 503      666C7920 
+ 503      47505320 
+ 503      4D6F6475 
+ 503      6C652065 
+ 504              		.section	.rodata.setGPSCoordinates.str1.4,"aMS",%progbits,1
+ 505              		.align	2
+ 506              	.LC4:
+ 507 0000 4C6F6361 		.ascii	"Location lat: %f, long: %f, hdop: %f \015\012\000"
+ 507      74696F6E 
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s 			page 15
+
+
+ 507      206C6174 
+ 507      3A202566 
+ 507      2C206C6F 
+ 508              		.weak	SystemClock_Config
+ 509              		.text
+ 510              	.Letext0:
+ 511              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 512              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 513              		.file 4 "../../core/ST/CMSIS/Include/core_cm4.h"
+ 514              		.file 5 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/system_stm32l4xx.h"
+ 515              		.file 6 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/stm32l496xx.h"
+ 516              		.file 7 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h"
+ 517              		.file 8 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dma.h"
+ 518              		.file 9 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_i2c.h"
+ 519              		.file 10 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_iwdg.h"
+ 520              		.file 11 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h"
+ 521              		.file 12 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h"
+ 522              		.file 13 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h"
+ 523              		.file 14 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h"
+ 524              		.file 15 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/include/timers.h"
+ 525              		.file 16 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h"
+ 526              		.file 17 "../../core/platform/octa/inc/gpio.h"
+ 527              		.file 18 "../../core/platform/octa/inc/iwdg.h"
+ 528              		.file 19 "../../core/platform/octa/inc/uart.h"
+ 529              		.file 20 "../../core/platform/octa/inc/i2c.h"
+ 530              		.file 21 "../../core/platform/octa/inc/spi.h"
+ 531              		.file 22 "../../core/platform/octa/inc/octa.h"
+ 532              		.file 23 "../../applications/gps-firefly-example/inc/gps-firefly-example.h"
+ 533              		.file 24 "../../shields/gps-firefly/inc/fireflyx1.h"
+ 534              		.file 25 "<built-in>"
+ 535              		.file 26 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio.h"
+ 536              		.file 27 "../../core/platform/octa/inc/sysclock.h"
+ 537              		.file 28 "../../core/platform/common/inc/platform.h"
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s 			page 16
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 gps-firefly-example.c
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:18     .text.printWelcome:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:26     .text.printWelcome:00000000 printWelcome
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:82     .text.printWelcome:00000044 $d
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:90     .text.main:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:97     .text.main:00000000 main
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:184    .text.main:00000068 $d
+                            *COM*:00000020 locationArrayHex
+                            *COM*:00000004 iwdgTimId
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:287    .text.GPS_Read:00000000 GPS_Read
+                            *COM*:00000004 gpsTimId
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:195    .text.setGPSCoordinates:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:202    .text.setGPSCoordinates:00000000 setGPSCoordinates
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:272    .text.setGPSCoordinates:00000060 $d
+                            *COM*:0000000c locationArray
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:280    .text.GPS_Read:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:354    .text.GPS_Read:0000002c $d
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:361    .text.HAL_TIM_PeriodElapsedCallback:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:368    .text.HAL_TIM_PeriodElapsedCallback:00000000 HAL_TIM_PeriodElapsedCallback
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:402    .text.HAL_TIM_PeriodElapsedCallback:00000014 $d
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:407    .text.Error_Handler:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:414    .text.Error_Handler:00000000 Error_Handler
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:475    .bss.currentLocation:00000000 currentLocation
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:481    .bss.hasGPSFix:00000000 hasGPSFix
+                            *COM*:00000004 currentHdop
+                            *COM*:00000004 currentLongitude
+                            *COM*:00000004 currentLatitude
+                            *COM*:0000002c P3_header
+                            *COM*:0000002c P2_header
+                            *COM*:0000002c P1_header
+                            *COM*:00000064 FLASH_SPI
+                            *COM*:00000064 P3_SPI
+                            *COM*:00000064 P2_SPI
+                            *COM*:00000064 P1_SPI
+                            *COM*:0000004c P3_I2C
+                            *COM*:0000004c P2_I2C
+                            *COM*:0000004c P1_I2C
+                            *COM*:0000004c common_I2C
+                            *COM*:00000078 P3_UART
+                            *COM*:00000078 P2_UART
+                            *COM*:00000078 P1_UART
+                            *COM*:00000078 BLE_UART
+                            *COM*:00000078 USB_UART
+                            *COM*:00000010 hiwdg
+                            *COM*:00000008 P3_DIO6
+                            *COM*:00000008 P3_DIO5
+                            *COM*:00000008 P3_DIO4
+                            *COM*:00000008 P3_DIO3
+                            *COM*:00000008 P3_DIO2
+                            *COM*:00000008 P3_DIO1
+                            *COM*:00000008 P2_DIO6
+                            *COM*:00000008 P2_DIO5
+                            *COM*:00000008 P2_DIO4
+                            *COM*:00000008 P2_DIO3
+                            *COM*:00000008 P2_DIO2
+                            *COM*:00000008 P2_DIO1
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s 			page 17
+
+
+                            *COM*:00000008 P1_DIO6
+                            *COM*:00000008 P1_DIO5
+                            *COM*:00000008 P1_DIO4
+                            *COM*:00000008 P1_DIO3
+                            *COM*:00000008 P1_DIO2
+                            *COM*:00000008 P1_DIO1
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:471    .bss.currentLocation:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:482    .bss.hasGPSFix:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:484    .rodata.GPS_Read.str1.4:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:491    .rodata.main.str1.4:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:495    .rodata.printWelcome.str1.4:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\ccaOhtOI.s:505    .rodata.setGPSCoordinates.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+puts
+HAL_GPIO_TogglePin
+HAL_Delay
+HAL_Init
+SystemClock_Config
+Initialize_Platform
+Firefly_Initialize
+memset
+IWDG_feed
+osTimerCreate
+osTimerStart
+osKernelStart
+__aeabi_f2d
+gps_get_position_dd
+printf
+Firefly_receive
+HAL_IncTick

@@ -1,0 +1,3016 @@
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"nmea.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.find_start,"ax",%progbits
+  18              		.align	1
+  19              		.global	find_start
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	find_start:
+  27              	.LVL0:
+  28              	.LFB4:
+  29              		.file 1 "../../shields/gps-firefly/src/nmea.c"
+   1:../../shields/gps-firefly/src/nmea.c **** // NMEA parser - only support for GNGGA and its coordinates, for now ;-)
+   2:../../shields/gps-firefly/src/nmea.c **** // constructed as a state machine
+   3:../../shields/gps-firefly/src/nmea.c **** 
+   4:../../shields/gps-firefly/src/nmea.c **** // example:
+   5:../../shields/gps-firefly/src/nmea.c **** // $GNGGA,135507.000,5101.1610,N,00442.8453,E,...
+   6:../../shields/gps-firefly/src/nmea.c **** // $.....,hhmmss.sss,ddmm.mmmm,[NS],ddmm.mmmm,[EW],...
+   7:../../shields/gps-firefly/src/nmea.c **** 
+   8:../../shields/gps-firefly/src/nmea.c **** #include <math.h>
+   9:../../shields/gps-firefly/src/nmea.c **** #include <stdlib.h>
+  10:../../shields/gps-firefly/src/nmea.c **** 
+  11:../../shields/gps-firefly/src/nmea.c **** #include "nmea.h"
+  12:../../shields/gps-firefly/src/nmea.c **** 
+  13:../../shields/gps-firefly/src/nmea.c **** // local variable to store the results of parsing
+  14:../../shields/gps-firefly/src/nmea.c **** static nmea_position_t position,
+  15:../../shields/gps-firefly/src/nmea.c ****                        current_position;
+  16:../../shields/gps-firefly/src/nmea.c **** 
+  17:../../shields/gps-firefly/src/nmea.c **** nmea_position_t nmea_get_position() { return current_position;             }
+  18:../../shields/gps-firefly/src/nmea.c **** uint8_t nmea_have_position()           { return current_position.quality > 0; }
+  19:../../shields/gps-firefly/src/nmea.c **** 
+  20:../../shields/gps-firefly/src/nmea.c **** void _reset_position(void) {
+  21:../../shields/gps-firefly/src/nmea.c ****   position.time.hour     = 0;
+  22:../../shields/gps-firefly/src/nmea.c ****   position.time.min      = 0;
+  23:../../shields/gps-firefly/src/nmea.c ****   position.time.sec      = 0;
+  24:../../shields/gps-firefly/src/nmea.c ****   position.latitude.deg  = 0;
+  25:../../shields/gps-firefly/src/nmea.c ****   position.latitude.min  = 0;
+  26:../../shields/gps-firefly/src/nmea.c ****   position.latitude.ns   = '_';
+  27:../../shields/gps-firefly/src/nmea.c ****   position.longitude.deg = 0;
+  28:../../shields/gps-firefly/src/nmea.c ****   position.longitude.min = 0;
+  29:../../shields/gps-firefly/src/nmea.c ****   position.longitude.ew  = '_';
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 2
+
+
+  30:../../shields/gps-firefly/src/nmea.c ****   position.quality=0;
+  31:../../shields/gps-firefly/src/nmea.c **** }
+  32:../../shields/gps-firefly/src/nmea.c **** void _reset_position2(void) {
+  33:../../shields/gps-firefly/src/nmea.c **** 	current_position.time.hour     = 0;
+  34:../../shields/gps-firefly/src/nmea.c **** 	current_position.time.min      = 0;
+  35:../../shields/gps-firefly/src/nmea.c **** 	current_position.time.sec      = 0;
+  36:../../shields/gps-firefly/src/nmea.c **** 	current_position.latitude.deg  = 0;
+  37:../../shields/gps-firefly/src/nmea.c **** 	current_position.latitude.min  = 0;
+  38:../../shields/gps-firefly/src/nmea.c **** 	current_position.latitude.ns   = '_';
+  39:../../shields/gps-firefly/src/nmea.c **** 	current_position.longitude.deg = 0;
+  40:../../shields/gps-firefly/src/nmea.c ****   current_position.longitude.min = 0;
+  41:../../shields/gps-firefly/src/nmea.c ****   current_position.longitude.ew  = '_';
+  42:../../shields/gps-firefly/src/nmea.c ****   current_position.quality=0;
+  43:../../shields/gps-firefly/src/nmea.c **** }
+  44:../../shields/gps-firefly/src/nmea.c **** 
+  45:../../shields/gps-firefly/src/nmea.c **** // states use parser functions to do parts of the parsing
+  46:../../shields/gps-firefly/src/nmea.c **** // they return a result code indicating if they failed to parse, want to 
+  47:../../shields/gps-firefly/src/nmea.c **** // continue parsing or are done for their part
+  48:../../shields/gps-firefly/src/nmea.c **** // the codes are used as their int value 0, 1, 2 in the transitions table
+  49:../../shields/gps-firefly/src/nmea.c **** // to choose the next state.
+  50:../../shields/gps-firefly/src/nmea.c **** enum result_code { FAIL, REPEAT, OK };
+  51:../../shields/gps-firefly/src/nmea.c **** 
+  52:../../shields/gps-firefly/src/nmea.c **** // detects the start of a command
+  53:../../shields/gps-firefly/src/nmea.c **** int find_start (uint8_t b) { return b == '$' ? OK : FAIL; }
+  30              		.loc 1 53 28 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  35              		.loc 1 53 30 view .LVU1
+  36              		.loc 1 53 51 is_stmt 0 view .LVU2
+  37 0000 2428     		cmp	r0, #36
+  38 0002 01D0     		beq	.L4
+  39 0004 0020     		movs	r0, #0
+  40              	.LVL1:
+  41              		.loc 1 53 1 view .LVU3
+  42 0006 7047     		bx	lr
+  43              	.LVL2:
+  44              	.L4:
+  45              		.loc 1 53 51 view .LVU4
+  46 0008 0220     		movs	r0, #2
+  47              	.LVL3:
+  48              		.loc 1 53 51 view .LVU5
+  49 000a 7047     		bx	lr
+  50              		.cfi_endproc
+  51              	.LFE4:
+  53              		.section	.text.parse_ns_ind,"ax",%progbits
+  54              		.align	1
+  55              		.global	parse_ns_ind
+  56              		.syntax unified
+  57              		.thumb
+  58              		.thumb_func
+  59              		.fpu fpv4-sp-d16
+  61              	parse_ns_ind:
+  62              	.LVL4:
+  63              	.LFB8:
+  54:../../shields/gps-firefly/src/nmea.c **** 
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 3
+
+
+  55:../../shields/gps-firefly/src/nmea.c **** // detects the GNGGA command
+  56:../../shields/gps-firefly/src/nmea.c **** //$GNGGA,132322.000,5113.4908,N,00424.7987,E,1,6,1.23,-13.3,M,47.3,M,,*5B
+  57:../../shields/gps-firefly/src/nmea.c **** int parse_gngga(uint8_t b) {
+  58:../../shields/gps-firefly/src/nmea.c ****   static uint8_t pos = 0;
+  59:../../shields/gps-firefly/src/nmea.c ****   const uint8_t string[] = "GNGGA,";
+  60:../../shields/gps-firefly/src/nmea.c **** 
+  61:../../shields/gps-firefly/src/nmea.c ****   // is it the expected next char?
+  62:../../shields/gps-firefly/src/nmea.c ****   if(string[pos] == b) {
+  63:../../shields/gps-firefly/src/nmea.c ****     if(pos == 5) {
+  64:../../shields/gps-firefly/src/nmea.c ****       pos = 0;
+  65:../../shields/gps-firefly/src/nmea.c ****       _reset_position();
+  66:../../shields/gps-firefly/src/nmea.c ****       return OK;
+  67:../../shields/gps-firefly/src/nmea.c ****     } else {
+  68:../../shields/gps-firefly/src/nmea.c ****       pos++;
+  69:../../shields/gps-firefly/src/nmea.c ****       return REPEAT;
+  70:../../shields/gps-firefly/src/nmea.c ****     }
+  71:../../shields/gps-firefly/src/nmea.c ****   }
+  72:../../shields/gps-firefly/src/nmea.c ****   pos = 0;
+  73:../../shields/gps-firefly/src/nmea.c ****   return FAIL;
+  74:../../shields/gps-firefly/src/nmea.c **** }
+  75:../../shields/gps-firefly/src/nmea.c **** 
+  76:../../shields/gps-firefly/src/nmea.c **** // parses the UTC timestamp
+  77:../../shields/gps-firefly/src/nmea.c **** int parse_time (uint8_t b) {
+  78:../../shields/gps-firefly/src/nmea.c ****   static uint8_t pos = 0;
+  79:../../shields/gps-firefly/src/nmea.c ****   switch(pos) {
+  80:../../shields/gps-firefly/src/nmea.c ****     case 0: // Hhmmss.sss
+  81:../../shields/gps-firefly/src/nmea.c ****     case 1: // hHmmss.sss
+  82:../../shields/gps-firefly/src/nmea.c ****       if(b < '0' || b > '9') { pos = 0; return FAIL; }
+  83:../../shields/gps-firefly/src/nmea.c ****       position.time.hour += (b - '0') * pow(10, (1-pos));
+  84:../../shields/gps-firefly/src/nmea.c ****       break;
+  85:../../shields/gps-firefly/src/nmea.c ****     case 2: // hhMmss.sss
+  86:../../shields/gps-firefly/src/nmea.c ****     case 3: // hhmMss.sss
+  87:../../shields/gps-firefly/src/nmea.c ****       if(b < '0' || b > '9') { pos = 0; return FAIL; }
+  88:../../shields/gps-firefly/src/nmea.c ****       position.time.min += (b - '0') * pow(10, (3-pos));
+  89:../../shields/gps-firefly/src/nmea.c ****       break;
+  90:../../shields/gps-firefly/src/nmea.c ****     case 4: // hhmmSs.sss
+  91:../../shields/gps-firefly/src/nmea.c ****     case 5: // hhmmsS.sss
+  92:../../shields/gps-firefly/src/nmea.c ****       if(b < '0' || b > '9') { pos = 0; return FAIL; }
+  93:../../shields/gps-firefly/src/nmea.c ****       position.time.sec += (b - '0') * pow(10, (5-pos));
+  94:../../shields/gps-firefly/src/nmea.c ****       break;
+  95:../../shields/gps-firefly/src/nmea.c ****     case 6: // skip .
+  96:../../shields/gps-firefly/src/nmea.c ****       break;
+  97:../../shields/gps-firefly/src/nmea.c ****     case 7: // hhmmss.Sss
+  98:../../shields/gps-firefly/src/nmea.c ****     case 8: // hhmmss.sSs
+  99:../../shields/gps-firefly/src/nmea.c ****     case 9: // hhmmss.ssS
+ 100:../../shields/gps-firefly/src/nmea.c ****       if(b < '0' || b > '9') { pos = 0; return FAIL; }
+ 101:../../shields/gps-firefly/src/nmea.c ****       position.time.sec += (b - '0') / pow(10, (pos - 6));
+ 102:../../shields/gps-firefly/src/nmea.c ****       break;
+ 103:../../shields/gps-firefly/src/nmea.c ****     case 10:
+ 104:../../shields/gps-firefly/src/nmea.c ****       pos = 0;
+ 105:../../shields/gps-firefly/src/nmea.c ****       if (b == ',')
+ 106:../../shields/gps-firefly/src/nmea.c ****         return OK;
+ 107:../../shields/gps-firefly/src/nmea.c ****       else
+ 108:../../shields/gps-firefly/src/nmea.c ****     	  return FAIL;
+ 109:../../shields/gps-firefly/src/nmea.c **** 
+ 110:../../shields/gps-firefly/src/nmea.c ****   }
+ 111:../../shields/gps-firefly/src/nmea.c **** 
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 4
+
+
+ 112:../../shields/gps-firefly/src/nmea.c ****   pos++;
+ 113:../../shields/gps-firefly/src/nmea.c ****   return REPEAT;
+ 114:../../shields/gps-firefly/src/nmea.c **** 
+ 115:../../shields/gps-firefly/src/nmea.c **** }
+ 116:../../shields/gps-firefly/src/nmea.c **** 
+ 117:../../shields/gps-firefly/src/nmea.c **** // parses the latitude information
+ 118:../../shields/gps-firefly/src/nmea.c **** int parse_latitude(uint8_t b) {
+ 119:../../shields/gps-firefly/src/nmea.c ****   static uint8_t pos = 0;
+ 120:../../shields/gps-firefly/src/nmea.c ****   switch(pos) {
+ 121:../../shields/gps-firefly/src/nmea.c ****     case 0: // Ddmm.mmmm
+ 122:../../shields/gps-firefly/src/nmea.c ****     case 1: // dDmm.mmmm
+ 123:../../shields/gps-firefly/src/nmea.c ****       if(b < '0' || b > '9') { pos = 0; return FAIL; }
+ 124:../../shields/gps-firefly/src/nmea.c ****       position.latitude.deg += (b - '0') * pow(10, (1-pos));
+ 125:../../shields/gps-firefly/src/nmea.c ****       break;
+ 126:../../shields/gps-firefly/src/nmea.c ****     case 2: // Ddmm.mmmm
+ 127:../../shields/gps-firefly/src/nmea.c ****     case 3: // dDmm.mmmm
+ 128:../../shields/gps-firefly/src/nmea.c ****       if(b < '0' || b > '9') { pos = 0; return FAIL; }
+ 129:../../shields/gps-firefly/src/nmea.c ****       position.latitude.min += (b - '0') * pow(10, (3-pos));
+ 130:../../shields/gps-firefly/src/nmea.c ****       break;
+ 131:../../shields/gps-firefly/src/nmea.c ****     case 4: break; // skip .
+ 132:../../shields/gps-firefly/src/nmea.c ****     case 5:
+ 133:../../shields/gps-firefly/src/nmea.c ****     case 6:
+ 134:../../shields/gps-firefly/src/nmea.c ****     case 7:
+ 135:../../shields/gps-firefly/src/nmea.c ****     case 8:
+ 136:../../shields/gps-firefly/src/nmea.c ****       if(b < '0' || b > '9') { pos = 0; return FAIL; }
+ 137:../../shields/gps-firefly/src/nmea.c ****       position.latitude.min += (b - '0') / pow(10, (pos - 4));
+ 138:../../shields/gps-firefly/src/nmea.c ****       break;
+ 139:../../shields/gps-firefly/src/nmea.c ****     case 9:
+ 140:../../shields/gps-firefly/src/nmea.c ****       if (b == ',')
+ 141:../../shields/gps-firefly/src/nmea.c ****       {
+ 142:../../shields/gps-firefly/src/nmea.c ****     	  pos = 0;
+ 143:../../shields/gps-firefly/src/nmea.c ****     	  return OK;
+ 144:../../shields/gps-firefly/src/nmea.c ****       }
+ 145:../../shields/gps-firefly/src/nmea.c ****       else
+ 146:../../shields/gps-firefly/src/nmea.c ****     	  break;
+ 147:../../shields/gps-firefly/src/nmea.c ****     case 10:
+ 148:../../shields/gps-firefly/src/nmea.c ****     	if(b < '0' || b > '9') { pos = 0; return FAIL; }
+ 149:../../shields/gps-firefly/src/nmea.c ****     	position.latitude.min += (b - '0') / pow(10, (pos - 6));
+ 150:../../shields/gps-firefly/src/nmea.c ****     	break;
+ 151:../../shields/gps-firefly/src/nmea.c ****     case 11:
+ 152:../../shields/gps-firefly/src/nmea.c ****     	pos = 0;
+ 153:../../shields/gps-firefly/src/nmea.c ****     	if (b == ',')
+ 154:../../shields/gps-firefly/src/nmea.c ****     	{
+ 155:../../shields/gps-firefly/src/nmea.c ****     	  	  return OK;
+ 156:../../shields/gps-firefly/src/nmea.c ****     	}
+ 157:../../shields/gps-firefly/src/nmea.c ****     	else
+ 158:../../shields/gps-firefly/src/nmea.c ****     	  	  return FAIL;
+ 159:../../shields/gps-firefly/src/nmea.c **** 
+ 160:../../shields/gps-firefly/src/nmea.c **** 
+ 161:../../shields/gps-firefly/src/nmea.c ****   }
+ 162:../../shields/gps-firefly/src/nmea.c ****   pos++;
+ 163:../../shields/gps-firefly/src/nmea.c ****   return REPEAT;
+ 164:../../shields/gps-firefly/src/nmea.c **** 
+ 165:../../shields/gps-firefly/src/nmea.c **** }
+ 166:../../shields/gps-firefly/src/nmea.c **** 
+ 167:../../shields/gps-firefly/src/nmea.c **** // parses the latitude orientation
+ 168:../../shields/gps-firefly/src/nmea.c **** int parse_ns_ind(uint8_t b) {
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 5
+
+
+  64              		.loc 1 168 29 is_stmt 1 view -0
+  65              		.cfi_startproc
+  66              		@ args = 0, pretend = 0, frame = 0
+  67              		@ frame_needed = 0, uses_anonymous_args = 0
+  68              		@ link register save eliminated.
+ 169:../../shields/gps-firefly/src/nmea.c ****   if (b == ',') return OK;
+  69              		.loc 1 169 3 view .LVU7
+  70              		.loc 1 169 6 is_stmt 0 view .LVU8
+  71 0000 2C28     		cmp	r0, #44
+  72 0002 07D0     		beq	.L8
+ 170:../../shields/gps-firefly/src/nmea.c **** 
+ 171:../../shields/gps-firefly/src/nmea.c ****   if(b != 'N' && b != 'S') { return FAIL; }
+  73              		.loc 1 171 3 is_stmt 1 view .LVU9
+  74              		.loc 1 171 5 is_stmt 0 view .LVU10
+  75 0004 4E28     		cmp	r0, #78
+  76 0006 01D0     		beq	.L7
+  77              		.loc 1 171 15 discriminator 1 view .LVU11
+  78 0008 5328     		cmp	r0, #83
+  79 000a 05D1     		bne	.L9
+  80              	.L7:
+ 172:../../shields/gps-firefly/src/nmea.c ****   position.latitude.ns = b;
+  81              		.loc 1 172 3 is_stmt 1 view .LVU12
+  82              		.loc 1 172 24 is_stmt 0 view .LVU13
+  83 000c 034B     		ldr	r3, .L10
+  84 000e 1874     		strb	r0, [r3, #16]
+ 173:../../shields/gps-firefly/src/nmea.c ****   return REPEAT;
+  85              		.loc 1 173 3 is_stmt 1 view .LVU14
+  86              		.loc 1 173 10 is_stmt 0 view .LVU15
+  87 0010 0120     		movs	r0, #1
+  88              	.LVL5:
+  89              		.loc 1 173 10 view .LVU16
+  90 0012 7047     		bx	lr
+  91              	.LVL6:
+  92              	.L8:
+ 169:../../shields/gps-firefly/src/nmea.c **** 
+  93              		.loc 1 169 24 view .LVU17
+  94 0014 0220     		movs	r0, #2
+  95              	.LVL7:
+ 169:../../shields/gps-firefly/src/nmea.c **** 
+  96              		.loc 1 169 24 view .LVU18
+  97 0016 7047     		bx	lr
+  98              	.LVL8:
+  99              	.L9:
+ 171:../../shields/gps-firefly/src/nmea.c ****   position.latitude.ns = b;
+ 100              		.loc 1 171 37 view .LVU19
+ 101 0018 0020     		movs	r0, #0
+ 102              	.LVL9:
+ 174:../../shields/gps-firefly/src/nmea.c **** }
+ 103              		.loc 1 174 1 view .LVU20
+ 104 001a 7047     		bx	lr
+ 105              	.L11:
+ 106              		.align	2
+ 107              	.L10:
+ 108 001c 00000000 		.word	.LANCHOR0
+ 109              		.cfi_endproc
+ 110              	.LFE8:
+ 112              		.section	.text.parse_ew_ind,"ax",%progbits
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 6
+
+
+ 113              		.align	1
+ 114              		.global	parse_ew_ind
+ 115              		.syntax unified
+ 116              		.thumb
+ 117              		.thumb_func
+ 118              		.fpu fpv4-sp-d16
+ 120              	parse_ew_ind:
+ 121              	.LVL10:
+ 122              	.LFB10:
+ 175:../../shields/gps-firefly/src/nmea.c **** 
+ 176:../../shields/gps-firefly/src/nmea.c **** // parses the liongitude information
+ 177:../../shields/gps-firefly/src/nmea.c **** int parse_longitude(uint8_t b) {
+ 178:../../shields/gps-firefly/src/nmea.c ****   static uint8_t pos = 0;
+ 179:../../shields/gps-firefly/src/nmea.c ****   switch(pos) {
+ 180:../../shields/gps-firefly/src/nmea.c ****     case 0: // Dddmm.mmmm
+ 181:../../shields/gps-firefly/src/nmea.c ****       position.longitude.deg = 0;
+ 182:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min = 0;
+ 183:../../shields/gps-firefly/src/nmea.c ****     case 1: // dDdmm.mmmm
+ 184:../../shields/gps-firefly/src/nmea.c ****     case 2: // ddDmm.mmmm
+ 185:../../shields/gps-firefly/src/nmea.c ****       if(b < '0' || b > '9') { pos = 0; return FAIL; }
+ 186:../../shields/gps-firefly/src/nmea.c ****       position.longitude.deg += (b - '0') * pow(10, (2-pos));
+ 187:../../shields/gps-firefly/src/nmea.c ****       break;
+ 188:../../shields/gps-firefly/src/nmea.c ****     case 3: // Ddmm.mmmm
+ 189:../../shields/gps-firefly/src/nmea.c ****     case 4: // dDmm.mmmm
+ 190:../../shields/gps-firefly/src/nmea.c ****       if(b < '0' || b > '9') { pos = 0; return FAIL; }
+ 191:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min += (b - '0') * pow(10, (4-pos));
+ 192:../../shields/gps-firefly/src/nmea.c ****       break;
+ 193:../../shields/gps-firefly/src/nmea.c ****     case 5: break; // skip .
+ 194:../../shields/gps-firefly/src/nmea.c ****     case 6:
+ 195:../../shields/gps-firefly/src/nmea.c ****     case 7:
+ 196:../../shields/gps-firefly/src/nmea.c ****     case 8:
+ 197:../../shields/gps-firefly/src/nmea.c ****     case 9:
+ 198:../../shields/gps-firefly/src/nmea.c ****       if(b < '0' || b > '9') { pos = 0; return FAIL; }
+ 199:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min += (b - '0') / pow(10, (pos - 5));
+ 200:../../shields/gps-firefly/src/nmea.c ****       break;
+ 201:../../shields/gps-firefly/src/nmea.c ****     case 10:
+ 202:../../shields/gps-firefly/src/nmea.c ****     	if (b == ',')
+ 203:../../shields/gps-firefly/src/nmea.c ****     	{
+ 204:../../shields/gps-firefly/src/nmea.c ****     		pos = 0;
+ 205:../../shields/gps-firefly/src/nmea.c ****     		return OK;
+ 206:../../shields/gps-firefly/src/nmea.c ****     	}
+ 207:../../shields/gps-firefly/src/nmea.c ****     	else
+ 208:../../shields/gps-firefly/src/nmea.c ****     		break;
+ 209:../../shields/gps-firefly/src/nmea.c ****     case 11:
+ 210:../../shields/gps-firefly/src/nmea.c ****     	if(b < '0' || b > '9') { pos = 0; return FAIL; }
+ 211:../../shields/gps-firefly/src/nmea.c ****     	position.longitude.min += (b - '0') / pow(10, (pos - 5));
+ 212:../../shields/gps-firefly/src/nmea.c ****     	break;
+ 213:../../shields/gps-firefly/src/nmea.c ****     case 12:
+ 214:../../shields/gps-firefly/src/nmea.c ****           pos = 0;
+ 215:../../shields/gps-firefly/src/nmea.c ****           if (b == ',')
+ 216:../../shields/gps-firefly/src/nmea.c ****             return OK;
+ 217:../../shields/gps-firefly/src/nmea.c ****           else
+ 218:../../shields/gps-firefly/src/nmea.c ****         	  return FAIL;
+ 219:../../shields/gps-firefly/src/nmea.c **** 
+ 220:../../shields/gps-firefly/src/nmea.c ****   }
+ 221:../../shields/gps-firefly/src/nmea.c ****   pos++;
+ 222:../../shields/gps-firefly/src/nmea.c ****   return REPEAT;
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 7
+
+
+ 223:../../shields/gps-firefly/src/nmea.c **** }
+ 224:../../shields/gps-firefly/src/nmea.c **** 
+ 225:../../shields/gps-firefly/src/nmea.c **** // parses the longitude orientation
+ 226:../../shields/gps-firefly/src/nmea.c **** int parse_ew_ind(uint8_t b) {
+ 123              		.loc 1 226 29 is_stmt 1 view -0
+ 124              		.cfi_startproc
+ 125              		@ args = 0, pretend = 0, frame = 0
+ 126              		@ frame_needed = 0, uses_anonymous_args = 0
+ 127              		@ link register save eliminated.
+ 227:../../shields/gps-firefly/src/nmea.c **** 	if (b == ',') return OK;
+ 128              		.loc 1 227 2 view .LVU22
+ 129              		.loc 1 227 5 is_stmt 0 view .LVU23
+ 130 0000 2C28     		cmp	r0, #44
+ 131 0002 07D0     		beq	.L15
+ 228:../../shields/gps-firefly/src/nmea.c **** 	if(b != 'E' && b != 'W') { return FAIL; }
+ 132              		.loc 1 228 2 is_stmt 1 view .LVU24
+ 133              		.loc 1 228 4 is_stmt 0 view .LVU25
+ 134 0004 4528     		cmp	r0, #69
+ 135 0006 01D0     		beq	.L14
+ 136              		.loc 1 228 14 discriminator 1 view .LVU26
+ 137 0008 5728     		cmp	r0, #87
+ 138 000a 05D1     		bne	.L16
+ 139              	.L14:
+ 229:../../shields/gps-firefly/src/nmea.c **** 	position.longitude.ew = b;
+ 140              		.loc 1 229 2 is_stmt 1 view .LVU27
+ 141              		.loc 1 229 24 is_stmt 0 view .LVU28
+ 142 000c 034B     		ldr	r3, .L17
+ 143 000e 1877     		strb	r0, [r3, #28]
+ 230:../../shields/gps-firefly/src/nmea.c **** 
+ 231:../../shields/gps-firefly/src/nmea.c **** 	return REPEAT;
+ 144              		.loc 1 231 2 is_stmt 1 view .LVU29
+ 145              		.loc 1 231 9 is_stmt 0 view .LVU30
+ 146 0010 0120     		movs	r0, #1
+ 147              	.LVL11:
+ 148              		.loc 1 231 9 view .LVU31
+ 149 0012 7047     		bx	lr
+ 150              	.LVL12:
+ 151              	.L15:
+ 227:../../shields/gps-firefly/src/nmea.c **** 	if(b != 'E' && b != 'W') { return FAIL; }
+ 152              		.loc 1 227 23 view .LVU32
+ 153 0014 0220     		movs	r0, #2
+ 154              	.LVL13:
+ 227:../../shields/gps-firefly/src/nmea.c **** 	if(b != 'E' && b != 'W') { return FAIL; }
+ 155              		.loc 1 227 23 view .LVU33
+ 156 0016 7047     		bx	lr
+ 157              	.LVL14:
+ 158              	.L16:
+ 228:../../shields/gps-firefly/src/nmea.c **** 	position.longitude.ew = b;
+ 159              		.loc 1 228 36 view .LVU34
+ 160 0018 0020     		movs	r0, #0
+ 161              	.LVL15:
+ 232:../../shields/gps-firefly/src/nmea.c **** }
+ 162              		.loc 1 232 1 view .LVU35
+ 163 001a 7047     		bx	lr
+ 164              	.L18:
+ 165              		.align	2
+ 166              	.L17:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 8
+
+
+ 167 001c 00000000 		.word	.LANCHOR0
+ 168              		.cfi_endproc
+ 169              	.LFE10:
+ 171              		.section	.text.parse_quality,"ax",%progbits
+ 172              		.align	1
+ 173              		.global	parse_quality
+ 174              		.syntax unified
+ 175              		.thumb
+ 176              		.thumb_func
+ 177              		.fpu fpv4-sp-d16
+ 179              	parse_quality:
+ 180              	.LVL16:
+ 181              	.LFB11:
+ 233:../../shields/gps-firefly/src/nmea.c **** 
+ 234:../../shields/gps-firefly/src/nmea.c **** int parse_quality(uint8_t b) {
+ 182              		.loc 1 234 30 is_stmt 1 view -0
+ 183              		.cfi_startproc
+ 184              		@ args = 0, pretend = 0, frame = 0
+ 185              		@ frame_needed = 0, uses_anonymous_args = 0
+ 186              		@ link register save eliminated.
+ 235:../../shields/gps-firefly/src/nmea.c **** 	if (b == ',') return OK;
+ 187              		.loc 1 235 2 view .LVU37
+ 188              		.loc 1 235 5 is_stmt 0 view .LVU38
+ 189 0000 2C28     		cmp	r0, #44
+ 190 0002 08D0     		beq	.L21
+ 236:../../shields/gps-firefly/src/nmea.c **** 	b -= '0';
+ 191              		.loc 1 236 2 is_stmt 1 view .LVU39
+ 192              		.loc 1 236 4 is_stmt 0 view .LVU40
+ 193 0004 3038     		subs	r0, r0, #48
+ 194              	.LVL17:
+ 195              		.loc 1 236 4 view .LVU41
+ 196 0006 C0B2     		uxtb	r0, r0
+ 197              	.LVL18:
+ 237:../../shields/gps-firefly/src/nmea.c **** 	if(b > 8) { return FAIL; }
+ 198              		.loc 1 237 2 is_stmt 1 view .LVU42
+ 199              		.loc 1 237 4 is_stmt 0 view .LVU43
+ 200 0008 0828     		cmp	r0, #8
+ 201 000a 06D8     		bhi	.L22
+ 238:../../shields/gps-firefly/src/nmea.c **** 	position.quality = b;
+ 202              		.loc 1 238 2 is_stmt 1 view .LVU44
+ 203              		.loc 1 238 19 is_stmt 0 view .LVU45
+ 204 000c 044B     		ldr	r3, .L23
+ 205 000e 83F82000 		strb	r0, [r3, #32]
+ 239:../../shields/gps-firefly/src/nmea.c **** 
+ 240:../../shields/gps-firefly/src/nmea.c **** 	return REPEAT;
+ 206              		.loc 1 240 2 is_stmt 1 view .LVU46
+ 207              		.loc 1 240 9 is_stmt 0 view .LVU47
+ 208 0012 0120     		movs	r0, #1
+ 209              	.LVL19:
+ 210              		.loc 1 240 9 view .LVU48
+ 211 0014 7047     		bx	lr
+ 212              	.LVL20:
+ 213              	.L21:
+ 235:../../shields/gps-firefly/src/nmea.c **** 	b -= '0';
+ 214              		.loc 1 235 23 view .LVU49
+ 215 0016 0220     		movs	r0, #2
+ 216              	.LVL21:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 9
+
+
+ 235:../../shields/gps-firefly/src/nmea.c **** 	b -= '0';
+ 217              		.loc 1 235 23 view .LVU50
+ 218 0018 7047     		bx	lr
+ 219              	.LVL22:
+ 220              	.L22:
+ 237:../../shields/gps-firefly/src/nmea.c **** 	position.quality = b;
+ 221              		.loc 1 237 21 view .LVU51
+ 222 001a 0020     		movs	r0, #0
+ 223              	.LVL23:
+ 241:../../shields/gps-firefly/src/nmea.c **** }
+ 224              		.loc 1 241 1 view .LVU52
+ 225 001c 7047     		bx	lr
+ 226              	.L24:
+ 227 001e 00BF     		.align	2
+ 228              	.L23:
+ 229 0020 00000000 		.word	.LANCHOR0
+ 230              		.cfi_endproc
+ 231              	.LFE11:
+ 233              		.section	.text.parse_nr_sats,"ax",%progbits
+ 234              		.align	1
+ 235              		.global	parse_nr_sats
+ 236              		.syntax unified
+ 237              		.thumb
+ 238              		.thumb_func
+ 239              		.fpu fpv4-sp-d16
+ 241              	parse_nr_sats:
+ 242              	.LVL24:
+ 243              	.LFB12:
+ 242:../../shields/gps-firefly/src/nmea.c **** 
+ 243:../../shields/gps-firefly/src/nmea.c **** int parse_nr_sats(uint8_t b) {
+ 244              		.loc 1 243 30 is_stmt 1 view -0
+ 245              		.cfi_startproc
+ 246              		@ args = 0, pretend = 0, frame = 0
+ 247              		@ frame_needed = 0, uses_anonymous_args = 0
+ 248              		@ link register save eliminated.
+ 244:../../shields/gps-firefly/src/nmea.c **** 
+ 245:../../shields/gps-firefly/src/nmea.c **** 	static uint8_t pos = 0;
+ 249              		.loc 1 245 2 view .LVU54
+ 246:../../shields/gps-firefly/src/nmea.c **** 	if (b == ',')
+ 250              		.loc 1 246 2 view .LVU55
+ 251              		.loc 1 246 5 is_stmt 0 view .LVU56
+ 252 0000 2C28     		cmp	r0, #44
+ 253 0002 0FD0     		beq	.L35
+ 247:../../shields/gps-firefly/src/nmea.c **** 	{
+ 248:../../shields/gps-firefly/src/nmea.c **** 		pos = 0;
+ 249:../../shields/gps-firefly/src/nmea.c **** 		return OK;
+ 250:../../shields/gps-firefly/src/nmea.c **** 	}
+ 251:../../shields/gps-firefly/src/nmea.c **** 
+ 252:../../shields/gps-firefly/src/nmea.c **** 	if(b < '0' || b > '9') { pos = 0; return FAIL; }
+ 254              		.loc 1 252 2 is_stmt 1 view .LVU57
+ 255              		.loc 1 252 13 is_stmt 0 view .LVU58
+ 256 0004 A0F13003 		sub	r3, r0, #48
+ 257 0008 DBB2     		uxtb	r3, r3
+ 258              		.loc 1 252 4 view .LVU59
+ 259 000a 092B     		cmp	r3, #9
+ 260 000c 0FD8     		bhi	.L36
+ 253:../../shields/gps-firefly/src/nmea.c **** 
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 10
+
+
+ 254:../../shields/gps-firefly/src/nmea.c **** 	if (pos == 0)
+ 261              		.loc 1 254 2 is_stmt 1 view .LVU60
+ 262              		.loc 1 254 10 is_stmt 0 view .LVU61
+ 263 000e 134A     		ldr	r2, .L37
+ 264 0010 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 265              		.loc 1 254 5 view .LVU62
+ 266 0012 82B9     		cbnz	r2, .L29
+ 255:../../shields/gps-firefly/src/nmea.c **** 	{
+ 256:../../shields/gps-firefly/src/nmea.c **** 		position.nrofsats = (b - '0');
+ 267              		.loc 1 256 3 is_stmt 1 view .LVU63
+ 268              		.loc 1 256 21 is_stmt 0 view .LVU64
+ 269 0014 1249     		ldr	r1, .L37+4
+ 270 0016 81F82830 		strb	r3, [r1, #40]
+ 257:../../shields/gps-firefly/src/nmea.c **** 	}
+ 258:../../shields/gps-firefly/src/nmea.c **** 	else
+ 259:../../shields/gps-firefly/src/nmea.c **** 	{
+ 260:../../shields/gps-firefly/src/nmea.c **** 		position.nrofsats *= 10;
+ 261:../../shields/gps-firefly/src/nmea.c **** 		position.nrofsats += (b - '0');
+ 262:../../shields/gps-firefly/src/nmea.c **** 	}
+ 263:../../shields/gps-firefly/src/nmea.c **** 
+ 264:../../shields/gps-firefly/src/nmea.c **** 	pos++;
+ 271              		.loc 1 264 2 is_stmt 1 view .LVU65
+ 272              		.loc 1 264 5 is_stmt 0 view .LVU66
+ 273 001a 0132     		adds	r2, r2, #1
+ 274 001c 0F4B     		ldr	r3, .L37
+ 275 001e 1A70     		strb	r2, [r3]
+ 265:../../shields/gps-firefly/src/nmea.c ****     return REPEAT;
+ 276              		.loc 1 265 5 is_stmt 1 view .LVU67
+ 277              		.loc 1 265 12 is_stmt 0 view .LVU68
+ 278 0020 0120     		movs	r0, #1
+ 279              	.LVL25:
+ 266:../../shields/gps-firefly/src/nmea.c **** }
+ 280              		.loc 1 266 1 view .LVU69
+ 281 0022 7047     		bx	lr
+ 282              	.LVL26:
+ 283              	.L35:
+ 248:../../shields/gps-firefly/src/nmea.c **** 		return OK;
+ 284              		.loc 1 248 3 is_stmt 1 view .LVU70
+ 248:../../shields/gps-firefly/src/nmea.c **** 		return OK;
+ 285              		.loc 1 248 7 is_stmt 0 view .LVU71
+ 286 0024 0D4B     		ldr	r3, .L37
+ 287 0026 0022     		movs	r2, #0
+ 288 0028 1A70     		strb	r2, [r3]
+ 249:../../shields/gps-firefly/src/nmea.c **** 	}
+ 289              		.loc 1 249 3 is_stmt 1 view .LVU72
+ 249:../../shields/gps-firefly/src/nmea.c **** 	}
+ 290              		.loc 1 249 10 is_stmt 0 view .LVU73
+ 291 002a 0220     		movs	r0, #2
+ 292              	.LVL27:
+ 249:../../shields/gps-firefly/src/nmea.c **** 	}
+ 293              		.loc 1 249 10 view .LVU74
+ 294 002c 7047     		bx	lr
+ 295              	.LVL28:
+ 296              	.L36:
+ 252:../../shields/gps-firefly/src/nmea.c **** 
+ 297              		.loc 1 252 27 is_stmt 1 discriminator 1 view .LVU75
+ 252:../../shields/gps-firefly/src/nmea.c **** 
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 11
+
+
+ 298              		.loc 1 252 31 is_stmt 0 discriminator 1 view .LVU76
+ 299 002e 0020     		movs	r0, #0
+ 300              	.LVL29:
+ 252:../../shields/gps-firefly/src/nmea.c **** 
+ 301              		.loc 1 252 31 discriminator 1 view .LVU77
+ 302 0030 0A4B     		ldr	r3, .L37
+ 303 0032 1870     		strb	r0, [r3]
+ 252:../../shields/gps-firefly/src/nmea.c **** 
+ 304              		.loc 1 252 36 is_stmt 1 discriminator 1 view .LVU78
+ 252:../../shields/gps-firefly/src/nmea.c **** 
+ 305              		.loc 1 252 43 is_stmt 0 discriminator 1 view .LVU79
+ 306 0034 7047     		bx	lr
+ 307              	.LVL30:
+ 308              	.L29:
+ 243:../../shields/gps-firefly/src/nmea.c **** 
+ 309              		.loc 1 243 30 view .LVU80
+ 310 0036 10B4     		push	{r4}
+ 311              	.LCFI0:
+ 312              		.cfi_def_cfa_offset 4
+ 313              		.cfi_offset 4, -4
+ 260:../../shields/gps-firefly/src/nmea.c **** 		position.nrofsats += (b - '0');
+ 314              		.loc 1 260 3 is_stmt 1 view .LVU81
+ 260:../../shields/gps-firefly/src/nmea.c **** 		position.nrofsats += (b - '0');
+ 315              		.loc 1 260 21 is_stmt 0 view .LVU82
+ 316 0038 094C     		ldr	r4, .L37+4
+ 317 003a 94F82810 		ldrb	r1, [r4, #40]	@ zero_extendqisi2
+ 318 003e 01EB8101 		add	r1, r1, r1, lsl #2
+ 319 0042 4B00     		lsls	r3, r1, #1
+ 320 0044 DBB2     		uxtb	r3, r3
+ 261:../../shields/gps-firefly/src/nmea.c **** 	}
+ 321              		.loc 1 261 3 is_stmt 1 view .LVU83
+ 261:../../shields/gps-firefly/src/nmea.c **** 	}
+ 322              		.loc 1 261 21 is_stmt 0 view .LVU84
+ 323 0046 0344     		add	r3, r3, r0
+ 324 0048 303B     		subs	r3, r3, #48
+ 325 004a 84F82830 		strb	r3, [r4, #40]
+ 264:../../shields/gps-firefly/src/nmea.c ****     return REPEAT;
+ 326              		.loc 1 264 2 is_stmt 1 view .LVU85
+ 264:../../shields/gps-firefly/src/nmea.c ****     return REPEAT;
+ 327              		.loc 1 264 5 is_stmt 0 view .LVU86
+ 328 004e 0132     		adds	r2, r2, #1
+ 329 0050 024B     		ldr	r3, .L37
+ 330 0052 1A70     		strb	r2, [r3]
+ 265:../../shields/gps-firefly/src/nmea.c **** }
+ 331              		.loc 1 265 5 is_stmt 1 view .LVU87
+ 265:../../shields/gps-firefly/src/nmea.c **** }
+ 332              		.loc 1 265 12 is_stmt 0 view .LVU88
+ 333 0054 0120     		movs	r0, #1
+ 334              	.LVL31:
+ 335              		.loc 1 266 1 view .LVU89
+ 336 0056 5DF8044B 		ldr	r4, [sp], #4
+ 337              	.LCFI1:
+ 338              		.cfi_restore 4
+ 339              		.cfi_def_cfa_offset 0
+ 340 005a 7047     		bx	lr
+ 341              	.L38:
+ 342              		.align	2
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 12
+
+
+ 343              	.L37:
+ 344 005c 00000000 		.word	.LANCHOR1
+ 345 0060 00000000 		.word	.LANCHOR0
+ 346              		.cfi_endproc
+ 347              	.LFE12:
+ 349              		.global	__aeabi_i2d
+ 350              		.global	__aeabi_dmul
+ 351              		.global	__aeabi_dadd
+ 352              		.global	__aeabi_d2uiz
+ 353              		.global	__aeabi_f2d
+ 354              		.global	__aeabi_d2f
+ 355              		.global	__aeabi_ddiv
+ 356              		.section	.text.parse_time,"ax",%progbits
+ 357              		.align	1
+ 358              		.global	parse_time
+ 359              		.syntax unified
+ 360              		.thumb
+ 361              		.thumb_func
+ 362              		.fpu fpv4-sp-d16
+ 364              	parse_time:
+ 365              	.LVL32:
+ 366              	.LFB6:
+  77:../../shields/gps-firefly/src/nmea.c ****   static uint8_t pos = 0;
+ 367              		.loc 1 77 28 is_stmt 1 view -0
+ 368              		.cfi_startproc
+ 369              		@ args = 0, pretend = 0, frame = 0
+ 370              		@ frame_needed = 0, uses_anonymous_args = 0
+  77:../../shields/gps-firefly/src/nmea.c ****   static uint8_t pos = 0;
+ 371              		.loc 1 77 28 is_stmt 0 view .LVU91
+ 372 0000 D0B5     		push	{r4, r6, r7, lr}
+ 373              	.LCFI2:
+ 374              		.cfi_def_cfa_offset 16
+ 375              		.cfi_offset 4, -16
+ 376              		.cfi_offset 6, -12
+ 377              		.cfi_offset 7, -8
+ 378              		.cfi_offset 14, -4
+  78:../../shields/gps-firefly/src/nmea.c ****   switch(pos) {
+ 379              		.loc 1 78 3 is_stmt 1 view .LVU92
+  79:../../shields/gps-firefly/src/nmea.c ****     case 0: // Hhmmss.sss
+ 380              		.loc 1 79 3 view .LVU93
+ 381 0002 674B     		ldr	r3, .L55+8
+ 382 0004 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 383 0006 0A2B     		cmp	r3, #10
+ 384 0008 32D8     		bhi	.L40
+ 385 000a DFE803F0 		tbb	[pc, r3]
+ 386              	.L42:
+ 387 000e 06       		.byte	(.L46-.L42)/2
+ 388 000f 06       		.byte	(.L46-.L42)/2
+ 389 0010 37       		.byte	(.L45-.L42)/2
+ 390 0011 37       		.byte	(.L45-.L42)/2
+ 391 0012 63       		.byte	(.L44-.L42)/2
+ 392 0013 63       		.byte	(.L44-.L42)/2
+ 393 0014 31       		.byte	(.L40-.L42)/2
+ 394 0015 8F       		.byte	(.L43-.L42)/2
+ 395 0016 8F       		.byte	(.L43-.L42)/2
+ 396 0017 8F       		.byte	(.L43-.L42)/2
+ 397 0018 BA       		.byte	(.L41-.L42)/2
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 13
+
+
+ 398 0019 00       		.p2align 1
+ 399              	.L46:
+  82:../../shields/gps-firefly/src/nmea.c ****       position.time.hour += (b - '0') * pow(10, (1-pos));
+ 400              		.loc 1 82 7 view .LVU94
+  82:../../shields/gps-firefly/src/nmea.c ****       position.time.hour += (b - '0') * pow(10, (1-pos));
+ 401              		.loc 1 82 18 is_stmt 0 view .LVU95
+ 402 001a A0F13002 		sub	r2, r0, #48
+ 403 001e D2B2     		uxtb	r2, r2
+  82:../../shields/gps-firefly/src/nmea.c ****       position.time.hour += (b - '0') * pow(10, (1-pos));
+ 404              		.loc 1 82 9 view .LVU96
+ 405 0020 092A     		cmp	r2, #9
+ 406 0022 03D9     		bls	.L47
+  82:../../shields/gps-firefly/src/nmea.c ****       position.time.hour += (b - '0') * pow(10, (1-pos));
+ 407              		.loc 1 82 32 is_stmt 1 discriminator 1 view .LVU97
+  82:../../shields/gps-firefly/src/nmea.c ****       position.time.hour += (b - '0') * pow(10, (1-pos));
+ 408              		.loc 1 82 36 is_stmt 0 discriminator 1 view .LVU98
+ 409 0024 0020     		movs	r0, #0
+ 410              	.LVL33:
+  82:../../shields/gps-firefly/src/nmea.c ****       position.time.hour += (b - '0') * pow(10, (1-pos));
+ 411              		.loc 1 82 36 discriminator 1 view .LVU99
+ 412 0026 5E4B     		ldr	r3, .L55+8
+ 413 0028 1870     		strb	r0, [r3]
+  82:../../shields/gps-firefly/src/nmea.c ****       position.time.hour += (b - '0') * pow(10, (1-pos));
+ 414              		.loc 1 82 41 is_stmt 1 discriminator 1 view .LVU100
+  82:../../shields/gps-firefly/src/nmea.c ****       position.time.hour += (b - '0') * pow(10, (1-pos));
+ 415              		.loc 1 82 48 is_stmt 0 discriminator 1 view .LVU101
+ 416 002a 26E0     		b	.L39
+ 417              	.LVL34:
+ 418              	.L47:
+  83:../../shields/gps-firefly/src/nmea.c ****       break;
+ 419              		.loc 1 83 7 is_stmt 1 view .LVU102
+  83:../../shields/gps-firefly/src/nmea.c ****       break;
+ 420              		.loc 1 83 32 is_stmt 0 view .LVU103
+ 421 002c A0F13004 		sub	r4, r0, #48
+  83:../../shields/gps-firefly/src/nmea.c ****       break;
+ 422              		.loc 1 83 41 view .LVU104
+ 423 0030 C3F10100 		rsb	r0, r3, #1
+ 424              	.LVL35:
+  83:../../shields/gps-firefly/src/nmea.c ****       break;
+ 425              		.loc 1 83 41 view .LVU105
+ 426 0034 FFF7FEFF 		bl	__aeabi_i2d
+ 427              	.LVL36:
+ 428 0038 41EC110B 		vmov	d1, r0, r1
+ 429 003c 9FED560B 		vldr.64	d0, .L55
+ 430 0040 FFF7FEFF 		bl	pow
+ 431              	.LVL37:
+ 432 0044 57EC106B 		vmov	r6, r7, d0
+  83:../../shields/gps-firefly/src/nmea.c ****       break;
+ 433              		.loc 1 83 39 view .LVU106
+ 434 0048 2046     		mov	r0, r4
+ 435 004a FFF7FEFF 		bl	__aeabi_i2d
+ 436              	.LVL38:
+ 437 004e 3246     		mov	r2, r6
+ 438 0050 3B46     		mov	r3, r7
+ 439 0052 FFF7FEFF 		bl	__aeabi_dmul
+ 440              	.LVL39:
+ 441 0056 0646     		mov	r6, r0
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 14
+
+
+ 442 0058 0F46     		mov	r7, r1
+  83:../../shields/gps-firefly/src/nmea.c ****       break;
+ 443              		.loc 1 83 26 view .LVU107
+ 444 005a 524C     		ldr	r4, .L55+12
+ 445 005c 2078     		ldrb	r0, [r4]	@ zero_extendqisi2
+ 446 005e FFF7FEFF 		bl	__aeabi_i2d
+ 447              	.LVL40:
+ 448 0062 3246     		mov	r2, r6
+ 449 0064 3B46     		mov	r3, r7
+ 450 0066 FFF7FEFF 		bl	__aeabi_dadd
+ 451              	.LVL41:
+ 452 006a FFF7FEFF 		bl	__aeabi_d2uiz
+ 453              	.LVL42:
+ 454 006e 2070     		strb	r0, [r4]
+  84:../../shields/gps-firefly/src/nmea.c ****     case 2: // hhMmss.sss
+ 455              		.loc 1 84 7 is_stmt 1 view .LVU108
+ 456              	.L40:
+ 112:../../shields/gps-firefly/src/nmea.c ****   return REPEAT;
+ 457              		.loc 1 112 3 view .LVU109
+ 112:../../shields/gps-firefly/src/nmea.c ****   return REPEAT;
+ 458              		.loc 1 112 6 is_stmt 0 view .LVU110
+ 459 0070 4B4A     		ldr	r2, .L55+8
+ 460 0072 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 461 0074 0133     		adds	r3, r3, #1
+ 462 0076 1370     		strb	r3, [r2]
+ 113:../../shields/gps-firefly/src/nmea.c **** 
+ 463              		.loc 1 113 3 is_stmt 1 view .LVU111
+ 113:../../shields/gps-firefly/src/nmea.c **** 
+ 464              		.loc 1 113 10 is_stmt 0 view .LVU112
+ 465 0078 0120     		movs	r0, #1
+ 466              	.L39:
+ 115:../../shields/gps-firefly/src/nmea.c **** 
+ 467              		.loc 1 115 1 view .LVU113
+ 468 007a D0BD     		pop	{r4, r6, r7, pc}
+ 469              	.LVL43:
+ 470              	.L45:
+  87:../../shields/gps-firefly/src/nmea.c ****       position.time.min += (b - '0') * pow(10, (3-pos));
+ 471              		.loc 1 87 7 is_stmt 1 view .LVU114
+  87:../../shields/gps-firefly/src/nmea.c ****       position.time.min += (b - '0') * pow(10, (3-pos));
+ 472              		.loc 1 87 18 is_stmt 0 view .LVU115
+ 473 007c A0F13002 		sub	r2, r0, #48
+ 474 0080 D2B2     		uxtb	r2, r2
+  87:../../shields/gps-firefly/src/nmea.c ****       position.time.min += (b - '0') * pow(10, (3-pos));
+ 475              		.loc 1 87 9 view .LVU116
+ 476 0082 092A     		cmp	r2, #9
+ 477 0084 03D9     		bls	.L49
+  87:../../shields/gps-firefly/src/nmea.c ****       position.time.min += (b - '0') * pow(10, (3-pos));
+ 478              		.loc 1 87 32 is_stmt 1 discriminator 1 view .LVU117
+  87:../../shields/gps-firefly/src/nmea.c ****       position.time.min += (b - '0') * pow(10, (3-pos));
+ 479              		.loc 1 87 36 is_stmt 0 discriminator 1 view .LVU118
+ 480 0086 0020     		movs	r0, #0
+ 481              	.LVL44:
+  87:../../shields/gps-firefly/src/nmea.c ****       position.time.min += (b - '0') * pow(10, (3-pos));
+ 482              		.loc 1 87 36 discriminator 1 view .LVU119
+ 483 0088 454B     		ldr	r3, .L55+8
+ 484 008a 1870     		strb	r0, [r3]
+  87:../../shields/gps-firefly/src/nmea.c ****       position.time.min += (b - '0') * pow(10, (3-pos));
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 15
+
+
+ 485              		.loc 1 87 41 is_stmt 1 discriminator 1 view .LVU120
+  87:../../shields/gps-firefly/src/nmea.c ****       position.time.min += (b - '0') * pow(10, (3-pos));
+ 486              		.loc 1 87 48 is_stmt 0 discriminator 1 view .LVU121
+ 487 008c F5E7     		b	.L39
+ 488              	.LVL45:
+ 489              	.L49:
+  88:../../shields/gps-firefly/src/nmea.c ****       break;
+ 490              		.loc 1 88 7 is_stmt 1 view .LVU122
+  88:../../shields/gps-firefly/src/nmea.c ****       break;
+ 491              		.loc 1 88 31 is_stmt 0 view .LVU123
+ 492 008e A0F13004 		sub	r4, r0, #48
+  88:../../shields/gps-firefly/src/nmea.c ****       break;
+ 493              		.loc 1 88 40 view .LVU124
+ 494 0092 C3F10300 		rsb	r0, r3, #3
+ 495              	.LVL46:
+  88:../../shields/gps-firefly/src/nmea.c ****       break;
+ 496              		.loc 1 88 40 view .LVU125
+ 497 0096 FFF7FEFF 		bl	__aeabi_i2d
+ 498              	.LVL47:
+ 499 009a 41EC110B 		vmov	d1, r0, r1
+ 500 009e 9FED3E0B 		vldr.64	d0, .L55
+ 501 00a2 FFF7FEFF 		bl	pow
+ 502              	.LVL48:
+ 503 00a6 57EC106B 		vmov	r6, r7, d0
+  88:../../shields/gps-firefly/src/nmea.c ****       break;
+ 504              		.loc 1 88 38 view .LVU126
+ 505 00aa 2046     		mov	r0, r4
+ 506 00ac FFF7FEFF 		bl	__aeabi_i2d
+ 507              	.LVL49:
+ 508 00b0 3246     		mov	r2, r6
+ 509 00b2 3B46     		mov	r3, r7
+ 510 00b4 FFF7FEFF 		bl	__aeabi_dmul
+ 511              	.LVL50:
+ 512 00b8 0646     		mov	r6, r0
+ 513 00ba 0F46     		mov	r7, r1
+  88:../../shields/gps-firefly/src/nmea.c ****       break;
+ 514              		.loc 1 88 25 view .LVU127
+ 515 00bc 394C     		ldr	r4, .L55+12
+ 516 00be 6078     		ldrb	r0, [r4, #1]	@ zero_extendqisi2
+ 517 00c0 FFF7FEFF 		bl	__aeabi_i2d
+ 518              	.LVL51:
+ 519 00c4 3246     		mov	r2, r6
+ 520 00c6 3B46     		mov	r3, r7
+ 521 00c8 FFF7FEFF 		bl	__aeabi_dadd
+ 522              	.LVL52:
+ 523 00cc FFF7FEFF 		bl	__aeabi_d2uiz
+ 524              	.LVL53:
+ 525 00d0 6070     		strb	r0, [r4, #1]
+  89:../../shields/gps-firefly/src/nmea.c ****     case 4: // hhmmSs.sss
+ 526              		.loc 1 89 7 is_stmt 1 view .LVU128
+ 527 00d2 CDE7     		b	.L40
+ 528              	.LVL54:
+ 529              	.L44:
+  92:../../shields/gps-firefly/src/nmea.c ****       position.time.sec += (b - '0') * pow(10, (5-pos));
+ 530              		.loc 1 92 7 view .LVU129
+  92:../../shields/gps-firefly/src/nmea.c ****       position.time.sec += (b - '0') * pow(10, (5-pos));
+ 531              		.loc 1 92 18 is_stmt 0 view .LVU130
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 16
+
+
+ 532 00d4 A0F13002 		sub	r2, r0, #48
+ 533 00d8 D2B2     		uxtb	r2, r2
+  92:../../shields/gps-firefly/src/nmea.c ****       position.time.sec += (b - '0') * pow(10, (5-pos));
+ 534              		.loc 1 92 9 view .LVU131
+ 535 00da 092A     		cmp	r2, #9
+ 536 00dc 03D9     		bls	.L50
+  92:../../shields/gps-firefly/src/nmea.c ****       position.time.sec += (b - '0') * pow(10, (5-pos));
+ 537              		.loc 1 92 32 is_stmt 1 discriminator 1 view .LVU132
+  92:../../shields/gps-firefly/src/nmea.c ****       position.time.sec += (b - '0') * pow(10, (5-pos));
+ 538              		.loc 1 92 36 is_stmt 0 discriminator 1 view .LVU133
+ 539 00de 0020     		movs	r0, #0
+ 540              	.LVL55:
+  92:../../shields/gps-firefly/src/nmea.c ****       position.time.sec += (b - '0') * pow(10, (5-pos));
+ 541              		.loc 1 92 36 discriminator 1 view .LVU134
+ 542 00e0 2F4B     		ldr	r3, .L55+8
+ 543 00e2 1870     		strb	r0, [r3]
+  92:../../shields/gps-firefly/src/nmea.c ****       position.time.sec += (b - '0') * pow(10, (5-pos));
+ 544              		.loc 1 92 41 is_stmt 1 discriminator 1 view .LVU135
+  92:../../shields/gps-firefly/src/nmea.c ****       position.time.sec += (b - '0') * pow(10, (5-pos));
+ 545              		.loc 1 92 48 is_stmt 0 discriminator 1 view .LVU136
+ 546 00e4 C9E7     		b	.L39
+ 547              	.LVL56:
+ 548              	.L50:
+  93:../../shields/gps-firefly/src/nmea.c ****       break;
+ 549              		.loc 1 93 7 is_stmt 1 view .LVU137
+  93:../../shields/gps-firefly/src/nmea.c ****       break;
+ 550              		.loc 1 93 31 is_stmt 0 view .LVU138
+ 551 00e6 A0F13004 		sub	r4, r0, #48
+  93:../../shields/gps-firefly/src/nmea.c ****       break;
+ 552              		.loc 1 93 40 view .LVU139
+ 553 00ea C3F10500 		rsb	r0, r3, #5
+ 554              	.LVL57:
+  93:../../shields/gps-firefly/src/nmea.c ****       break;
+ 555              		.loc 1 93 40 view .LVU140
+ 556 00ee FFF7FEFF 		bl	__aeabi_i2d
+ 557              	.LVL58:
+ 558 00f2 41EC110B 		vmov	d1, r0, r1
+ 559 00f6 9FED280B 		vldr.64	d0, .L55
+ 560 00fa FFF7FEFF 		bl	pow
+ 561              	.LVL59:
+ 562 00fe 57EC106B 		vmov	r6, r7, d0
+  93:../../shields/gps-firefly/src/nmea.c ****       break;
+ 563              		.loc 1 93 38 view .LVU141
+ 564 0102 2046     		mov	r0, r4
+ 565 0104 FFF7FEFF 		bl	__aeabi_i2d
+ 566              	.LVL60:
+ 567 0108 3246     		mov	r2, r6
+ 568 010a 3B46     		mov	r3, r7
+ 569 010c FFF7FEFF 		bl	__aeabi_dmul
+ 570              	.LVL61:
+ 571 0110 0646     		mov	r6, r0
+ 572 0112 0F46     		mov	r7, r1
+  93:../../shields/gps-firefly/src/nmea.c ****       break;
+ 573              		.loc 1 93 25 view .LVU142
+ 574 0114 234C     		ldr	r4, .L55+12
+ 575 0116 6068     		ldr	r0, [r4, #4]	@ float
+ 576 0118 FFF7FEFF 		bl	__aeabi_f2d
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 17
+
+
+ 577              	.LVL62:
+ 578 011c 3246     		mov	r2, r6
+ 579 011e 3B46     		mov	r3, r7
+ 580 0120 FFF7FEFF 		bl	__aeabi_dadd
+ 581              	.LVL63:
+ 582 0124 FFF7FEFF 		bl	__aeabi_d2f
+ 583              	.LVL64:
+ 584 0128 6060     		str	r0, [r4, #4]	@ float
+  94:../../shields/gps-firefly/src/nmea.c ****     case 6: // skip .
+ 585              		.loc 1 94 7 is_stmt 1 view .LVU143
+ 586 012a A1E7     		b	.L40
+ 587              	.LVL65:
+ 588              	.L43:
+ 100:../../shields/gps-firefly/src/nmea.c ****       position.time.sec += (b - '0') / pow(10, (pos - 6));
+ 589              		.loc 1 100 7 view .LVU144
+ 100:../../shields/gps-firefly/src/nmea.c ****       position.time.sec += (b - '0') / pow(10, (pos - 6));
+ 590              		.loc 1 100 18 is_stmt 0 view .LVU145
+ 591 012c A0F13002 		sub	r2, r0, #48
+ 592 0130 D2B2     		uxtb	r2, r2
+ 100:../../shields/gps-firefly/src/nmea.c ****       position.time.sec += (b - '0') / pow(10, (pos - 6));
+ 593              		.loc 1 100 9 view .LVU146
+ 594 0132 092A     		cmp	r2, #9
+ 595 0134 03D9     		bls	.L51
+ 100:../../shields/gps-firefly/src/nmea.c ****       position.time.sec += (b - '0') / pow(10, (pos - 6));
+ 596              		.loc 1 100 32 is_stmt 1 discriminator 1 view .LVU147
+ 100:../../shields/gps-firefly/src/nmea.c ****       position.time.sec += (b - '0') / pow(10, (pos - 6));
+ 597              		.loc 1 100 36 is_stmt 0 discriminator 1 view .LVU148
+ 598 0136 0020     		movs	r0, #0
+ 599              	.LVL66:
+ 100:../../shields/gps-firefly/src/nmea.c ****       position.time.sec += (b - '0') / pow(10, (pos - 6));
+ 600              		.loc 1 100 36 discriminator 1 view .LVU149
+ 601 0138 194B     		ldr	r3, .L55+8
+ 602 013a 1870     		strb	r0, [r3]
+ 100:../../shields/gps-firefly/src/nmea.c ****       position.time.sec += (b - '0') / pow(10, (pos - 6));
+ 603              		.loc 1 100 41 is_stmt 1 discriminator 1 view .LVU150
+ 100:../../shields/gps-firefly/src/nmea.c ****       position.time.sec += (b - '0') / pow(10, (pos - 6));
+ 604              		.loc 1 100 48 is_stmt 0 discriminator 1 view .LVU151
+ 605 013c 9DE7     		b	.L39
+ 606              	.LVL67:
+ 607              	.L51:
+ 101:../../shields/gps-firefly/src/nmea.c ****       break;
+ 608              		.loc 1 101 7 is_stmt 1 view .LVU152
+ 101:../../shields/gps-firefly/src/nmea.c ****       break;
+ 609              		.loc 1 101 31 is_stmt 0 view .LVU153
+ 610 013e A0F13004 		sub	r4, r0, #48
+ 101:../../shields/gps-firefly/src/nmea.c ****       break;
+ 611              		.loc 1 101 40 view .LVU154
+ 612 0142 981F     		subs	r0, r3, #6
+ 613              	.LVL68:
+ 101:../../shields/gps-firefly/src/nmea.c ****       break;
+ 614              		.loc 1 101 40 view .LVU155
+ 615 0144 FFF7FEFF 		bl	__aeabi_i2d
+ 616              	.LVL69:
+ 617 0148 41EC110B 		vmov	d1, r0, r1
+ 618 014c 9FED120B 		vldr.64	d0, .L55
+ 619 0150 FFF7FEFF 		bl	pow
+ 620              	.LVL70:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 18
+
+
+ 621 0154 57EC106B 		vmov	r6, r7, d0
+ 101:../../shields/gps-firefly/src/nmea.c ****       break;
+ 622              		.loc 1 101 38 view .LVU156
+ 623 0158 2046     		mov	r0, r4
+ 624 015a FFF7FEFF 		bl	__aeabi_i2d
+ 625              	.LVL71:
+ 626 015e 3246     		mov	r2, r6
+ 627 0160 3B46     		mov	r3, r7
+ 628 0162 FFF7FEFF 		bl	__aeabi_ddiv
+ 629              	.LVL72:
+ 630 0166 0646     		mov	r6, r0
+ 631 0168 0F46     		mov	r7, r1
+ 101:../../shields/gps-firefly/src/nmea.c ****       break;
+ 632              		.loc 1 101 25 view .LVU157
+ 633 016a 0E4C     		ldr	r4, .L55+12
+ 634 016c 6068     		ldr	r0, [r4, #4]	@ float
+ 635 016e FFF7FEFF 		bl	__aeabi_f2d
+ 636              	.LVL73:
+ 637 0172 3246     		mov	r2, r6
+ 638 0174 3B46     		mov	r3, r7
+ 639 0176 FFF7FEFF 		bl	__aeabi_dadd
+ 640              	.LVL74:
+ 641 017a FFF7FEFF 		bl	__aeabi_d2f
+ 642              	.LVL75:
+ 643 017e 6060     		str	r0, [r4, #4]	@ float
+ 102:../../shields/gps-firefly/src/nmea.c ****     case 10:
+ 644              		.loc 1 102 7 is_stmt 1 view .LVU158
+ 645 0180 76E7     		b	.L40
+ 646              	.LVL76:
+ 647              	.L41:
+ 104:../../shields/gps-firefly/src/nmea.c ****       if (b == ',')
+ 648              		.loc 1 104 7 view .LVU159
+ 104:../../shields/gps-firefly/src/nmea.c ****       if (b == ',')
+ 649              		.loc 1 104 11 is_stmt 0 view .LVU160
+ 650 0182 074B     		ldr	r3, .L55+8
+ 651 0184 0022     		movs	r2, #0
+ 652 0186 1A70     		strb	r2, [r3]
+ 105:../../shields/gps-firefly/src/nmea.c ****         return OK;
+ 653              		.loc 1 105 7 is_stmt 1 view .LVU161
+ 105:../../shields/gps-firefly/src/nmea.c ****         return OK;
+ 654              		.loc 1 105 10 is_stmt 0 view .LVU162
+ 655 0188 2C28     		cmp	r0, #44
+ 656 018a 01D0     		beq	.L54
+ 108:../../shields/gps-firefly/src/nmea.c **** 
+ 657              		.loc 1 108 15 view .LVU163
+ 658 018c 0020     		movs	r0, #0
+ 659              	.LVL77:
+ 108:../../shields/gps-firefly/src/nmea.c **** 
+ 660              		.loc 1 108 15 view .LVU164
+ 661 018e 74E7     		b	.L39
+ 662              	.LVL78:
+ 663              	.L54:
+ 106:../../shields/gps-firefly/src/nmea.c ****       else
+ 664              		.loc 1 106 16 view .LVU165
+ 665 0190 0220     		movs	r0, #2
+ 666              	.LVL79:
+ 106:../../shields/gps-firefly/src/nmea.c ****       else
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 19
+
+
+ 667              		.loc 1 106 16 view .LVU166
+ 668 0192 72E7     		b	.L39
+ 669              	.L56:
+ 670 0194 AFF30080 		.align	3
+ 671              	.L55:
+ 672 0198 00000000 		.word	0
+ 673 019c 00002440 		.word	1076101120
+ 674 01a0 00000000 		.word	.LANCHOR2
+ 675 01a4 00000000 		.word	.LANCHOR0
+ 676              		.cfi_endproc
+ 677              	.LFE6:
+ 679              		.section	.text.parse_latitude,"ax",%progbits
+ 680              		.align	1
+ 681              		.global	parse_latitude
+ 682              		.syntax unified
+ 683              		.thumb
+ 684              		.thumb_func
+ 685              		.fpu fpv4-sp-d16
+ 687              	parse_latitude:
+ 688              	.LVL80:
+ 689              	.LFB7:
+ 118:../../shields/gps-firefly/src/nmea.c ****   static uint8_t pos = 0;
+ 690              		.loc 1 118 31 is_stmt 1 view -0
+ 691              		.cfi_startproc
+ 692              		@ args = 0, pretend = 0, frame = 0
+ 693              		@ frame_needed = 0, uses_anonymous_args = 0
+ 118:../../shields/gps-firefly/src/nmea.c ****   static uint8_t pos = 0;
+ 694              		.loc 1 118 31 is_stmt 0 view .LVU168
+ 695 0000 D0B5     		push	{r4, r6, r7, lr}
+ 696              	.LCFI3:
+ 697              		.cfi_def_cfa_offset 16
+ 698              		.cfi_offset 4, -16
+ 699              		.cfi_offset 6, -12
+ 700              		.cfi_offset 7, -8
+ 701              		.cfi_offset 14, -4
+ 119:../../shields/gps-firefly/src/nmea.c ****   switch(pos) {
+ 702              		.loc 1 119 3 is_stmt 1 view .LVU169
+ 120:../../shields/gps-firefly/src/nmea.c ****     case 0: // Ddmm.mmmm
+ 703              		.loc 1 120 3 view .LVU170
+ 704 0002 6B4B     		ldr	r3, .L75+8
+ 705 0004 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 706 0006 0B2B     		cmp	r3, #11
+ 707 0008 00F28D80 		bhi	.L58
+ 708 000c DFE803F0 		tbb	[pc, r3]
+ 709              	.L60:
+ 710 0010 06       		.byte	(.L65-.L60)/2
+ 711 0011 06       		.byte	(.L65-.L60)/2
+ 712 0012 32       		.byte	(.L64-.L60)/2
+ 713 0013 32       		.byte	(.L64-.L60)/2
+ 714 0014 8B       		.byte	(.L58-.L60)/2
+ 715 0015 5E       		.byte	(.L63-.L60)/2
+ 716 0016 5E       		.byte	(.L63-.L60)/2
+ 717 0017 5E       		.byte	(.L63-.L60)/2
+ 718 0018 5E       		.byte	(.L63-.L60)/2
+ 719 0019 89       		.byte	(.L62-.L60)/2
+ 720 001a 96       		.byte	(.L61-.L60)/2
+ 721 001b C1       		.byte	(.L59-.L60)/2
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 20
+
+
+ 722              		.p2align 1
+ 723              	.L65:
+ 123:../../shields/gps-firefly/src/nmea.c ****       position.latitude.deg += (b - '0') * pow(10, (1-pos));
+ 724              		.loc 1 123 7 view .LVU171
+ 123:../../shields/gps-firefly/src/nmea.c ****       position.latitude.deg += (b - '0') * pow(10, (1-pos));
+ 725              		.loc 1 123 18 is_stmt 0 view .LVU172
+ 726 001c A0F13002 		sub	r2, r0, #48
+ 727 0020 D2B2     		uxtb	r2, r2
+ 123:../../shields/gps-firefly/src/nmea.c ****       position.latitude.deg += (b - '0') * pow(10, (1-pos));
+ 728              		.loc 1 123 9 view .LVU173
+ 729 0022 092A     		cmp	r2, #9
+ 730 0024 03D9     		bls	.L66
+ 123:../../shields/gps-firefly/src/nmea.c ****       position.latitude.deg += (b - '0') * pow(10, (1-pos));
+ 731              		.loc 1 123 32 is_stmt 1 discriminator 1 view .LVU174
+ 123:../../shields/gps-firefly/src/nmea.c ****       position.latitude.deg += (b - '0') * pow(10, (1-pos));
+ 732              		.loc 1 123 36 is_stmt 0 discriminator 1 view .LVU175
+ 733 0026 0020     		movs	r0, #0
+ 734              	.LVL81:
+ 123:../../shields/gps-firefly/src/nmea.c ****       position.latitude.deg += (b - '0') * pow(10, (1-pos));
+ 735              		.loc 1 123 36 discriminator 1 view .LVU176
+ 736 0028 614B     		ldr	r3, .L75+8
+ 737 002a 1870     		strb	r0, [r3]
+ 123:../../shields/gps-firefly/src/nmea.c ****       position.latitude.deg += (b - '0') * pow(10, (1-pos));
+ 738              		.loc 1 123 41 is_stmt 1 discriminator 1 view .LVU177
+ 123:../../shields/gps-firefly/src/nmea.c ****       position.latitude.deg += (b - '0') * pow(10, (1-pos));
+ 739              		.loc 1 123 48 is_stmt 0 discriminator 1 view .LVU178
+ 740 002c 80E0     		b	.L57
+ 741              	.LVL82:
+ 742              	.L66:
+ 124:../../shields/gps-firefly/src/nmea.c ****       break;
+ 743              		.loc 1 124 7 is_stmt 1 view .LVU179
+ 124:../../shields/gps-firefly/src/nmea.c ****       break;
+ 744              		.loc 1 124 35 is_stmt 0 view .LVU180
+ 745 002e A0F13004 		sub	r4, r0, #48
+ 124:../../shields/gps-firefly/src/nmea.c ****       break;
+ 746              		.loc 1 124 44 view .LVU181
+ 747 0032 C3F10100 		rsb	r0, r3, #1
+ 748              	.LVL83:
+ 124:../../shields/gps-firefly/src/nmea.c ****       break;
+ 749              		.loc 1 124 44 view .LVU182
+ 750 0036 FFF7FEFF 		bl	__aeabi_i2d
+ 751              	.LVL84:
+ 752 003a 41EC110B 		vmov	d1, r0, r1
+ 753 003e 9FED5A0B 		vldr.64	d0, .L75
+ 754 0042 FFF7FEFF 		bl	pow
+ 755              	.LVL85:
+ 756 0046 57EC106B 		vmov	r6, r7, d0
+ 124:../../shields/gps-firefly/src/nmea.c ****       break;
+ 757              		.loc 1 124 42 view .LVU183
+ 758 004a 2046     		mov	r0, r4
+ 759 004c FFF7FEFF 		bl	__aeabi_i2d
+ 760              	.LVL86:
+ 761 0050 3246     		mov	r2, r6
+ 762 0052 3B46     		mov	r3, r7
+ 763 0054 FFF7FEFF 		bl	__aeabi_dmul
+ 764              	.LVL87:
+ 765 0058 0646     		mov	r6, r0
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 21
+
+
+ 766 005a 0F46     		mov	r7, r1
+ 124:../../shields/gps-firefly/src/nmea.c ****       break;
+ 767              		.loc 1 124 29 view .LVU184
+ 768 005c 554C     		ldr	r4, .L75+12
+ 769 005e 207A     		ldrb	r0, [r4, #8]	@ zero_extendqisi2
+ 770 0060 FFF7FEFF 		bl	__aeabi_i2d
+ 771              	.LVL88:
+ 772 0064 3246     		mov	r2, r6
+ 773 0066 3B46     		mov	r3, r7
+ 774 0068 FFF7FEFF 		bl	__aeabi_dadd
+ 775              	.LVL89:
+ 776 006c FFF7FEFF 		bl	__aeabi_d2uiz
+ 777              	.LVL90:
+ 778 0070 2072     		strb	r0, [r4, #8]
+ 125:../../shields/gps-firefly/src/nmea.c ****     case 2: // Ddmm.mmmm
+ 779              		.loc 1 125 7 is_stmt 1 view .LVU185
+ 780 0072 58E0     		b	.L58
+ 781              	.LVL91:
+ 782              	.L64:
+ 128:../../shields/gps-firefly/src/nmea.c ****       position.latitude.min += (b - '0') * pow(10, (3-pos));
+ 783              		.loc 1 128 7 view .LVU186
+ 128:../../shields/gps-firefly/src/nmea.c ****       position.latitude.min += (b - '0') * pow(10, (3-pos));
+ 784              		.loc 1 128 18 is_stmt 0 view .LVU187
+ 785 0074 A0F13002 		sub	r2, r0, #48
+ 786 0078 D2B2     		uxtb	r2, r2
+ 128:../../shields/gps-firefly/src/nmea.c ****       position.latitude.min += (b - '0') * pow(10, (3-pos));
+ 787              		.loc 1 128 9 view .LVU188
+ 788 007a 092A     		cmp	r2, #9
+ 789 007c 03D9     		bls	.L68
+ 128:../../shields/gps-firefly/src/nmea.c ****       position.latitude.min += (b - '0') * pow(10, (3-pos));
+ 790              		.loc 1 128 32 is_stmt 1 discriminator 1 view .LVU189
+ 128:../../shields/gps-firefly/src/nmea.c ****       position.latitude.min += (b - '0') * pow(10, (3-pos));
+ 791              		.loc 1 128 36 is_stmt 0 discriminator 1 view .LVU190
+ 792 007e 0020     		movs	r0, #0
+ 793              	.LVL92:
+ 128:../../shields/gps-firefly/src/nmea.c ****       position.latitude.min += (b - '0') * pow(10, (3-pos));
+ 794              		.loc 1 128 36 discriminator 1 view .LVU191
+ 795 0080 4B4B     		ldr	r3, .L75+8
+ 796 0082 1870     		strb	r0, [r3]
+ 128:../../shields/gps-firefly/src/nmea.c ****       position.latitude.min += (b - '0') * pow(10, (3-pos));
+ 797              		.loc 1 128 41 is_stmt 1 discriminator 1 view .LVU192
+ 128:../../shields/gps-firefly/src/nmea.c ****       position.latitude.min += (b - '0') * pow(10, (3-pos));
+ 798              		.loc 1 128 48 is_stmt 0 discriminator 1 view .LVU193
+ 799 0084 54E0     		b	.L57
+ 800              	.LVL93:
+ 801              	.L68:
+ 129:../../shields/gps-firefly/src/nmea.c ****       break;
+ 802              		.loc 1 129 7 is_stmt 1 view .LVU194
+ 129:../../shields/gps-firefly/src/nmea.c ****       break;
+ 803              		.loc 1 129 35 is_stmt 0 view .LVU195
+ 804 0086 A0F13004 		sub	r4, r0, #48
+ 129:../../shields/gps-firefly/src/nmea.c ****       break;
+ 805              		.loc 1 129 44 view .LVU196
+ 806 008a C3F10300 		rsb	r0, r3, #3
+ 807              	.LVL94:
+ 129:../../shields/gps-firefly/src/nmea.c ****       break;
+ 808              		.loc 1 129 44 view .LVU197
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 22
+
+
+ 809 008e FFF7FEFF 		bl	__aeabi_i2d
+ 810              	.LVL95:
+ 811 0092 41EC110B 		vmov	d1, r0, r1
+ 812 0096 9FED440B 		vldr.64	d0, .L75
+ 813 009a FFF7FEFF 		bl	pow
+ 814              	.LVL96:
+ 815 009e 57EC106B 		vmov	r6, r7, d0
+ 129:../../shields/gps-firefly/src/nmea.c ****       break;
+ 816              		.loc 1 129 42 view .LVU198
+ 817 00a2 2046     		mov	r0, r4
+ 818 00a4 FFF7FEFF 		bl	__aeabi_i2d
+ 819              	.LVL97:
+ 820 00a8 3246     		mov	r2, r6
+ 821 00aa 3B46     		mov	r3, r7
+ 822 00ac FFF7FEFF 		bl	__aeabi_dmul
+ 823              	.LVL98:
+ 824 00b0 0646     		mov	r6, r0
+ 825 00b2 0F46     		mov	r7, r1
+ 129:../../shields/gps-firefly/src/nmea.c ****       break;
+ 826              		.loc 1 129 29 view .LVU199
+ 827 00b4 3F4C     		ldr	r4, .L75+12
+ 828 00b6 E068     		ldr	r0, [r4, #12]	@ float
+ 829 00b8 FFF7FEFF 		bl	__aeabi_f2d
+ 830              	.LVL99:
+ 831 00bc 3246     		mov	r2, r6
+ 832 00be 3B46     		mov	r3, r7
+ 833 00c0 FFF7FEFF 		bl	__aeabi_dadd
+ 834              	.LVL100:
+ 835 00c4 FFF7FEFF 		bl	__aeabi_d2f
+ 836              	.LVL101:
+ 837 00c8 E060     		str	r0, [r4, #12]	@ float
+ 130:../../shields/gps-firefly/src/nmea.c ****     case 4: break; // skip .
+ 838              		.loc 1 130 7 is_stmt 1 view .LVU200
+ 839 00ca 2CE0     		b	.L58
+ 840              	.LVL102:
+ 841              	.L63:
+ 136:../../shields/gps-firefly/src/nmea.c ****       position.latitude.min += (b - '0') / pow(10, (pos - 4));
+ 842              		.loc 1 136 7 view .LVU201
+ 136:../../shields/gps-firefly/src/nmea.c ****       position.latitude.min += (b - '0') / pow(10, (pos - 4));
+ 843              		.loc 1 136 18 is_stmt 0 view .LVU202
+ 844 00cc A0F13002 		sub	r2, r0, #48
+ 845 00d0 D2B2     		uxtb	r2, r2
+ 136:../../shields/gps-firefly/src/nmea.c ****       position.latitude.min += (b - '0') / pow(10, (pos - 4));
+ 846              		.loc 1 136 9 view .LVU203
+ 847 00d2 092A     		cmp	r2, #9
+ 848 00d4 03D9     		bls	.L69
+ 136:../../shields/gps-firefly/src/nmea.c ****       position.latitude.min += (b - '0') / pow(10, (pos - 4));
+ 849              		.loc 1 136 32 is_stmt 1 discriminator 1 view .LVU204
+ 136:../../shields/gps-firefly/src/nmea.c ****       position.latitude.min += (b - '0') / pow(10, (pos - 4));
+ 850              		.loc 1 136 36 is_stmt 0 discriminator 1 view .LVU205
+ 851 00d6 0020     		movs	r0, #0
+ 852              	.LVL103:
+ 136:../../shields/gps-firefly/src/nmea.c ****       position.latitude.min += (b - '0') / pow(10, (pos - 4));
+ 853              		.loc 1 136 36 discriminator 1 view .LVU206
+ 854 00d8 354B     		ldr	r3, .L75+8
+ 855 00da 1870     		strb	r0, [r3]
+ 136:../../shields/gps-firefly/src/nmea.c ****       position.latitude.min += (b - '0') / pow(10, (pos - 4));
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 23
+
+
+ 856              		.loc 1 136 41 is_stmt 1 discriminator 1 view .LVU207
+ 136:../../shields/gps-firefly/src/nmea.c ****       position.latitude.min += (b - '0') / pow(10, (pos - 4));
+ 857              		.loc 1 136 48 is_stmt 0 discriminator 1 view .LVU208
+ 858 00dc 28E0     		b	.L57
+ 859              	.LVL104:
+ 860              	.L69:
+ 137:../../shields/gps-firefly/src/nmea.c ****       break;
+ 861              		.loc 1 137 7 is_stmt 1 view .LVU209
+ 137:../../shields/gps-firefly/src/nmea.c ****       break;
+ 862              		.loc 1 137 35 is_stmt 0 view .LVU210
+ 863 00de A0F13004 		sub	r4, r0, #48
+ 137:../../shields/gps-firefly/src/nmea.c ****       break;
+ 864              		.loc 1 137 44 view .LVU211
+ 865 00e2 181F     		subs	r0, r3, #4
+ 866              	.LVL105:
+ 137:../../shields/gps-firefly/src/nmea.c ****       break;
+ 867              		.loc 1 137 44 view .LVU212
+ 868 00e4 FFF7FEFF 		bl	__aeabi_i2d
+ 869              	.LVL106:
+ 870 00e8 41EC110B 		vmov	d1, r0, r1
+ 871 00ec 9FED2E0B 		vldr.64	d0, .L75
+ 872 00f0 FFF7FEFF 		bl	pow
+ 873              	.LVL107:
+ 874 00f4 57EC106B 		vmov	r6, r7, d0
+ 137:../../shields/gps-firefly/src/nmea.c ****       break;
+ 875              		.loc 1 137 42 view .LVU213
+ 876 00f8 2046     		mov	r0, r4
+ 877 00fa FFF7FEFF 		bl	__aeabi_i2d
+ 878              	.LVL108:
+ 879 00fe 3246     		mov	r2, r6
+ 880 0100 3B46     		mov	r3, r7
+ 881 0102 FFF7FEFF 		bl	__aeabi_ddiv
+ 882              	.LVL109:
+ 883 0106 0646     		mov	r6, r0
+ 884 0108 0F46     		mov	r7, r1
+ 137:../../shields/gps-firefly/src/nmea.c ****       break;
+ 885              		.loc 1 137 29 view .LVU214
+ 886 010a 2A4C     		ldr	r4, .L75+12
+ 887 010c E068     		ldr	r0, [r4, #12]	@ float
+ 888 010e FFF7FEFF 		bl	__aeabi_f2d
+ 889              	.LVL110:
+ 890 0112 3246     		mov	r2, r6
+ 891 0114 3B46     		mov	r3, r7
+ 892 0116 FFF7FEFF 		bl	__aeabi_dadd
+ 893              	.LVL111:
+ 894 011a FFF7FEFF 		bl	__aeabi_d2f
+ 895              	.LVL112:
+ 896 011e E060     		str	r0, [r4, #12]	@ float
+ 138:../../shields/gps-firefly/src/nmea.c ****     case 9:
+ 897              		.loc 1 138 7 is_stmt 1 view .LVU215
+ 898 0120 01E0     		b	.L58
+ 899              	.LVL113:
+ 900              	.L62:
+ 140:../../shields/gps-firefly/src/nmea.c ****       {
+ 901              		.loc 1 140 7 view .LVU216
+ 140:../../shields/gps-firefly/src/nmea.c ****       {
+ 902              		.loc 1 140 10 is_stmt 0 view .LVU217
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 24
+
+
+ 903 0122 2C28     		cmp	r0, #44
+ 904 0124 05D0     		beq	.L73
+ 905              	.LVL114:
+ 906              	.L58:
+ 162:../../shields/gps-firefly/src/nmea.c ****   return REPEAT;
+ 907              		.loc 1 162 3 is_stmt 1 view .LVU218
+ 162:../../shields/gps-firefly/src/nmea.c ****   return REPEAT;
+ 908              		.loc 1 162 6 is_stmt 0 view .LVU219
+ 909 0126 224A     		ldr	r2, .L75+8
+ 910 0128 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 911 012a 0133     		adds	r3, r3, #1
+ 912 012c 1370     		strb	r3, [r2]
+ 163:../../shields/gps-firefly/src/nmea.c **** 
+ 913              		.loc 1 163 3 is_stmt 1 view .LVU220
+ 163:../../shields/gps-firefly/src/nmea.c **** 
+ 914              		.loc 1 163 10 is_stmt 0 view .LVU221
+ 915 012e 0120     		movs	r0, #1
+ 916              	.L57:
+ 165:../../shields/gps-firefly/src/nmea.c **** 
+ 917              		.loc 1 165 1 view .LVU222
+ 918 0130 D0BD     		pop	{r4, r6, r7, pc}
+ 919              	.LVL115:
+ 920              	.L73:
+ 142:../../shields/gps-firefly/src/nmea.c ****     	  return OK;
+ 921              		.loc 1 142 8 is_stmt 1 view .LVU223
+ 142:../../shields/gps-firefly/src/nmea.c ****     	  return OK;
+ 922              		.loc 1 142 12 is_stmt 0 view .LVU224
+ 923 0132 1F4B     		ldr	r3, .L75+8
+ 924 0134 0022     		movs	r2, #0
+ 925 0136 1A70     		strb	r2, [r3]
+ 143:../../shields/gps-firefly/src/nmea.c ****       }
+ 926              		.loc 1 143 8 is_stmt 1 view .LVU225
+ 143:../../shields/gps-firefly/src/nmea.c ****       }
+ 927              		.loc 1 143 15 is_stmt 0 view .LVU226
+ 928 0138 0220     		movs	r0, #2
+ 929              	.LVL116:
+ 143:../../shields/gps-firefly/src/nmea.c ****       }
+ 930              		.loc 1 143 15 view .LVU227
+ 931 013a F9E7     		b	.L57
+ 932              	.LVL117:
+ 933              	.L61:
+ 148:../../shields/gps-firefly/src/nmea.c ****     	position.latitude.min += (b - '0') / pow(10, (pos - 6));
+ 934              		.loc 1 148 6 is_stmt 1 view .LVU228
+ 148:../../shields/gps-firefly/src/nmea.c ****     	position.latitude.min += (b - '0') / pow(10, (pos - 6));
+ 935              		.loc 1 148 17 is_stmt 0 view .LVU229
+ 936 013c A0F13002 		sub	r2, r0, #48
+ 937 0140 D2B2     		uxtb	r2, r2
+ 148:../../shields/gps-firefly/src/nmea.c ****     	position.latitude.min += (b - '0') / pow(10, (pos - 6));
+ 938              		.loc 1 148 8 view .LVU230
+ 939 0142 092A     		cmp	r2, #9
+ 940 0144 03D9     		bls	.L70
+ 148:../../shields/gps-firefly/src/nmea.c ****     	position.latitude.min += (b - '0') / pow(10, (pos - 6));
+ 941              		.loc 1 148 31 is_stmt 1 discriminator 1 view .LVU231
+ 148:../../shields/gps-firefly/src/nmea.c ****     	position.latitude.min += (b - '0') / pow(10, (pos - 6));
+ 942              		.loc 1 148 35 is_stmt 0 discriminator 1 view .LVU232
+ 943 0146 0020     		movs	r0, #0
+ 944              	.LVL118:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 25
+
+
+ 148:../../shields/gps-firefly/src/nmea.c ****     	position.latitude.min += (b - '0') / pow(10, (pos - 6));
+ 945              		.loc 1 148 35 discriminator 1 view .LVU233
+ 946 0148 194B     		ldr	r3, .L75+8
+ 947 014a 1870     		strb	r0, [r3]
+ 148:../../shields/gps-firefly/src/nmea.c ****     	position.latitude.min += (b - '0') / pow(10, (pos - 6));
+ 948              		.loc 1 148 40 is_stmt 1 discriminator 1 view .LVU234
+ 148:../../shields/gps-firefly/src/nmea.c ****     	position.latitude.min += (b - '0') / pow(10, (pos - 6));
+ 949              		.loc 1 148 47 is_stmt 0 discriminator 1 view .LVU235
+ 950 014c F0E7     		b	.L57
+ 951              	.LVL119:
+ 952              	.L70:
+ 149:../../shields/gps-firefly/src/nmea.c ****     	break;
+ 953              		.loc 1 149 6 is_stmt 1 view .LVU236
+ 149:../../shields/gps-firefly/src/nmea.c ****     	break;
+ 954              		.loc 1 149 34 is_stmt 0 view .LVU237
+ 955 014e A0F13004 		sub	r4, r0, #48
+ 149:../../shields/gps-firefly/src/nmea.c ****     	break;
+ 956              		.loc 1 149 43 view .LVU238
+ 957 0152 981F     		subs	r0, r3, #6
+ 958              	.LVL120:
+ 149:../../shields/gps-firefly/src/nmea.c ****     	break;
+ 959              		.loc 1 149 43 view .LVU239
+ 960 0154 FFF7FEFF 		bl	__aeabi_i2d
+ 961              	.LVL121:
+ 962 0158 41EC110B 		vmov	d1, r0, r1
+ 963 015c 9FED120B 		vldr.64	d0, .L75
+ 964 0160 FFF7FEFF 		bl	pow
+ 965              	.LVL122:
+ 966 0164 57EC106B 		vmov	r6, r7, d0
+ 149:../../shields/gps-firefly/src/nmea.c ****     	break;
+ 967              		.loc 1 149 41 view .LVU240
+ 968 0168 2046     		mov	r0, r4
+ 969 016a FFF7FEFF 		bl	__aeabi_i2d
+ 970              	.LVL123:
+ 971 016e 3246     		mov	r2, r6
+ 972 0170 3B46     		mov	r3, r7
+ 973 0172 FFF7FEFF 		bl	__aeabi_ddiv
+ 974              	.LVL124:
+ 975 0176 0646     		mov	r6, r0
+ 976 0178 0F46     		mov	r7, r1
+ 149:../../shields/gps-firefly/src/nmea.c ****     	break;
+ 977              		.loc 1 149 28 view .LVU241
+ 978 017a 0E4C     		ldr	r4, .L75+12
+ 979 017c E068     		ldr	r0, [r4, #12]	@ float
+ 980 017e FFF7FEFF 		bl	__aeabi_f2d
+ 981              	.LVL125:
+ 982 0182 3246     		mov	r2, r6
+ 983 0184 3B46     		mov	r3, r7
+ 984 0186 FFF7FEFF 		bl	__aeabi_dadd
+ 985              	.LVL126:
+ 986 018a FFF7FEFF 		bl	__aeabi_d2f
+ 987              	.LVL127:
+ 988 018e E060     		str	r0, [r4, #12]	@ float
+ 150:../../shields/gps-firefly/src/nmea.c ****     case 11:
+ 989              		.loc 1 150 6 is_stmt 1 view .LVU242
+ 990 0190 C9E7     		b	.L58
+ 991              	.LVL128:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 26
+
+
+ 992              	.L59:
+ 152:../../shields/gps-firefly/src/nmea.c ****     	if (b == ',')
+ 993              		.loc 1 152 6 view .LVU243
+ 152:../../shields/gps-firefly/src/nmea.c ****     	if (b == ',')
+ 994              		.loc 1 152 10 is_stmt 0 view .LVU244
+ 995 0192 074B     		ldr	r3, .L75+8
+ 996 0194 0022     		movs	r2, #0
+ 997 0196 1A70     		strb	r2, [r3]
+ 153:../../shields/gps-firefly/src/nmea.c ****     	{
+ 998              		.loc 1 153 6 is_stmt 1 view .LVU245
+ 153:../../shields/gps-firefly/src/nmea.c ****     	{
+ 999              		.loc 1 153 9 is_stmt 0 view .LVU246
+ 1000 0198 2C28     		cmp	r0, #44
+ 1001 019a 01D0     		beq	.L74
+ 158:../../shields/gps-firefly/src/nmea.c **** 
+ 1002              		.loc 1 158 18 view .LVU247
+ 1003 019c 0020     		movs	r0, #0
+ 1004              	.LVL129:
+ 158:../../shields/gps-firefly/src/nmea.c **** 
+ 1005              		.loc 1 158 18 view .LVU248
+ 1006 019e C7E7     		b	.L57
+ 1007              	.LVL130:
+ 1008              	.L74:
+ 155:../../shields/gps-firefly/src/nmea.c ****     	}
+ 1009              		.loc 1 155 18 view .LVU249
+ 1010 01a0 0220     		movs	r0, #2
+ 1011              	.LVL131:
+ 155:../../shields/gps-firefly/src/nmea.c ****     	}
+ 1012              		.loc 1 155 18 view .LVU250
+ 1013 01a2 C5E7     		b	.L57
+ 1014              	.L76:
+ 1015 01a4 AFF30080 		.align	3
+ 1016              	.L75:
+ 1017 01a8 00000000 		.word	0
+ 1018 01ac 00002440 		.word	1076101120
+ 1019 01b0 00000000 		.word	.LANCHOR3
+ 1020 01b4 00000000 		.word	.LANCHOR0
+ 1021              		.cfi_endproc
+ 1022              	.LFE7:
+ 1024              		.section	.text.parse_longitude,"ax",%progbits
+ 1025              		.align	1
+ 1026              		.global	parse_longitude
+ 1027              		.syntax unified
+ 1028              		.thumb
+ 1029              		.thumb_func
+ 1030              		.fpu fpv4-sp-d16
+ 1032              	parse_longitude:
+ 1033              	.LVL132:
+ 1034              	.LFB9:
+ 177:../../shields/gps-firefly/src/nmea.c ****   static uint8_t pos = 0;
+ 1035              		.loc 1 177 32 is_stmt 1 view -0
+ 1036              		.cfi_startproc
+ 1037              		@ args = 0, pretend = 0, frame = 0
+ 1038              		@ frame_needed = 0, uses_anonymous_args = 0
+ 177:../../shields/gps-firefly/src/nmea.c ****   static uint8_t pos = 0;
+ 1039              		.loc 1 177 32 is_stmt 0 view .LVU252
+ 1040 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 27
+
+
+ 1041              	.LCFI4:
+ 1042              		.cfi_def_cfa_offset 24
+ 1043              		.cfi_offset 3, -24
+ 1044              		.cfi_offset 4, -20
+ 1045              		.cfi_offset 5, -16
+ 1046              		.cfi_offset 6, -12
+ 1047              		.cfi_offset 7, -8
+ 1048              		.cfi_offset 14, -4
+ 178:../../shields/gps-firefly/src/nmea.c ****   switch(pos) {
+ 1049              		.loc 1 178 3 is_stmt 1 view .LVU253
+ 179:../../shields/gps-firefly/src/nmea.c ****     case 0: // Dddmm.mmmm
+ 1050              		.loc 1 179 3 view .LVU254
+ 1051 0002 6D4B     		ldr	r3, .L95+8
+ 1052 0004 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1053 0006 0C2B     		cmp	r3, #12
+ 1054 0008 38D8     		bhi	.L78
+ 1055 000a DFE803F0 		tbb	[pc, r3]
+ 1056              	.L80:
+ 1057 000e 07       		.byte	(.L86-.L80)/2
+ 1058 000f 0C       		.byte	(.L85-.L80)/2
+ 1059 0010 0C       		.byte	(.L85-.L80)/2
+ 1060 0011 3D       		.byte	(.L84-.L80)/2
+ 1061 0012 3D       		.byte	(.L84-.L80)/2
+ 1062 0013 37       		.byte	(.L78-.L80)/2
+ 1063 0014 69       		.byte	(.L83-.L80)/2
+ 1064 0015 69       		.byte	(.L83-.L80)/2
+ 1065 0016 69       		.byte	(.L83-.L80)/2
+ 1066 0017 69       		.byte	(.L83-.L80)/2
+ 1067 0018 94       		.byte	(.L82-.L80)/2
+ 1068 0019 9B       		.byte	(.L81-.L80)/2
+ 1069 001a C6       		.byte	(.L79-.L80)/2
+ 1070 001b 00       		.p2align 1
+ 1071              	.L86:
+ 181:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min = 0;
+ 1072              		.loc 1 181 7 view .LVU255
+ 181:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min = 0;
+ 1073              		.loc 1 181 30 is_stmt 0 view .LVU256
+ 1074 001c 674A     		ldr	r2, .L95+12
+ 1075 001e 0021     		movs	r1, #0
+ 1076 0020 1175     		strb	r1, [r2, #20]
+ 182:../../shields/gps-firefly/src/nmea.c ****     case 1: // dDdmm.mmmm
+ 1077              		.loc 1 182 7 is_stmt 1 view .LVU257
+ 182:../../shields/gps-firefly/src/nmea.c ****     case 1: // dDdmm.mmmm
+ 1078              		.loc 1 182 30 is_stmt 0 view .LVU258
+ 1079 0022 0021     		movs	r1, #0
+ 1080 0024 9161     		str	r1, [r2, #24]	@ float
+ 1081              	.L85:
+ 185:../../shields/gps-firefly/src/nmea.c ****       position.longitude.deg += (b - '0') * pow(10, (2-pos));
+ 1082              		.loc 1 185 7 is_stmt 1 view .LVU259
+ 185:../../shields/gps-firefly/src/nmea.c ****       position.longitude.deg += (b - '0') * pow(10, (2-pos));
+ 1083              		.loc 1 185 18 is_stmt 0 view .LVU260
+ 1084 0026 A0F13002 		sub	r2, r0, #48
+ 1085 002a D2B2     		uxtb	r2, r2
+ 185:../../shields/gps-firefly/src/nmea.c ****       position.longitude.deg += (b - '0') * pow(10, (2-pos));
+ 1086              		.loc 1 185 9 view .LVU261
+ 1087 002c 092A     		cmp	r2, #9
+ 1088 002e 03D9     		bls	.L87
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 28
+
+
+ 185:../../shields/gps-firefly/src/nmea.c ****       position.longitude.deg += (b - '0') * pow(10, (2-pos));
+ 1089              		.loc 1 185 32 is_stmt 1 discriminator 1 view .LVU262
+ 185:../../shields/gps-firefly/src/nmea.c ****       position.longitude.deg += (b - '0') * pow(10, (2-pos));
+ 1090              		.loc 1 185 36 is_stmt 0 discriminator 1 view .LVU263
+ 1091 0030 0020     		movs	r0, #0
+ 1092              	.LVL133:
+ 185:../../shields/gps-firefly/src/nmea.c ****       position.longitude.deg += (b - '0') * pow(10, (2-pos));
+ 1093              		.loc 1 185 36 discriminator 1 view .LVU264
+ 1094 0032 614B     		ldr	r3, .L95+8
+ 1095 0034 1870     		strb	r0, [r3]
+ 185:../../shields/gps-firefly/src/nmea.c ****       position.longitude.deg += (b - '0') * pow(10, (2-pos));
+ 1096              		.loc 1 185 41 is_stmt 1 discriminator 1 view .LVU265
+ 185:../../shields/gps-firefly/src/nmea.c ****       position.longitude.deg += (b - '0') * pow(10, (2-pos));
+ 1097              		.loc 1 185 48 is_stmt 0 discriminator 1 view .LVU266
+ 1098 0036 26E0     		b	.L77
+ 1099              	.LVL134:
+ 1100              	.L87:
+ 186:../../shields/gps-firefly/src/nmea.c ****       break;
+ 1101              		.loc 1 186 7 is_stmt 1 view .LVU267
+ 186:../../shields/gps-firefly/src/nmea.c ****       break;
+ 1102              		.loc 1 186 36 is_stmt 0 view .LVU268
+ 1103 0038 A0F13006 		sub	r6, r0, #48
+ 186:../../shields/gps-firefly/src/nmea.c ****       break;
+ 1104              		.loc 1 186 45 view .LVU269
+ 1105 003c C3F10200 		rsb	r0, r3, #2
+ 1106              	.LVL135:
+ 186:../../shields/gps-firefly/src/nmea.c ****       break;
+ 1107              		.loc 1 186 45 view .LVU270
+ 1108 0040 FFF7FEFF 		bl	__aeabi_i2d
+ 1109              	.LVL136:
+ 1110 0044 41EC110B 		vmov	d1, r0, r1
+ 1111 0048 9FED590B 		vldr.64	d0, .L95
+ 1112 004c FFF7FEFF 		bl	pow
+ 1113              	.LVL137:
+ 1114 0050 55EC104B 		vmov	r4, r5, d0
+ 186:../../shields/gps-firefly/src/nmea.c ****       break;
+ 1115              		.loc 1 186 43 view .LVU271
+ 1116 0054 3046     		mov	r0, r6
+ 1117 0056 FFF7FEFF 		bl	__aeabi_i2d
+ 1118              	.LVL138:
+ 1119 005a 2246     		mov	r2, r4
+ 1120 005c 2B46     		mov	r3, r5
+ 1121 005e FFF7FEFF 		bl	__aeabi_dmul
+ 1122              	.LVL139:
+ 1123 0062 0646     		mov	r6, r0
+ 1124 0064 0F46     		mov	r7, r1
+ 186:../../shields/gps-firefly/src/nmea.c ****       break;
+ 1125              		.loc 1 186 30 view .LVU272
+ 1126 0066 554C     		ldr	r4, .L95+12
+ 1127 0068 207D     		ldrb	r0, [r4, #20]	@ zero_extendqisi2
+ 1128 006a FFF7FEFF 		bl	__aeabi_i2d
+ 1129              	.LVL140:
+ 1130 006e 3246     		mov	r2, r6
+ 1131 0070 3B46     		mov	r3, r7
+ 1132 0072 FFF7FEFF 		bl	__aeabi_dadd
+ 1133              	.LVL141:
+ 1134 0076 FFF7FEFF 		bl	__aeabi_d2uiz
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 29
+
+
+ 1135              	.LVL142:
+ 1136 007a 2075     		strb	r0, [r4, #20]
+ 187:../../shields/gps-firefly/src/nmea.c ****     case 3: // Ddmm.mmmm
+ 1137              		.loc 1 187 7 is_stmt 1 view .LVU273
+ 1138              	.L78:
+ 221:../../shields/gps-firefly/src/nmea.c ****   return REPEAT;
+ 1139              		.loc 1 221 3 view .LVU274
+ 221:../../shields/gps-firefly/src/nmea.c ****   return REPEAT;
+ 1140              		.loc 1 221 6 is_stmt 0 view .LVU275
+ 1141 007c 4E4A     		ldr	r2, .L95+8
+ 1142 007e 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 1143 0080 0133     		adds	r3, r3, #1
+ 1144 0082 1370     		strb	r3, [r2]
+ 222:../../shields/gps-firefly/src/nmea.c **** }
+ 1145              		.loc 1 222 3 is_stmt 1 view .LVU276
+ 222:../../shields/gps-firefly/src/nmea.c **** }
+ 1146              		.loc 1 222 10 is_stmt 0 view .LVU277
+ 1147 0084 0120     		movs	r0, #1
+ 1148              	.L77:
+ 223:../../shields/gps-firefly/src/nmea.c **** 
+ 1149              		.loc 1 223 1 view .LVU278
+ 1150 0086 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 1151              	.LVL143:
+ 1152              	.L84:
+ 190:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min += (b - '0') * pow(10, (4-pos));
+ 1153              		.loc 1 190 7 is_stmt 1 view .LVU279
+ 190:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min += (b - '0') * pow(10, (4-pos));
+ 1154              		.loc 1 190 18 is_stmt 0 view .LVU280
+ 1155 0088 A0F13002 		sub	r2, r0, #48
+ 1156 008c D2B2     		uxtb	r2, r2
+ 190:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min += (b - '0') * pow(10, (4-pos));
+ 1157              		.loc 1 190 9 view .LVU281
+ 1158 008e 092A     		cmp	r2, #9
+ 1159 0090 03D9     		bls	.L89
+ 190:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min += (b - '0') * pow(10, (4-pos));
+ 1160              		.loc 1 190 32 is_stmt 1 discriminator 1 view .LVU282
+ 190:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min += (b - '0') * pow(10, (4-pos));
+ 1161              		.loc 1 190 36 is_stmt 0 discriminator 1 view .LVU283
+ 1162 0092 0020     		movs	r0, #0
+ 1163              	.LVL144:
+ 190:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min += (b - '0') * pow(10, (4-pos));
+ 1164              		.loc 1 190 36 discriminator 1 view .LVU284
+ 1165 0094 484B     		ldr	r3, .L95+8
+ 1166 0096 1870     		strb	r0, [r3]
+ 190:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min += (b - '0') * pow(10, (4-pos));
+ 1167              		.loc 1 190 41 is_stmt 1 discriminator 1 view .LVU285
+ 190:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min += (b - '0') * pow(10, (4-pos));
+ 1168              		.loc 1 190 48 is_stmt 0 discriminator 1 view .LVU286
+ 1169 0098 F5E7     		b	.L77
+ 1170              	.LVL145:
+ 1171              	.L89:
+ 191:../../shields/gps-firefly/src/nmea.c ****       break;
+ 1172              		.loc 1 191 7 is_stmt 1 view .LVU287
+ 191:../../shields/gps-firefly/src/nmea.c ****       break;
+ 1173              		.loc 1 191 36 is_stmt 0 view .LVU288
+ 1174 009a A0F13006 		sub	r6, r0, #48
+ 191:../../shields/gps-firefly/src/nmea.c ****       break;
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 30
+
+
+ 1175              		.loc 1 191 45 view .LVU289
+ 1176 009e C3F10400 		rsb	r0, r3, #4
+ 1177              	.LVL146:
+ 191:../../shields/gps-firefly/src/nmea.c ****       break;
+ 1178              		.loc 1 191 45 view .LVU290
+ 1179 00a2 FFF7FEFF 		bl	__aeabi_i2d
+ 1180              	.LVL147:
+ 1181 00a6 41EC110B 		vmov	d1, r0, r1
+ 1182 00aa 9FED410B 		vldr.64	d0, .L95
+ 1183 00ae FFF7FEFF 		bl	pow
+ 1184              	.LVL148:
+ 1185 00b2 55EC104B 		vmov	r4, r5, d0
+ 191:../../shields/gps-firefly/src/nmea.c ****       break;
+ 1186              		.loc 1 191 43 view .LVU291
+ 1187 00b6 3046     		mov	r0, r6
+ 1188 00b8 FFF7FEFF 		bl	__aeabi_i2d
+ 1189              	.LVL149:
+ 1190 00bc 2246     		mov	r2, r4
+ 1191 00be 2B46     		mov	r3, r5
+ 1192 00c0 FFF7FEFF 		bl	__aeabi_dmul
+ 1193              	.LVL150:
+ 1194 00c4 0646     		mov	r6, r0
+ 1195 00c6 0F46     		mov	r7, r1
+ 191:../../shields/gps-firefly/src/nmea.c ****       break;
+ 1196              		.loc 1 191 30 view .LVU292
+ 1197 00c8 3C4C     		ldr	r4, .L95+12
+ 1198 00ca A069     		ldr	r0, [r4, #24]	@ float
+ 1199 00cc FFF7FEFF 		bl	__aeabi_f2d
+ 1200              	.LVL151:
+ 1201 00d0 3246     		mov	r2, r6
+ 1202 00d2 3B46     		mov	r3, r7
+ 1203 00d4 FFF7FEFF 		bl	__aeabi_dadd
+ 1204              	.LVL152:
+ 1205 00d8 FFF7FEFF 		bl	__aeabi_d2f
+ 1206              	.LVL153:
+ 1207 00dc A061     		str	r0, [r4, #24]	@ float
+ 192:../../shields/gps-firefly/src/nmea.c ****     case 5: break; // skip .
+ 1208              		.loc 1 192 7 is_stmt 1 view .LVU293
+ 1209 00de CDE7     		b	.L78
+ 1210              	.LVL154:
+ 1211              	.L83:
+ 198:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min += (b - '0') / pow(10, (pos - 5));
+ 1212              		.loc 1 198 7 view .LVU294
+ 198:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min += (b - '0') / pow(10, (pos - 5));
+ 1213              		.loc 1 198 18 is_stmt 0 view .LVU295
+ 1214 00e0 A0F13002 		sub	r2, r0, #48
+ 1215 00e4 D2B2     		uxtb	r2, r2
+ 198:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min += (b - '0') / pow(10, (pos - 5));
+ 1216              		.loc 1 198 9 view .LVU296
+ 1217 00e6 092A     		cmp	r2, #9
+ 1218 00e8 03D9     		bls	.L90
+ 198:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min += (b - '0') / pow(10, (pos - 5));
+ 1219              		.loc 1 198 32 is_stmt 1 discriminator 1 view .LVU297
+ 198:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min += (b - '0') / pow(10, (pos - 5));
+ 1220              		.loc 1 198 36 is_stmt 0 discriminator 1 view .LVU298
+ 1221 00ea 0020     		movs	r0, #0
+ 1222              	.LVL155:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 31
+
+
+ 198:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min += (b - '0') / pow(10, (pos - 5));
+ 1223              		.loc 1 198 36 discriminator 1 view .LVU299
+ 1224 00ec 324B     		ldr	r3, .L95+8
+ 1225 00ee 1870     		strb	r0, [r3]
+ 198:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min += (b - '0') / pow(10, (pos - 5));
+ 1226              		.loc 1 198 41 is_stmt 1 discriminator 1 view .LVU300
+ 198:../../shields/gps-firefly/src/nmea.c ****       position.longitude.min += (b - '0') / pow(10, (pos - 5));
+ 1227              		.loc 1 198 48 is_stmt 0 discriminator 1 view .LVU301
+ 1228 00f0 C9E7     		b	.L77
+ 1229              	.LVL156:
+ 1230              	.L90:
+ 199:../../shields/gps-firefly/src/nmea.c ****       break;
+ 1231              		.loc 1 199 7 is_stmt 1 view .LVU302
+ 199:../../shields/gps-firefly/src/nmea.c ****       break;
+ 1232              		.loc 1 199 36 is_stmt 0 view .LVU303
+ 1233 00f2 A0F13006 		sub	r6, r0, #48
+ 199:../../shields/gps-firefly/src/nmea.c ****       break;
+ 1234              		.loc 1 199 45 view .LVU304
+ 1235 00f6 581F     		subs	r0, r3, #5
+ 1236              	.LVL157:
+ 199:../../shields/gps-firefly/src/nmea.c ****       break;
+ 1237              		.loc 1 199 45 view .LVU305
+ 1238 00f8 FFF7FEFF 		bl	__aeabi_i2d
+ 1239              	.LVL158:
+ 1240 00fc 41EC110B 		vmov	d1, r0, r1
+ 1241 0100 9FED2B0B 		vldr.64	d0, .L95
+ 1242 0104 FFF7FEFF 		bl	pow
+ 1243              	.LVL159:
+ 1244 0108 55EC104B 		vmov	r4, r5, d0
+ 199:../../shields/gps-firefly/src/nmea.c ****       break;
+ 1245              		.loc 1 199 43 view .LVU306
+ 1246 010c 3046     		mov	r0, r6
+ 1247 010e FFF7FEFF 		bl	__aeabi_i2d
+ 1248              	.LVL160:
+ 1249 0112 2246     		mov	r2, r4
+ 1250 0114 2B46     		mov	r3, r5
+ 1251 0116 FFF7FEFF 		bl	__aeabi_ddiv
+ 1252              	.LVL161:
+ 1253 011a 0646     		mov	r6, r0
+ 1254 011c 0F46     		mov	r7, r1
+ 199:../../shields/gps-firefly/src/nmea.c ****       break;
+ 1255              		.loc 1 199 30 view .LVU307
+ 1256 011e 274C     		ldr	r4, .L95+12
+ 1257 0120 A069     		ldr	r0, [r4, #24]	@ float
+ 1258 0122 FFF7FEFF 		bl	__aeabi_f2d
+ 1259              	.LVL162:
+ 1260 0126 3246     		mov	r2, r6
+ 1261 0128 3B46     		mov	r3, r7
+ 1262 012a FFF7FEFF 		bl	__aeabi_dadd
+ 1263              	.LVL163:
+ 1264 012e FFF7FEFF 		bl	__aeabi_d2f
+ 1265              	.LVL164:
+ 1266 0132 A061     		str	r0, [r4, #24]	@ float
+ 200:../../shields/gps-firefly/src/nmea.c ****     case 10:
+ 1267              		.loc 1 200 7 is_stmt 1 view .LVU308
+ 1268 0134 A2E7     		b	.L78
+ 1269              	.LVL165:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 32
+
+
+ 1270              	.L82:
+ 202:../../shields/gps-firefly/src/nmea.c ****     	{
+ 1271              		.loc 1 202 6 view .LVU309
+ 202:../../shields/gps-firefly/src/nmea.c ****     	{
+ 1272              		.loc 1 202 9 is_stmt 0 view .LVU310
+ 1273 0136 2C28     		cmp	r0, #44
+ 1274 0138 A0D1     		bne	.L78
+ 204:../../shields/gps-firefly/src/nmea.c ****     		return OK;
+ 1275              		.loc 1 204 7 is_stmt 1 view .LVU311
+ 204:../../shields/gps-firefly/src/nmea.c ****     		return OK;
+ 1276              		.loc 1 204 11 is_stmt 0 view .LVU312
+ 1277 013a 1F4B     		ldr	r3, .L95+8
+ 1278 013c 0022     		movs	r2, #0
+ 1279 013e 1A70     		strb	r2, [r3]
+ 205:../../shields/gps-firefly/src/nmea.c ****     	}
+ 1280              		.loc 1 205 7 is_stmt 1 view .LVU313
+ 205:../../shields/gps-firefly/src/nmea.c ****     	}
+ 1281              		.loc 1 205 14 is_stmt 0 view .LVU314
+ 1282 0140 0220     		movs	r0, #2
+ 1283              	.LVL166:
+ 205:../../shields/gps-firefly/src/nmea.c ****     	}
+ 1284              		.loc 1 205 14 view .LVU315
+ 1285 0142 A0E7     		b	.L77
+ 1286              	.LVL167:
+ 1287              	.L81:
+ 210:../../shields/gps-firefly/src/nmea.c ****     	position.longitude.min += (b - '0') / pow(10, (pos - 5));
+ 1288              		.loc 1 210 6 is_stmt 1 view .LVU316
+ 210:../../shields/gps-firefly/src/nmea.c ****     	position.longitude.min += (b - '0') / pow(10, (pos - 5));
+ 1289              		.loc 1 210 17 is_stmt 0 view .LVU317
+ 1290 0144 A0F13002 		sub	r2, r0, #48
+ 1291 0148 D2B2     		uxtb	r2, r2
+ 210:../../shields/gps-firefly/src/nmea.c ****     	position.longitude.min += (b - '0') / pow(10, (pos - 5));
+ 1292              		.loc 1 210 8 view .LVU318
+ 1293 014a 092A     		cmp	r2, #9
+ 1294 014c 03D9     		bls	.L91
+ 210:../../shields/gps-firefly/src/nmea.c ****     	position.longitude.min += (b - '0') / pow(10, (pos - 5));
+ 1295              		.loc 1 210 31 is_stmt 1 discriminator 1 view .LVU319
+ 210:../../shields/gps-firefly/src/nmea.c ****     	position.longitude.min += (b - '0') / pow(10, (pos - 5));
+ 1296              		.loc 1 210 35 is_stmt 0 discriminator 1 view .LVU320
+ 1297 014e 0020     		movs	r0, #0
+ 1298              	.LVL168:
+ 210:../../shields/gps-firefly/src/nmea.c ****     	position.longitude.min += (b - '0') / pow(10, (pos - 5));
+ 1299              		.loc 1 210 35 discriminator 1 view .LVU321
+ 1300 0150 194B     		ldr	r3, .L95+8
+ 1301 0152 1870     		strb	r0, [r3]
+ 210:../../shields/gps-firefly/src/nmea.c ****     	position.longitude.min += (b - '0') / pow(10, (pos - 5));
+ 1302              		.loc 1 210 40 is_stmt 1 discriminator 1 view .LVU322
+ 210:../../shields/gps-firefly/src/nmea.c ****     	position.longitude.min += (b - '0') / pow(10, (pos - 5));
+ 1303              		.loc 1 210 47 is_stmt 0 discriminator 1 view .LVU323
+ 1304 0154 97E7     		b	.L77
+ 1305              	.LVL169:
+ 1306              	.L91:
+ 211:../../shields/gps-firefly/src/nmea.c ****     	break;
+ 1307              		.loc 1 211 6 is_stmt 1 view .LVU324
+ 211:../../shields/gps-firefly/src/nmea.c ****     	break;
+ 1308              		.loc 1 211 35 is_stmt 0 view .LVU325
+ 1309 0156 A0F13006 		sub	r6, r0, #48
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 33
+
+
+ 211:../../shields/gps-firefly/src/nmea.c ****     	break;
+ 1310              		.loc 1 211 44 view .LVU326
+ 1311 015a 581F     		subs	r0, r3, #5
+ 1312              	.LVL170:
+ 211:../../shields/gps-firefly/src/nmea.c ****     	break;
+ 1313              		.loc 1 211 44 view .LVU327
+ 1314 015c FFF7FEFF 		bl	__aeabi_i2d
+ 1315              	.LVL171:
+ 1316 0160 41EC110B 		vmov	d1, r0, r1
+ 1317 0164 9FED120B 		vldr.64	d0, .L95
+ 1318 0168 FFF7FEFF 		bl	pow
+ 1319              	.LVL172:
+ 1320 016c 55EC104B 		vmov	r4, r5, d0
+ 211:../../shields/gps-firefly/src/nmea.c ****     	break;
+ 1321              		.loc 1 211 42 view .LVU328
+ 1322 0170 3046     		mov	r0, r6
+ 1323 0172 FFF7FEFF 		bl	__aeabi_i2d
+ 1324              	.LVL173:
+ 1325 0176 2246     		mov	r2, r4
+ 1326 0178 2B46     		mov	r3, r5
+ 1327 017a FFF7FEFF 		bl	__aeabi_ddiv
+ 1328              	.LVL174:
+ 1329 017e 0646     		mov	r6, r0
+ 1330 0180 0F46     		mov	r7, r1
+ 211:../../shields/gps-firefly/src/nmea.c ****     	break;
+ 1331              		.loc 1 211 29 view .LVU329
+ 1332 0182 0E4C     		ldr	r4, .L95+12
+ 1333 0184 A069     		ldr	r0, [r4, #24]	@ float
+ 1334 0186 FFF7FEFF 		bl	__aeabi_f2d
+ 1335              	.LVL175:
+ 1336 018a 3246     		mov	r2, r6
+ 1337 018c 3B46     		mov	r3, r7
+ 1338 018e FFF7FEFF 		bl	__aeabi_dadd
+ 1339              	.LVL176:
+ 1340 0192 FFF7FEFF 		bl	__aeabi_d2f
+ 1341              	.LVL177:
+ 1342 0196 A061     		str	r0, [r4, #24]	@ float
+ 212:../../shields/gps-firefly/src/nmea.c ****     case 12:
+ 1343              		.loc 1 212 6 is_stmt 1 view .LVU330
+ 1344 0198 70E7     		b	.L78
+ 1345              	.LVL178:
+ 1346              	.L79:
+ 214:../../shields/gps-firefly/src/nmea.c ****           if (b == ',')
+ 1347              		.loc 1 214 11 view .LVU331
+ 214:../../shields/gps-firefly/src/nmea.c ****           if (b == ',')
+ 1348              		.loc 1 214 15 is_stmt 0 view .LVU332
+ 1349 019a 074B     		ldr	r3, .L95+8
+ 1350 019c 0022     		movs	r2, #0
+ 1351 019e 1A70     		strb	r2, [r3]
+ 215:../../shields/gps-firefly/src/nmea.c ****             return OK;
+ 1352              		.loc 1 215 11 is_stmt 1 view .LVU333
+ 215:../../shields/gps-firefly/src/nmea.c ****             return OK;
+ 1353              		.loc 1 215 14 is_stmt 0 view .LVU334
+ 1354 01a0 2C28     		cmp	r0, #44
+ 1355 01a2 01D0     		beq	.L94
+ 218:../../shields/gps-firefly/src/nmea.c **** 
+ 1356              		.loc 1 218 19 view .LVU335
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 34
+
+
+ 1357 01a4 0020     		movs	r0, #0
+ 1358              	.LVL179:
+ 218:../../shields/gps-firefly/src/nmea.c **** 
+ 1359              		.loc 1 218 19 view .LVU336
+ 1360 01a6 6EE7     		b	.L77
+ 1361              	.LVL180:
+ 1362              	.L94:
+ 216:../../shields/gps-firefly/src/nmea.c ****           else
+ 1363              		.loc 1 216 20 view .LVU337
+ 1364 01a8 0220     		movs	r0, #2
+ 1365              	.LVL181:
+ 216:../../shields/gps-firefly/src/nmea.c ****           else
+ 1366              		.loc 1 216 20 view .LVU338
+ 1367 01aa 6CE7     		b	.L77
+ 1368              	.L96:
+ 1369 01ac AFF30080 		.align	3
+ 1370              	.L95:
+ 1371 01b0 00000000 		.word	0
+ 1372 01b4 00002440 		.word	1076101120
+ 1373 01b8 00000000 		.word	.LANCHOR4
+ 1374 01bc 00000000 		.word	.LANCHOR0
+ 1375              		.cfi_endproc
+ 1376              	.LFE9:
+ 1378              		.global	__aeabi_ui2d
+ 1379              		.section	.text.parse_hdop,"ax",%progbits
+ 1380              		.align	1
+ 1381              		.global	parse_hdop
+ 1382              		.syntax unified
+ 1383              		.thumb
+ 1384              		.thumb_func
+ 1385              		.fpu fpv4-sp-d16
+ 1387              	parse_hdop:
+ 1388              	.LVL182:
+ 1389              	.LFB13:
+ 267:../../shields/gps-firefly/src/nmea.c **** 
+ 268:../../shields/gps-firefly/src/nmea.c **** int parse_hdop(uint8_t b) {
+ 1390              		.loc 1 268 27 is_stmt 1 view -0
+ 1391              		.cfi_startproc
+ 1392              		@ args = 0, pretend = 0, frame = 0
+ 1393              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1394              		.loc 1 268 27 is_stmt 0 view .LVU340
+ 1395 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 1396              	.LCFI5:
+ 1397              		.cfi_def_cfa_offset 24
+ 1398              		.cfi_offset 3, -24
+ 1399              		.cfi_offset 4, -20
+ 1400              		.cfi_offset 5, -16
+ 1401              		.cfi_offset 6, -12
+ 1402              		.cfi_offset 7, -8
+ 1403              		.cfi_offset 14, -4
+ 269:../../shields/gps-firefly/src/nmea.c **** 	static uint8_t pos = 0;
+ 1404              		.loc 1 269 2 is_stmt 1 view .LVU341
+ 270:../../shields/gps-firefly/src/nmea.c **** 	static uint8_t dec = 0;
+ 1405              		.loc 1 270 2 view .LVU342
+ 271:../../shields/gps-firefly/src/nmea.c **** 
+ 272:../../shields/gps-firefly/src/nmea.c **** 	if (b == ',')
+ 1406              		.loc 1 272 2 view .LVU343
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 35
+
+
+ 1407              		.loc 1 272 5 is_stmt 0 view .LVU344
+ 1408 0002 2C28     		cmp	r0, #44
+ 1409 0004 15D0     		beq	.L105
+ 273:../../shields/gps-firefly/src/nmea.c **** 	{
+ 274:../../shields/gps-firefly/src/nmea.c **** 		pos = 0;
+ 275:../../shields/gps-firefly/src/nmea.c **** 		dec = 0;
+ 276:../../shields/gps-firefly/src/nmea.c **** 		// full parse, store current position
+ 277:../../shields/gps-firefly/src/nmea.c **** 		current_position = position;
+ 278:../../shields/gps-firefly/src/nmea.c **** 		return OK;
+ 279:../../shields/gps-firefly/src/nmea.c **** 	}
+ 280:../../shields/gps-firefly/src/nmea.c **** 
+ 281:../../shields/gps-firefly/src/nmea.c **** 	if (b == '.')
+ 1410              		.loc 1 281 2 is_stmt 1 view .LVU345
+ 1411              		.loc 1 281 5 is_stmt 0 view .LVU346
+ 1412 0006 2E28     		cmp	r0, #46
+ 1413 0008 24D0     		beq	.L106
+ 282:../../shields/gps-firefly/src/nmea.c **** 	{
+ 283:../../shields/gps-firefly/src/nmea.c **** 		dec = 1;
+ 284:../../shields/gps-firefly/src/nmea.c **** 		return REPEAT;
+ 285:../../shields/gps-firefly/src/nmea.c **** 	}
+ 286:../../shields/gps-firefly/src/nmea.c **** 
+ 287:../../shields/gps-firefly/src/nmea.c **** 	if(b < '0' || b > '9') { pos = 0; return FAIL; }
+ 1414              		.loc 1 287 2 is_stmt 1 view .LVU347
+ 1415              		.loc 1 287 13 is_stmt 0 view .LVU348
+ 1416 000a A0F13003 		sub	r3, r0, #48
+ 1417 000e DBB2     		uxtb	r3, r3
+ 1418              		.loc 1 287 4 view .LVU349
+ 1419 0010 092B     		cmp	r3, #9
+ 1420 0012 23D8     		bhi	.L107
+ 288:../../shields/gps-firefly/src/nmea.c **** 
+ 289:../../shields/gps-firefly/src/nmea.c **** 	if (pos == 0)
+ 1421              		.loc 1 289 2 is_stmt 1 view .LVU350
+ 1422              		.loc 1 289 10 is_stmt 0 view .LVU351
+ 1423 0014 344B     		ldr	r3, .L108+8
+ 1424 0016 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1425              		.loc 1 289 5 view .LVU352
+ 1426 0018 23BB     		cbnz	r3, .L102
+ 290:../../shields/gps-firefly/src/nmea.c **** 	{
+ 291:../../shields/gps-firefly/src/nmea.c **** 		position.hdop = (b - '0');
+ 1427              		.loc 1 291 3 is_stmt 1 view .LVU353
+ 1428              		.loc 1 291 22 is_stmt 0 view .LVU354
+ 1429 001a 3038     		subs	r0, r0, #48
+ 1430              	.LVL183:
+ 1431              		.loc 1 291 17 view .LVU355
+ 1432 001c 07EE900A 		vmov	s15, r0	@ int
+ 1433 0020 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 1434 0024 314B     		ldr	r3, .L108+12
+ 1435 0026 C3ED097A 		vstr.32	s15, [r3, #36]
+ 292:../../shields/gps-firefly/src/nmea.c **** 		pos = 1;
+ 1436              		.loc 1 292 3 is_stmt 1 view .LVU356
+ 1437              		.loc 1 292 7 is_stmt 0 view .LVU357
+ 1438 002a 0120     		movs	r0, #1
+ 1439 002c 2E4B     		ldr	r3, .L108+8
+ 1440 002e 1870     		strb	r0, [r3]
+ 1441 0030 17E0     		b	.L97
+ 1442              	.LVL184:
+ 1443              	.L105:
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 36
+
+
+ 274:../../shields/gps-firefly/src/nmea.c **** 		dec = 0;
+ 1444              		.loc 1 274 3 is_stmt 1 view .LVU358
+ 274:../../shields/gps-firefly/src/nmea.c **** 		dec = 0;
+ 1445              		.loc 1 274 7 is_stmt 0 view .LVU359
+ 1446 0032 0023     		movs	r3, #0
+ 1447 0034 2C4A     		ldr	r2, .L108+8
+ 1448 0036 1370     		strb	r3, [r2]
+ 275:../../shields/gps-firefly/src/nmea.c **** 		// full parse, store current position
+ 1449              		.loc 1 275 3 is_stmt 1 view .LVU360
+ 275:../../shields/gps-firefly/src/nmea.c **** 		// full parse, store current position
+ 1450              		.loc 1 275 7 is_stmt 0 view .LVU361
+ 1451 0038 2D4A     		ldr	r2, .L108+16
+ 1452 003a 1370     		strb	r3, [r2]
+ 277:../../shields/gps-firefly/src/nmea.c **** 		return OK;
+ 1453              		.loc 1 277 3 is_stmt 1 view .LVU362
+ 277:../../shields/gps-firefly/src/nmea.c **** 		return OK;
+ 1454              		.loc 1 277 20 is_stmt 0 view .LVU363
+ 1455 003c 2D4C     		ldr	r4, .L108+20
+ 1456 003e 2B4D     		ldr	r5, .L108+12
+ 1457 0040 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 1458              	.LVL185:
+ 277:../../shields/gps-firefly/src/nmea.c **** 		return OK;
+ 1459              		.loc 1 277 20 view .LVU364
+ 1460 0042 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 1461 0044 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 1462 0046 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 1463 0048 95E80700 		ldm	r5, {r0, r1, r2}
+ 1464 004c 84E80700 		stm	r4, {r0, r1, r2}
+ 278:../../shields/gps-firefly/src/nmea.c **** 	}
+ 1465              		.loc 1 278 3 is_stmt 1 view .LVU365
+ 278:../../shields/gps-firefly/src/nmea.c **** 	}
+ 1466              		.loc 1 278 10 is_stmt 0 view .LVU366
+ 1467 0050 0220     		movs	r0, #2
+ 1468 0052 06E0     		b	.L97
+ 1469              	.LVL186:
+ 1470              	.L106:
+ 283:../../shields/gps-firefly/src/nmea.c **** 		return REPEAT;
+ 1471              		.loc 1 283 3 is_stmt 1 view .LVU367
+ 283:../../shields/gps-firefly/src/nmea.c **** 		return REPEAT;
+ 1472              		.loc 1 283 7 is_stmt 0 view .LVU368
+ 1473 0054 0120     		movs	r0, #1
+ 1474              	.LVL187:
+ 283:../../shields/gps-firefly/src/nmea.c **** 		return REPEAT;
+ 1475              		.loc 1 283 7 view .LVU369
+ 1476 0056 264B     		ldr	r3, .L108+16
+ 1477 0058 1870     		strb	r0, [r3]
+ 284:../../shields/gps-firefly/src/nmea.c **** 	}
+ 1478              		.loc 1 284 3 is_stmt 1 view .LVU370
+ 284:../../shields/gps-firefly/src/nmea.c **** 	}
+ 1479              		.loc 1 284 10 is_stmt 0 view .LVU371
+ 1480 005a 02E0     		b	.L97
+ 1481              	.LVL188:
+ 1482              	.L107:
+ 287:../../shields/gps-firefly/src/nmea.c **** 
+ 1483              		.loc 1 287 27 is_stmt 1 discriminator 1 view .LVU372
+ 287:../../shields/gps-firefly/src/nmea.c **** 
+ 1484              		.loc 1 287 31 is_stmt 0 discriminator 1 view .LVU373
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 37
+
+
+ 1485 005c 0020     		movs	r0, #0
+ 1486              	.LVL189:
+ 287:../../shields/gps-firefly/src/nmea.c **** 
+ 1487              		.loc 1 287 31 discriminator 1 view .LVU374
+ 1488 005e 224B     		ldr	r3, .L108+8
+ 1489 0060 1870     		strb	r0, [r3]
+ 287:../../shields/gps-firefly/src/nmea.c **** 
+ 1490              		.loc 1 287 36 is_stmt 1 discriminator 1 view .LVU375
+ 1491              	.L97:
+ 293:../../shields/gps-firefly/src/nmea.c **** 	} else {
+ 294:../../shields/gps-firefly/src/nmea.c **** 		if (dec == 0)
+ 295:../../shields/gps-firefly/src/nmea.c **** 		{
+ 296:../../shields/gps-firefly/src/nmea.c **** 			position.hdop *= 10;
+ 297:../../shields/gps-firefly/src/nmea.c **** 			position.hdop += (b - '0');
+ 298:../../shields/gps-firefly/src/nmea.c **** 		} else {
+ 299:../../shields/gps-firefly/src/nmea.c **** 			position.hdop += (b - '0') / pow(10, dec);
+ 300:../../shields/gps-firefly/src/nmea.c **** 			dec++;
+ 301:../../shields/gps-firefly/src/nmea.c **** 		}
+ 302:../../shields/gps-firefly/src/nmea.c **** 	}
+ 303:../../shields/gps-firefly/src/nmea.c **** 
+ 304:../../shields/gps-firefly/src/nmea.c **** 	return REPEAT;
+ 305:../../shields/gps-firefly/src/nmea.c **** }
+ 1492              		.loc 1 305 1 is_stmt 0 view .LVU376
+ 1493 0062 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 1494              	.LVL190:
+ 1495              	.L102:
+ 294:../../shields/gps-firefly/src/nmea.c **** 		{
+ 1496              		.loc 1 294 3 is_stmt 1 view .LVU377
+ 294:../../shields/gps-firefly/src/nmea.c **** 		{
+ 1497              		.loc 1 294 11 is_stmt 0 view .LVU378
+ 1498 0064 224B     		ldr	r3, .L108+16
+ 1499 0066 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 294:../../shields/gps-firefly/src/nmea.c **** 		{
+ 1500              		.loc 1 294 6 view .LVU379
+ 1501 0068 93B9     		cbnz	r3, .L103
+ 296:../../shields/gps-firefly/src/nmea.c **** 			position.hdop += (b - '0');
+ 1502              		.loc 1 296 4 is_stmt 1 view .LVU380
+ 296:../../shields/gps-firefly/src/nmea.c **** 			position.hdop += (b - '0');
+ 1503              		.loc 1 296 18 is_stmt 0 view .LVU381
+ 1504 006a 204B     		ldr	r3, .L108+12
+ 1505 006c D3ED097A 		vldr.32	s15, [r3, #36]
+ 1506 0070 B2EE047A 		vmov.f32	s14, #1.0e+1
+ 1507 0074 27EE877A 		vmul.f32	s14, s15, s14
+ 297:../../shields/gps-firefly/src/nmea.c **** 		} else {
+ 1508              		.loc 1 297 4 is_stmt 1 view .LVU382
+ 297:../../shields/gps-firefly/src/nmea.c **** 		} else {
+ 1509              		.loc 1 297 24 is_stmt 0 view .LVU383
+ 1510 0078 A0F13002 		sub	r2, r0, #48
+ 1511 007c 07EE902A 		vmov	s15, r2	@ int
+ 297:../../shields/gps-firefly/src/nmea.c **** 		} else {
+ 1512              		.loc 1 297 18 view .LVU384
+ 1513 0080 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 1514 0084 77EE877A 		vadd.f32	s15, s15, s14
+ 1515 0088 C3ED097A 		vstr.32	s15, [r3, #36]
+ 304:../../shields/gps-firefly/src/nmea.c **** }
+ 1516              		.loc 1 304 9 view .LVU385
+ 1517 008c 0120     		movs	r0, #1
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 38
+
+
+ 1518              	.LVL191:
+ 304:../../shields/gps-firefly/src/nmea.c **** }
+ 1519              		.loc 1 304 9 view .LVU386
+ 1520 008e E8E7     		b	.L97
+ 1521              	.LVL192:
+ 1522              	.L103:
+ 299:../../shields/gps-firefly/src/nmea.c **** 			dec++;
+ 1523              		.loc 1 299 4 is_stmt 1 view .LVU387
+ 299:../../shields/gps-firefly/src/nmea.c **** 			dec++;
+ 1524              		.loc 1 299 24 is_stmt 0 view .LVU388
+ 1525 0090 A0F13004 		sub	r4, r0, #48
+ 299:../../shields/gps-firefly/src/nmea.c **** 			dec++;
+ 1526              		.loc 1 299 33 view .LVU389
+ 1527 0094 1846     		mov	r0, r3
+ 1528              	.LVL193:
+ 299:../../shields/gps-firefly/src/nmea.c **** 			dec++;
+ 1529              		.loc 1 299 33 view .LVU390
+ 1530 0096 FFF7FEFF 		bl	__aeabi_ui2d
+ 1531              	.LVL194:
+ 1532 009a 41EC110B 		vmov	d1, r0, r1
+ 1533 009e 9FED100B 		vldr.64	d0, .L108
+ 1534 00a2 FFF7FEFF 		bl	pow
+ 1535              	.LVL195:
+ 1536 00a6 57EC106B 		vmov	r6, r7, d0
+ 299:../../shields/gps-firefly/src/nmea.c **** 			dec++;
+ 1537              		.loc 1 299 31 view .LVU391
+ 1538 00aa 2046     		mov	r0, r4
+ 1539 00ac FFF7FEFF 		bl	__aeabi_i2d
+ 1540              	.LVL196:
+ 1541 00b0 3246     		mov	r2, r6
+ 1542 00b2 3B46     		mov	r3, r7
+ 1543 00b4 FFF7FEFF 		bl	__aeabi_ddiv
+ 1544              	.LVL197:
+ 1545 00b8 0646     		mov	r6, r0
+ 1546 00ba 0F46     		mov	r7, r1
+ 299:../../shields/gps-firefly/src/nmea.c **** 			dec++;
+ 1547              		.loc 1 299 18 view .LVU392
+ 1548 00bc 0B4C     		ldr	r4, .L108+12
+ 1549 00be 606A     		ldr	r0, [r4, #36]	@ float
+ 1550 00c0 FFF7FEFF 		bl	__aeabi_f2d
+ 1551              	.LVL198:
+ 1552 00c4 3246     		mov	r2, r6
+ 1553 00c6 3B46     		mov	r3, r7
+ 1554 00c8 FFF7FEFF 		bl	__aeabi_dadd
+ 1555              	.LVL199:
+ 1556 00cc FFF7FEFF 		bl	__aeabi_d2f
+ 1557              	.LVL200:
+ 1558 00d0 6062     		str	r0, [r4, #36]	@ float
+ 300:../../shields/gps-firefly/src/nmea.c **** 		}
+ 1559              		.loc 1 300 4 is_stmt 1 view .LVU393
+ 300:../../shields/gps-firefly/src/nmea.c **** 		}
+ 1560              		.loc 1 300 7 is_stmt 0 view .LVU394
+ 1561 00d2 074A     		ldr	r2, .L108+16
+ 1562 00d4 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 1563 00d6 0133     		adds	r3, r3, #1
+ 1564 00d8 1370     		strb	r3, [r2]
+ 304:../../shields/gps-firefly/src/nmea.c **** }
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 39
+
+
+ 1565              		.loc 1 304 9 view .LVU395
+ 1566 00da 0120     		movs	r0, #1
+ 1567 00dc C1E7     		b	.L97
+ 1568              	.L109:
+ 1569 00de 00BF     		.align	3
+ 1570              	.L108:
+ 1571 00e0 00000000 		.word	0
+ 1572 00e4 00002440 		.word	1076101120
+ 1573 00e8 00000000 		.word	.LANCHOR5
+ 1574 00ec 00000000 		.word	.LANCHOR0
+ 1575 00f0 00000000 		.word	.LANCHOR6
+ 1576 00f4 00000000 		.word	.LANCHOR7
+ 1577              		.cfi_endproc
+ 1578              	.LFE13:
+ 1580              		.section	.text.nmea_get_position,"ax",%progbits
+ 1581              		.align	1
+ 1582              		.global	nmea_get_position
+ 1583              		.syntax unified
+ 1584              		.thumb
+ 1585              		.thumb_func
+ 1586              		.fpu fpv4-sp-d16
+ 1588              	nmea_get_position:
+ 1589              	.LVL201:
+ 1590              	.LFB0:
+  17:../../shields/gps-firefly/src/nmea.c **** uint8_t nmea_have_position()           { return current_position.quality > 0; }
+ 1591              		.loc 1 17 37 is_stmt 1 view -0
+ 1592              		.cfi_startproc
+ 1593              		@ args = 0, pretend = 0, frame = 0
+ 1594              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1595              		@ link register save eliminated.
+  17:../../shields/gps-firefly/src/nmea.c **** uint8_t nmea_have_position()           { return current_position.quality > 0; }
+ 1596              		.loc 1 17 37 is_stmt 0 view .LVU397
+ 1597 0000 70B4     		push	{r4, r5, r6}
+ 1598              	.LCFI6:
+ 1599              		.cfi_def_cfa_offset 12
+ 1600              		.cfi_offset 4, -12
+ 1601              		.cfi_offset 5, -8
+ 1602              		.cfi_offset 6, -4
+ 1603 0002 0646     		mov	r6, r0
+  17:../../shields/gps-firefly/src/nmea.c **** uint8_t nmea_have_position()           { return current_position.quality > 0; }
+ 1604              		.loc 1 17 39 is_stmt 1 view .LVU398
+  17:../../shields/gps-firefly/src/nmea.c **** uint8_t nmea_have_position()           { return current_position.quality > 0; }
+ 1605              		.loc 1 17 46 is_stmt 0 view .LVU399
+ 1606 0004 0446     		mov	r4, r0
+ 1607 0006 064D     		ldr	r5, .L112
+ 1608 0008 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 1609              	.LVL202:
+  17:../../shields/gps-firefly/src/nmea.c **** uint8_t nmea_have_position()           { return current_position.quality > 0; }
+ 1610              		.loc 1 17 46 view .LVU400
+ 1611 000a 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 1612              	.LVL203:
+  17:../../shields/gps-firefly/src/nmea.c **** uint8_t nmea_have_position()           { return current_position.quality > 0; }
+ 1613              		.loc 1 17 46 view .LVU401
+ 1614 000c 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 1615 000e 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 1616 0010 95E80700 		ldm	r5, {r0, r1, r2}
+ 1617 0014 84E80700 		stm	r4, {r0, r1, r2}
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 40
+
+
+  17:../../shields/gps-firefly/src/nmea.c **** uint8_t nmea_have_position()           { return current_position.quality > 0; }
+ 1618              		.loc 1 17 1 view .LVU402
+ 1619 0018 3046     		mov	r0, r6
+ 1620 001a 70BC     		pop	{r4, r5, r6}
+ 1621              	.LCFI7:
+ 1622              		.cfi_restore 6
+ 1623              		.cfi_restore 5
+ 1624              		.cfi_restore 4
+ 1625              		.cfi_def_cfa_offset 0
+ 1626              	.LVL204:
+  17:../../shields/gps-firefly/src/nmea.c **** uint8_t nmea_have_position()           { return current_position.quality > 0; }
+ 1627              		.loc 1 17 1 view .LVU403
+ 1628 001c 7047     		bx	lr
+ 1629              	.L113:
+ 1630 001e 00BF     		.align	2
+ 1631              	.L112:
+ 1632 0020 00000000 		.word	.LANCHOR7
+ 1633              		.cfi_endproc
+ 1634              	.LFE0:
+ 1636              		.section	.text.nmea_have_position,"ax",%progbits
+ 1637              		.align	1
+ 1638              		.global	nmea_have_position
+ 1639              		.syntax unified
+ 1640              		.thumb
+ 1641              		.thumb_func
+ 1642              		.fpu fpv4-sp-d16
+ 1644              	nmea_have_position:
+ 1645              	.LFB1:
+  18:../../shields/gps-firefly/src/nmea.c **** 
+ 1646              		.loc 1 18 40 is_stmt 1 view -0
+ 1647              		.cfi_startproc
+ 1648              		@ args = 0, pretend = 0, frame = 0
+ 1649              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1650              		@ link register save eliminated.
+  18:../../shields/gps-firefly/src/nmea.c **** 
+ 1651              		.loc 1 18 42 view .LVU405
+  18:../../shields/gps-firefly/src/nmea.c **** 
+ 1652              		.loc 1 18 65 is_stmt 0 view .LVU406
+ 1653 0000 034B     		ldr	r3, .L115
+ 1654 0002 93F82000 		ldrb	r0, [r3, #32]	@ zero_extendqisi2
+  18:../../shields/gps-firefly/src/nmea.c **** 
+ 1655              		.loc 1 18 1 view .LVU407
+ 1656 0006 0030     		adds	r0, r0, #0
+ 1657 0008 18BF     		it	ne
+ 1658 000a 0120     		movne	r0, #1
+ 1659 000c 7047     		bx	lr
+ 1660              	.L116:
+ 1661 000e 00BF     		.align	2
+ 1662              	.L115:
+ 1663 0010 00000000 		.word	.LANCHOR7
+ 1664              		.cfi_endproc
+ 1665              	.LFE1:
+ 1667              		.section	.text._reset_position,"ax",%progbits
+ 1668              		.align	1
+ 1669              		.global	_reset_position
+ 1670              		.syntax unified
+ 1671              		.thumb
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 41
+
+
+ 1672              		.thumb_func
+ 1673              		.fpu fpv4-sp-d16
+ 1675              	_reset_position:
+ 1676              	.LFB2:
+  20:../../shields/gps-firefly/src/nmea.c ****   position.time.hour     = 0;
+ 1677              		.loc 1 20 28 is_stmt 1 view -0
+ 1678              		.cfi_startproc
+ 1679              		@ args = 0, pretend = 0, frame = 0
+ 1680              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1681              		@ link register save eliminated.
+  21:../../shields/gps-firefly/src/nmea.c ****   position.time.min      = 0;
+ 1682              		.loc 1 21 3 view .LVU409
+  21:../../shields/gps-firefly/src/nmea.c ****   position.time.min      = 0;
+ 1683              		.loc 1 21 26 is_stmt 0 view .LVU410
+ 1684 0000 074B     		ldr	r3, .L118
+ 1685 0002 0022     		movs	r2, #0
+ 1686 0004 1A70     		strb	r2, [r3]
+  22:../../shields/gps-firefly/src/nmea.c ****   position.time.sec      = 0;
+ 1687              		.loc 1 22 3 is_stmt 1 view .LVU411
+  22:../../shields/gps-firefly/src/nmea.c ****   position.time.sec      = 0;
+ 1688              		.loc 1 22 26 is_stmt 0 view .LVU412
+ 1689 0006 5A70     		strb	r2, [r3, #1]
+  23:../../shields/gps-firefly/src/nmea.c ****   position.latitude.deg  = 0;
+ 1690              		.loc 1 23 3 is_stmt 1 view .LVU413
+  23:../../shields/gps-firefly/src/nmea.c ****   position.latitude.deg  = 0;
+ 1691              		.loc 1 23 26 is_stmt 0 view .LVU414
+ 1692 0008 0021     		movs	r1, #0
+ 1693 000a 5960     		str	r1, [r3, #4]	@ float
+  24:../../shields/gps-firefly/src/nmea.c ****   position.latitude.min  = 0;
+ 1694              		.loc 1 24 3 is_stmt 1 view .LVU415
+  24:../../shields/gps-firefly/src/nmea.c ****   position.latitude.min  = 0;
+ 1695              		.loc 1 24 26 is_stmt 0 view .LVU416
+ 1696 000c 1A72     		strb	r2, [r3, #8]
+  25:../../shields/gps-firefly/src/nmea.c ****   position.latitude.ns   = '_';
+ 1697              		.loc 1 25 3 is_stmt 1 view .LVU417
+  25:../../shields/gps-firefly/src/nmea.c ****   position.latitude.ns   = '_';
+ 1698              		.loc 1 25 26 is_stmt 0 view .LVU418
+ 1699 000e D960     		str	r1, [r3, #12]	@ float
+  26:../../shields/gps-firefly/src/nmea.c ****   position.longitude.deg = 0;
+ 1700              		.loc 1 26 3 is_stmt 1 view .LVU419
+  26:../../shields/gps-firefly/src/nmea.c ****   position.longitude.deg = 0;
+ 1701              		.loc 1 26 26 is_stmt 0 view .LVU420
+ 1702 0010 5F20     		movs	r0, #95
+ 1703 0012 1874     		strb	r0, [r3, #16]
+  27:../../shields/gps-firefly/src/nmea.c ****   position.longitude.min = 0;
+ 1704              		.loc 1 27 3 is_stmt 1 view .LVU421
+  27:../../shields/gps-firefly/src/nmea.c ****   position.longitude.min = 0;
+ 1705              		.loc 1 27 26 is_stmt 0 view .LVU422
+ 1706 0014 1A75     		strb	r2, [r3, #20]
+  28:../../shields/gps-firefly/src/nmea.c ****   position.longitude.ew  = '_';
+ 1707              		.loc 1 28 3 is_stmt 1 view .LVU423
+  28:../../shields/gps-firefly/src/nmea.c ****   position.longitude.ew  = '_';
+ 1708              		.loc 1 28 26 is_stmt 0 view .LVU424
+ 1709 0016 9961     		str	r1, [r3, #24]	@ float
+  29:../../shields/gps-firefly/src/nmea.c ****   position.quality=0;
+ 1710              		.loc 1 29 3 is_stmt 1 view .LVU425
+  29:../../shields/gps-firefly/src/nmea.c ****   position.quality=0;
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 42
+
+
+ 1711              		.loc 1 29 26 is_stmt 0 view .LVU426
+ 1712 0018 1877     		strb	r0, [r3, #28]
+  30:../../shields/gps-firefly/src/nmea.c **** }
+ 1713              		.loc 1 30 3 is_stmt 1 view .LVU427
+  30:../../shields/gps-firefly/src/nmea.c **** }
+ 1714              		.loc 1 30 19 is_stmt 0 view .LVU428
+ 1715 001a 83F82020 		strb	r2, [r3, #32]
+  31:../../shields/gps-firefly/src/nmea.c **** void _reset_position2(void) {
+ 1716              		.loc 1 31 1 view .LVU429
+ 1717 001e 7047     		bx	lr
+ 1718              	.L119:
+ 1719              		.align	2
+ 1720              	.L118:
+ 1721 0020 00000000 		.word	.LANCHOR0
+ 1722              		.cfi_endproc
+ 1723              	.LFE2:
+ 1725              		.section	.text.parse_gngga,"ax",%progbits
+ 1726              		.align	1
+ 1727              		.global	parse_gngga
+ 1728              		.syntax unified
+ 1729              		.thumb
+ 1730              		.thumb_func
+ 1731              		.fpu fpv4-sp-d16
+ 1733              	parse_gngga:
+ 1734              	.LVL205:
+ 1735              	.LFB5:
+  57:../../shields/gps-firefly/src/nmea.c ****   static uint8_t pos = 0;
+ 1736              		.loc 1 57 28 is_stmt 1 view -0
+ 1737              		.cfi_startproc
+ 1738              		@ args = 0, pretend = 0, frame = 8
+ 1739              		@ frame_needed = 0, uses_anonymous_args = 0
+  57:../../shields/gps-firefly/src/nmea.c ****   static uint8_t pos = 0;
+ 1740              		.loc 1 57 28 is_stmt 0 view .LVU431
+ 1741 0000 00B5     		push	{lr}
+ 1742              	.LCFI8:
+ 1743              		.cfi_def_cfa_offset 4
+ 1744              		.cfi_offset 14, -4
+ 1745 0002 83B0     		sub	sp, sp, #12
+ 1746              	.LCFI9:
+ 1747              		.cfi_def_cfa_offset 16
+ 1748 0004 0246     		mov	r2, r0
+  58:../../shields/gps-firefly/src/nmea.c ****   const uint8_t string[] = "GNGGA,";
+ 1749              		.loc 1 58 3 is_stmt 1 view .LVU432
+  59:../../shields/gps-firefly/src/nmea.c **** 
+ 1750              		.loc 1 59 3 view .LVU433
+  59:../../shields/gps-firefly/src/nmea.c **** 
+ 1751              		.loc 1 59 17 is_stmt 0 view .LVU434
+ 1752 0006 124B     		ldr	r3, .L127
+ 1753 0008 93E80300 		ldm	r3, {r0, r1}
+ 1754              	.LVL206:
+  59:../../shields/gps-firefly/src/nmea.c **** 
+ 1755              		.loc 1 59 17 view .LVU435
+ 1756 000c 0090     		str	r0, [sp]
+ 1757 000e ADF80410 		strh	r1, [sp, #4]	@ movhi
+ 1758 0012 090C     		lsrs	r1, r1, #16
+ 1759 0014 8DF80610 		strb	r1, [sp, #6]
+  62:../../shields/gps-firefly/src/nmea.c ****     if(pos == 5) {
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 43
+
+
+ 1760              		.loc 1 62 3 is_stmt 1 view .LVU436
+  62:../../shields/gps-firefly/src/nmea.c ****     if(pos == 5) {
+ 1761              		.loc 1 62 12 is_stmt 0 view .LVU437
+ 1762 0018 0E4B     		ldr	r3, .L127+4
+ 1763 001a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1764 001c 02A9     		add	r1, sp, #8
+ 1765 001e 1944     		add	r1, r1, r3
+ 1766 0020 11F8081C 		ldrb	r1, [r1, #-8]	@ zero_extendqisi2
+  62:../../shields/gps-firefly/src/nmea.c ****     if(pos == 5) {
+ 1767              		.loc 1 62 5 view .LVU438
+ 1768 0024 9142     		cmp	r1, r2
+ 1769 0026 05D0     		beq	.L125
+  72:../../shields/gps-firefly/src/nmea.c ****   return FAIL;
+ 1770              		.loc 1 72 3 is_stmt 1 view .LVU439
+  72:../../shields/gps-firefly/src/nmea.c ****   return FAIL;
+ 1771              		.loc 1 72 7 is_stmt 0 view .LVU440
+ 1772 0028 0020     		movs	r0, #0
+ 1773 002a 0A4B     		ldr	r3, .L127+4
+ 1774 002c 1870     		strb	r0, [r3]
+  73:../../shields/gps-firefly/src/nmea.c **** }
+ 1775              		.loc 1 73 3 is_stmt 1 view .LVU441
+ 1776              	.L120:
+  74:../../shields/gps-firefly/src/nmea.c **** 
+ 1777              		.loc 1 74 1 is_stmt 0 view .LVU442
+ 1778 002e 03B0     		add	sp, sp, #12
+ 1779              	.LCFI10:
+ 1780              		.cfi_remember_state
+ 1781              		.cfi_def_cfa_offset 4
+ 1782              		@ sp needed
+ 1783 0030 5DF804FB 		ldr	pc, [sp], #4
+ 1784              	.L125:
+ 1785              	.LCFI11:
+ 1786              		.cfi_restore_state
+  63:../../shields/gps-firefly/src/nmea.c ****       pos = 0;
+ 1787              		.loc 1 63 5 is_stmt 1 view .LVU443
+  63:../../shields/gps-firefly/src/nmea.c ****       pos = 0;
+ 1788              		.loc 1 63 7 is_stmt 0 view .LVU444
+ 1789 0034 052B     		cmp	r3, #5
+ 1790 0036 04D0     		beq	.L126
+  68:../../shields/gps-firefly/src/nmea.c ****       return REPEAT;
+ 1791              		.loc 1 68 7 is_stmt 1 view .LVU445
+  68:../../shields/gps-firefly/src/nmea.c ****       return REPEAT;
+ 1792              		.loc 1 68 10 is_stmt 0 view .LVU446
+ 1793 0038 0133     		adds	r3, r3, #1
+ 1794 003a 064A     		ldr	r2, .L127+4
+ 1795 003c 1370     		strb	r3, [r2]
+  69:../../shields/gps-firefly/src/nmea.c ****     }
+ 1796              		.loc 1 69 7 is_stmt 1 view .LVU447
+  69:../../shields/gps-firefly/src/nmea.c ****     }
+ 1797              		.loc 1 69 14 is_stmt 0 view .LVU448
+ 1798 003e 0120     		movs	r0, #1
+ 1799 0040 F5E7     		b	.L120
+ 1800              	.L126:
+  64:../../shields/gps-firefly/src/nmea.c ****       _reset_position();
+ 1801              		.loc 1 64 7 is_stmt 1 view .LVU449
+  64:../../shields/gps-firefly/src/nmea.c ****       _reset_position();
+ 1802              		.loc 1 64 11 is_stmt 0 view .LVU450
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 44
+
+
+ 1803 0042 044B     		ldr	r3, .L127+4
+ 1804 0044 0022     		movs	r2, #0
+ 1805 0046 1A70     		strb	r2, [r3]
+  65:../../shields/gps-firefly/src/nmea.c ****       return OK;
+ 1806              		.loc 1 65 7 is_stmt 1 view .LVU451
+ 1807 0048 FFF7FEFF 		bl	_reset_position
+ 1808              	.LVL207:
+  66:../../shields/gps-firefly/src/nmea.c ****     } else {
+ 1809              		.loc 1 66 7 view .LVU452
+  66:../../shields/gps-firefly/src/nmea.c ****     } else {
+ 1810              		.loc 1 66 14 is_stmt 0 view .LVU453
+ 1811 004c 0220     		movs	r0, #2
+ 1812 004e EEE7     		b	.L120
+ 1813              	.L128:
+ 1814              		.align	2
+ 1815              	.L127:
+ 1816 0050 00000000 		.word	.LC0
+ 1817 0054 00000000 		.word	.LANCHOR8
+ 1818              		.cfi_endproc
+ 1819              	.LFE5:
+ 1821              		.section	.text._reset_position2,"ax",%progbits
+ 1822              		.align	1
+ 1823              		.global	_reset_position2
+ 1824              		.syntax unified
+ 1825              		.thumb
+ 1826              		.thumb_func
+ 1827              		.fpu fpv4-sp-d16
+ 1829              	_reset_position2:
+ 1830              	.LFB3:
+  32:../../shields/gps-firefly/src/nmea.c **** 	current_position.time.hour     = 0;
+ 1831              		.loc 1 32 29 is_stmt 1 view -0
+ 1832              		.cfi_startproc
+ 1833              		@ args = 0, pretend = 0, frame = 0
+ 1834              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1835              		@ link register save eliminated.
+  33:../../shields/gps-firefly/src/nmea.c **** 	current_position.time.min      = 0;
+ 1836              		.loc 1 33 2 view .LVU455
+  33:../../shields/gps-firefly/src/nmea.c **** 	current_position.time.min      = 0;
+ 1837              		.loc 1 33 33 is_stmt 0 view .LVU456
+ 1838 0000 074B     		ldr	r3, .L130
+ 1839 0002 0022     		movs	r2, #0
+ 1840 0004 1A70     		strb	r2, [r3]
+  34:../../shields/gps-firefly/src/nmea.c **** 	current_position.time.sec      = 0;
+ 1841              		.loc 1 34 2 is_stmt 1 view .LVU457
+  34:../../shields/gps-firefly/src/nmea.c **** 	current_position.time.sec      = 0;
+ 1842              		.loc 1 34 33 is_stmt 0 view .LVU458
+ 1843 0006 5A70     		strb	r2, [r3, #1]
+  35:../../shields/gps-firefly/src/nmea.c **** 	current_position.latitude.deg  = 0;
+ 1844              		.loc 1 35 2 is_stmt 1 view .LVU459
+  35:../../shields/gps-firefly/src/nmea.c **** 	current_position.latitude.deg  = 0;
+ 1845              		.loc 1 35 33 is_stmt 0 view .LVU460
+ 1846 0008 0021     		movs	r1, #0
+ 1847 000a 5960     		str	r1, [r3, #4]	@ float
+  36:../../shields/gps-firefly/src/nmea.c **** 	current_position.latitude.min  = 0;
+ 1848              		.loc 1 36 2 is_stmt 1 view .LVU461
+  36:../../shields/gps-firefly/src/nmea.c **** 	current_position.latitude.min  = 0;
+ 1849              		.loc 1 36 33 is_stmt 0 view .LVU462
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 45
+
+
+ 1850 000c 1A72     		strb	r2, [r3, #8]
+  37:../../shields/gps-firefly/src/nmea.c **** 	current_position.latitude.ns   = '_';
+ 1851              		.loc 1 37 2 is_stmt 1 view .LVU463
+  37:../../shields/gps-firefly/src/nmea.c **** 	current_position.latitude.ns   = '_';
+ 1852              		.loc 1 37 33 is_stmt 0 view .LVU464
+ 1853 000e D960     		str	r1, [r3, #12]	@ float
+  38:../../shields/gps-firefly/src/nmea.c **** 	current_position.longitude.deg = 0;
+ 1854              		.loc 1 38 2 is_stmt 1 view .LVU465
+  38:../../shields/gps-firefly/src/nmea.c **** 	current_position.longitude.deg = 0;
+ 1855              		.loc 1 38 33 is_stmt 0 view .LVU466
+ 1856 0010 5F20     		movs	r0, #95
+ 1857 0012 1874     		strb	r0, [r3, #16]
+  39:../../shields/gps-firefly/src/nmea.c ****   current_position.longitude.min = 0;
+ 1858              		.loc 1 39 2 is_stmt 1 view .LVU467
+  39:../../shields/gps-firefly/src/nmea.c ****   current_position.longitude.min = 0;
+ 1859              		.loc 1 39 33 is_stmt 0 view .LVU468
+ 1860 0014 1A75     		strb	r2, [r3, #20]
+  40:../../shields/gps-firefly/src/nmea.c ****   current_position.longitude.ew  = '_';
+ 1861              		.loc 1 40 3 is_stmt 1 view .LVU469
+  40:../../shields/gps-firefly/src/nmea.c ****   current_position.longitude.ew  = '_';
+ 1862              		.loc 1 40 34 is_stmt 0 view .LVU470
+ 1863 0016 9961     		str	r1, [r3, #24]	@ float
+  41:../../shields/gps-firefly/src/nmea.c ****   current_position.quality=0;
+ 1864              		.loc 1 41 3 is_stmt 1 view .LVU471
+  41:../../shields/gps-firefly/src/nmea.c ****   current_position.quality=0;
+ 1865              		.loc 1 41 34 is_stmt 0 view .LVU472
+ 1866 0018 1877     		strb	r0, [r3, #28]
+  42:../../shields/gps-firefly/src/nmea.c **** }
+ 1867              		.loc 1 42 3 is_stmt 1 view .LVU473
+  42:../../shields/gps-firefly/src/nmea.c **** }
+ 1868              		.loc 1 42 27 is_stmt 0 view .LVU474
+ 1869 001a 83F82020 		strb	r2, [r3, #32]
+  43:../../shields/gps-firefly/src/nmea.c **** 
+ 1870              		.loc 1 43 1 view .LVU475
+ 1871 001e 7047     		bx	lr
+ 1872              	.L131:
+ 1873              		.align	2
+ 1874              	.L130:
+ 1875 0020 00000000 		.word	.LANCHOR7
+ 1876              		.cfi_endproc
+ 1877              	.LFE3:
+ 1879              		.section	.text.nmea_parse,"ax",%progbits
+ 1880              		.align	1
+ 1881              		.global	nmea_parse
+ 1882              		.syntax unified
+ 1883              		.thumb
+ 1884              		.thumb_func
+ 1885              		.fpu fpv4-sp-d16
+ 1887              	nmea_parse:
+ 1888              	.LVL208:
+ 1889              	.LFB14:
+ 306:../../shields/gps-firefly/src/nmea.c **** 
+ 307:../../shields/gps-firefly/src/nmea.c **** // function pointer for state_handlers
+ 308:../../shields/gps-firefly/src/nmea.c **** typedef int (* state_handler)(uint8_t);
+ 309:../../shields/gps-firefly/src/nmea.c **** 
+ 310:../../shields/gps-firefly/src/nmea.c **** enum state {
+ 311:../../shields/gps-firefly/src/nmea.c ****   start_state,
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 46
+
+
+ 312:../../shields/gps-firefly/src/nmea.c ****   gngga_state,
+ 313:../../shields/gps-firefly/src/nmea.c ****   time_state,
+ 314:../../shields/gps-firefly/src/nmea.c ****   latitude_state,
+ 315:../../shields/gps-firefly/src/nmea.c ****   ns_ind_state,
+ 316:../../shields/gps-firefly/src/nmea.c ****   longitude_state,
+ 317:../../shields/gps-firefly/src/nmea.c ****   ew_ind_state,
+ 318:../../shields/gps-firefly/src/nmea.c ****   quality_state,
+ 319:../../shields/gps-firefly/src/nmea.c ****   nr_sat_state,
+ 320:../../shields/gps-firefly/src/nmea.c ****   hdop_state
+ 321:../../shields/gps-firefly/src/nmea.c **** };
+ 322:../../shields/gps-firefly/src/nmea.c **** 
+ 323:../../shields/gps-firefly/src/nmea.c **** struct transition {
+ 324:../../shields/gps-firefly/src/nmea.c ****   state_handler handler;
+ 325:../../shields/gps-firefly/src/nmea.c ****   int result[3];
+ 326:../../shields/gps-firefly/src/nmea.c **** };
+ 327:../../shields/gps-firefly/src/nmea.c **** 
+ 328:../../shields/gps-firefly/src/nmea.c **** static struct transition transitions[] = {
+ 329:../../shields/gps-firefly/src/nmea.c ****   /* in state              what to look for   FAIL         REPEAT            OK               */
+ 330:../../shields/gps-firefly/src/nmea.c ****   /* -------------------   ----------------   -----------  ----------------  ---------------  */
+ 331:../../shields/gps-firefly/src/nmea.c ****   /* start_state */      { find_start,      { start_state, start_state,      gngga_state     } },
+ 332:../../shields/gps-firefly/src/nmea.c ****   /* gngga_state */      { parse_gngga,     { start_state, gngga_state,      time_state      } },
+ 333:../../shields/gps-firefly/src/nmea.c ****   /* time_state */       { parse_time,      { start_state, time_state,       latitude_state  } },
+ 334:../../shields/gps-firefly/src/nmea.c ****   /* latitude_state */   { parse_latitude,  { start_state, latitude_state,   ns_ind_state    } },
+ 335:../../shields/gps-firefly/src/nmea.c ****   /* ns_ind_state */     { parse_ns_ind,    { start_state, ns_ind_state,     longitude_state } },
+ 336:../../shields/gps-firefly/src/nmea.c ****   /* longitude_state */  { parse_longitude, { start_state, longitude_state,  ew_ind_state    } },
+ 337:../../shields/gps-firefly/src/nmea.c ****   /* ew_ind_state */     { parse_ew_ind,    { start_state, ew_ind_state,     quality_state   } },
+ 338:../../shields/gps-firefly/src/nmea.c ****   /* quality_state */    { parse_quality,   { start_state, quality_state,    nr_sat_state    } },
+ 339:../../shields/gps-firefly/src/nmea.c ****   /* nr_sat_state */     { parse_nr_sats,   { start_state, nr_sat_state,     hdop_state      } },
+ 340:../../shields/gps-firefly/src/nmea.c ****   /* hdop_state */       { parse_hdop,      { start_state, hdop_state,       start_state     } }
+ 341:../../shields/gps-firefly/src/nmea.c **** };
+ 342:../../shields/gps-firefly/src/nmea.c **** 
+ 343:../../shields/gps-firefly/src/nmea.c **** static int current_state = start_state;
+ 344:../../shields/gps-firefly/src/nmea.c ****   
+ 345:../../shields/gps-firefly/src/nmea.c **** void nmea_parse(uint8_t b) {
+ 1890              		.loc 1 345 28 is_stmt 1 view -0
+ 1891              		.cfi_startproc
+ 1892              		@ args = 0, pretend = 0, frame = 0
+ 1893              		@ frame_needed = 0, uses_anonymous_args = 0
+ 346:../../shields/gps-firefly/src/nmea.c ****   if(b == '\n' || b == '\r') {   // IGNORES
+ 1894              		.loc 1 346 3 view .LVU477
+ 1895              		.loc 1 346 5 is_stmt 0 view .LVU478
+ 1896 0000 0A28     		cmp	r0, #10
+ 1897 0002 10D0     		beq	.L135
+ 1898              		.loc 1 346 16 discriminator 1 view .LVU479
+ 1899 0004 0D28     		cmp	r0, #13
+ 1900 0006 0ED0     		beq	.L135
+ 345:../../shields/gps-firefly/src/nmea.c ****   if(b == '\n' || b == '\r') {   // IGNORES
+ 1901              		.loc 1 345 28 view .LVU480
+ 1902 0008 38B5     		push	{r3, r4, r5, lr}
+ 1903              	.LCFI12:
+ 1904              		.cfi_def_cfa_offset 16
+ 1905              		.cfi_offset 3, -16
+ 1906              		.cfi_offset 4, -12
+ 1907              		.cfi_offset 5, -8
+ 1908              		.cfi_offset 14, -4
+ 347:../../shields/gps-firefly/src/nmea.c ****     return;
+ 348:../../shields/gps-firefly/src/nmea.c ****   }
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 47
+
+
+ 349:../../shields/gps-firefly/src/nmea.c ****   int outcome   = transitions[current_state].handler(b);
+ 1909              		.loc 1 349 3 is_stmt 1 view .LVU481
+ 1910              		.loc 1 349 45 is_stmt 0 view .LVU482
+ 1911 000a 074C     		ldr	r4, .L138
+ 1912 000c 074D     		ldr	r5, .L138+4
+ 1913 000e 2B68     		ldr	r3, [r5]
+ 1914 0010 1B01     		lsls	r3, r3, #4
+ 1915 0012 E358     		ldr	r3, [r4, r3]
+ 1916              		.loc 1 349 19 view .LVU483
+ 1917 0014 9847     		blx	r3
+ 1918              	.LVL209:
+ 350:../../shields/gps-firefly/src/nmea.c ****   current_state = transitions[current_state].result[outcome];
+ 1919              		.loc 1 350 3 is_stmt 1 view .LVU484
+ 1920              		.loc 1 350 52 is_stmt 0 view .LVU485
+ 1921 0016 2B68     		ldr	r3, [r5]
+ 1922 0018 00EB8300 		add	r0, r0, r3, lsl #2
+ 1923              	.LVL210:
+ 1924              		.loc 1 350 52 view .LVU486
+ 1925 001c 04EB8004 		add	r4, r4, r0, lsl #2
+ 1926 0020 6368     		ldr	r3, [r4, #4]
+ 1927              		.loc 1 350 17 view .LVU487
+ 1928 0022 2B60     		str	r3, [r5]
+ 351:../../shields/gps-firefly/src/nmea.c **** }
+ 1929              		.loc 1 351 1 view .LVU488
+ 1930 0024 38BD     		pop	{r3, r4, r5, pc}
+ 1931              	.LVL211:
+ 1932              	.L135:
+ 1933              	.LCFI13:
+ 1934              		.cfi_def_cfa_offset 0
+ 1935              		.cfi_restore 3
+ 1936              		.cfi_restore 4
+ 1937              		.cfi_restore 5
+ 1938              		.cfi_restore 14
+ 1939              		.loc 1 351 1 view .LVU489
+ 1940 0026 7047     		bx	lr
+ 1941              	.L139:
+ 1942              		.align	2
+ 1943              	.L138:
+ 1944 0028 00000000 		.word	.LANCHOR9
+ 1945 002c 00000000 		.word	.LANCHOR10
+ 1946              		.cfi_endproc
+ 1947              	.LFE14:
+ 1949              		.section	.bss.current_position,"aw",%nobits
+ 1950              		.align	2
+ 1951              		.set	.LANCHOR7,. + 0
+ 1954              	current_position:
+ 1955 0000 00000000 		.space	44
+ 1955      00000000 
+ 1955      00000000 
+ 1955      00000000 
+ 1955      00000000 
+ 1956              		.section	.bss.current_state,"aw",%nobits
+ 1957              		.align	2
+ 1958              		.set	.LANCHOR10,. + 0
+ 1961              	current_state:
+ 1962 0000 00000000 		.space	4
+ 1963              		.section	.bss.dec.6782,"aw",%nobits
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 48
+
+
+ 1964              		.set	.LANCHOR6,. + 0
+ 1967              	dec.6782:
+ 1968 0000 00       		.space	1
+ 1969              		.section	.bss.pos.6712,"aw",%nobits
+ 1970              		.set	.LANCHOR8,. + 0
+ 1973              	pos.6712:
+ 1974 0000 00       		.space	1
+ 1975              		.section	.bss.pos.6717,"aw",%nobits
+ 1976              		.set	.LANCHOR2,. + 0
+ 1979              	pos.6717:
+ 1980 0000 00       		.space	1
+ 1981              		.section	.bss.pos.6733,"aw",%nobits
+ 1982              		.set	.LANCHOR3,. + 0
+ 1985              	pos.6733:
+ 1986 0000 00       		.space	1
+ 1987              		.section	.bss.pos.6753,"aw",%nobits
+ 1988              		.set	.LANCHOR4,. + 0
+ 1991              	pos.6753:
+ 1992 0000 00       		.space	1
+ 1993              		.section	.bss.pos.6777,"aw",%nobits
+ 1994              		.set	.LANCHOR1,. + 0
+ 1997              	pos.6777:
+ 1998 0000 00       		.space	1
+ 1999              		.section	.bss.pos.6781,"aw",%nobits
+ 2000              		.set	.LANCHOR5,. + 0
+ 2003              	pos.6781:
+ 2004 0000 00       		.space	1
+ 2005              		.section	.bss.position,"aw",%nobits
+ 2006              		.align	2
+ 2007              		.set	.LANCHOR0,. + 0
+ 2010              	position:
+ 2011 0000 00000000 		.space	44
+ 2011      00000000 
+ 2011      00000000 
+ 2011      00000000 
+ 2011      00000000 
+ 2012              		.section	.rodata.parse_gngga.str1.4,"aMS",%progbits,1
+ 2013              		.align	2
+ 2014              	.LC0:
+ 2015 0000 474E4747 		.ascii	"GNGGA,\000"
+ 2015      412C00
+ 2016              		.section	.rodata.transitions,"a"
+ 2017              		.align	2
+ 2018              		.set	.LANCHOR9,. + 0
+ 2021              	transitions:
+ 2022 0000 00000000 		.word	find_start
+ 2023 0004 00000000 		.word	0
+ 2024 0008 00000000 		.word	0
+ 2025 000c 01000000 		.word	1
+ 2026 0010 00000000 		.word	parse_gngga
+ 2027 0014 00000000 		.word	0
+ 2028 0018 01000000 		.word	1
+ 2029 001c 02000000 		.word	2
+ 2030 0020 00000000 		.word	parse_time
+ 2031 0024 00000000 		.word	0
+ 2032 0028 02000000 		.word	2
+ 2033 002c 03000000 		.word	3
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 49
+
+
+ 2034 0030 00000000 		.word	parse_latitude
+ 2035 0034 00000000 		.word	0
+ 2036 0038 03000000 		.word	3
+ 2037 003c 04000000 		.word	4
+ 2038 0040 00000000 		.word	parse_ns_ind
+ 2039 0044 00000000 		.word	0
+ 2040 0048 04000000 		.word	4
+ 2041 004c 05000000 		.word	5
+ 2042 0050 00000000 		.word	parse_longitude
+ 2043 0054 00000000 		.word	0
+ 2044 0058 05000000 		.word	5
+ 2045 005c 06000000 		.word	6
+ 2046 0060 00000000 		.word	parse_ew_ind
+ 2047 0064 00000000 		.word	0
+ 2048 0068 06000000 		.word	6
+ 2049 006c 07000000 		.word	7
+ 2050 0070 00000000 		.word	parse_quality
+ 2051 0074 00000000 		.word	0
+ 2052 0078 07000000 		.word	7
+ 2053 007c 08000000 		.word	8
+ 2054 0080 00000000 		.word	parse_nr_sats
+ 2055 0084 00000000 		.word	0
+ 2056 0088 08000000 		.word	8
+ 2057 008c 09000000 		.word	9
+ 2058 0090 00000000 		.word	parse_hdop
+ 2059 0094 00000000 		.word	0
+ 2060 0098 09000000 		.word	9
+ 2061 009c 00000000 		.word	0
+ 2062              		.text
+ 2063              	.Letext0:
+ 2064              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\lib\\gcc\\arm-none-eab
+ 2065              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 2066              		.file 4 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 2067              		.file 5 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 2068              		.file 6 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 2069              		.file 7 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 2070              		.file 8 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 2071              		.file 9 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 2072              		.file 10 "../../shields/gps-firefly/inc/nmea.h"
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 50
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 nmea.c
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:18     .text.find_start:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:26     .text.find_start:00000000 find_start
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:54     .text.parse_ns_ind:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:61     .text.parse_ns_ind:00000000 parse_ns_ind
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:108    .text.parse_ns_ind:0000001c $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:113    .text.parse_ew_ind:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:120    .text.parse_ew_ind:00000000 parse_ew_ind
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:167    .text.parse_ew_ind:0000001c $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:172    .text.parse_quality:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:179    .text.parse_quality:00000000 parse_quality
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:229    .text.parse_quality:00000020 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:234    .text.parse_nr_sats:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:241    .text.parse_nr_sats:00000000 parse_nr_sats
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:344    .text.parse_nr_sats:0000005c $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:357    .text.parse_time:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:364    .text.parse_time:00000000 parse_time
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:387    .text.parse_time:0000000e $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:672    .text.parse_time:00000198 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:680    .text.parse_latitude:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:687    .text.parse_latitude:00000000 parse_latitude
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:710    .text.parse_latitude:00000010 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:722    .text.parse_latitude:0000001c $t
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1017   .text.parse_latitude:000001a8 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1025   .text.parse_longitude:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1032   .text.parse_longitude:00000000 parse_longitude
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1057   .text.parse_longitude:0000000e $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1371   .text.parse_longitude:000001b0 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1380   .text.parse_hdop:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1387   .text.parse_hdop:00000000 parse_hdop
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1571   .text.parse_hdop:000000e0 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1581   .text.nmea_get_position:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1588   .text.nmea_get_position:00000000 nmea_get_position
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1632   .text.nmea_get_position:00000020 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1637   .text.nmea_have_position:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1644   .text.nmea_have_position:00000000 nmea_have_position
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1663   .text.nmea_have_position:00000010 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1668   .text._reset_position:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1675   .text._reset_position:00000000 _reset_position
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1721   .text._reset_position:00000020 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1726   .text.parse_gngga:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1733   .text.parse_gngga:00000000 parse_gngga
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1816   .text.parse_gngga:00000050 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1822   .text._reset_position2:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1829   .text._reset_position2:00000000 _reset_position2
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1875   .text._reset_position2:00000020 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1880   .text.nmea_parse:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1887   .text.nmea_parse:00000000 nmea_parse
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1944   .text.nmea_parse:00000028 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1950   .bss.current_position:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1954   .bss.current_position:00000000 current_position
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1957   .bss.current_state:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1961   .bss.current_state:00000000 current_state
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1967   .bss.dec.6782:00000000 dec.6782
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1968   .bss.dec.6782:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1973   .bss.pos.6712:00000000 pos.6712
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s 			page 51
+
+
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1974   .bss.pos.6712:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1979   .bss.pos.6717:00000000 pos.6717
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1980   .bss.pos.6717:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1985   .bss.pos.6733:00000000 pos.6733
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1986   .bss.pos.6733:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1991   .bss.pos.6753:00000000 pos.6753
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1992   .bss.pos.6753:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1997   .bss.pos.6777:00000000 pos.6777
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1998   .bss.pos.6777:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:2003   .bss.pos.6781:00000000 pos.6781
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:2004   .bss.pos.6781:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:2006   .bss.position:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:2010   .bss.position:00000000 position
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:2013   .rodata.parse_gngga.str1.4:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:2017   .rodata.transitions:00000000 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:2021   .rodata.transitions:00000000 transitions
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:398    .text.parse_time:00000019 $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:398    .text.parse_time:0000001a $t
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1070   .text.parse_longitude:0000001b $d
+C:\Users\yvesk\AppData\Local\Temp\ccGlrqRQ.s:1070   .text.parse_longitude:0000001c $t
+
+UNDEFINED SYMBOLS
+__aeabi_i2d
+__aeabi_dmul
+__aeabi_dadd
+__aeabi_d2uiz
+__aeabi_f2d
+__aeabi_d2f
+__aeabi_ddiv
+pow
+__aeabi_ui2d

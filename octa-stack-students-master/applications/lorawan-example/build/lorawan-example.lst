@@ -1,0 +1,1418 @@
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"lorawan-example.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.LoRaWAN_send,"ax",%progbits
+  18              		.align	1
+  19              		.global	LoRaWAN_send
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	LoRaWAN_send:
+  27              	.LVL0:
+  28              	.LFB130:
+  29              		.file 1 "../../applications/lorawan-example/src/lorawan-example.c"
+   1:../../applications/lorawan-example/src/lorawan-example.c **** /* USER CODE BEGIN Header */
+   2:../../applications/lorawan-example/src/lorawan-example.c **** /**
+   3:../../applications/lorawan-example/src/lorawan-example.c ****   ******************************************************************************
+   4:../../applications/lorawan-example/src/lorawan-example.c ****   * @file           : main.c
+   5:../../applications/lorawan-example/src/lorawan-example.c ****   * @brief          : Main program body
+   6:../../applications/lorawan-example/src/lorawan-example.c ****   ******************************************************************************
+   7:../../applications/lorawan-example/src/lorawan-example.c ****   * This notice applies to any and all portions of this file
+   8:../../applications/lorawan-example/src/lorawan-example.c ****   * that are not between comment pairs USER CODE BEGIN and
+   9:../../applications/lorawan-example/src/lorawan-example.c ****   * USER CODE END. Other portions of this file, whether 
+  10:../../applications/lorawan-example/src/lorawan-example.c ****   * inserted by the user or by software development tools
+  11:../../applications/lorawan-example/src/lorawan-example.c ****   * are owned by their respective copyright owners.
+  12:../../applications/lorawan-example/src/lorawan-example.c ****   *
+  13:../../applications/lorawan-example/src/lorawan-example.c ****   * Copyright (c) 2019 STMicroelectronics International N.V. 
+  14:../../applications/lorawan-example/src/lorawan-example.c ****   * All rights reserved.
+  15:../../applications/lorawan-example/src/lorawan-example.c ****   *
+  16:../../applications/lorawan-example/src/lorawan-example.c ****   * Redistribution and use in source and binary forms, with or without 
+  17:../../applications/lorawan-example/src/lorawan-example.c ****   * modification, are permitted, provided that the following conditions are met:
+  18:../../applications/lorawan-example/src/lorawan-example.c ****   *
+  19:../../applications/lorawan-example/src/lorawan-example.c ****   * 1. Redistribution of source code must retain the above copyright notice, 
+  20:../../applications/lorawan-example/src/lorawan-example.c ****   *    this list of conditions and the following disclaimer.
+  21:../../applications/lorawan-example/src/lorawan-example.c ****   * 2. Redistributions in binary form must reproduce the above copyright notice,
+  22:../../applications/lorawan-example/src/lorawan-example.c ****   *    this list of conditions and the following disclaimer in the documentation
+  23:../../applications/lorawan-example/src/lorawan-example.c ****   *    and/or other materials provided with the distribution.
+  24:../../applications/lorawan-example/src/lorawan-example.c ****   * 3. Neither the name of STMicroelectronics nor the names of other 
+  25:../../applications/lorawan-example/src/lorawan-example.c ****   *    contributors to this software may be used to endorse or promote products 
+  26:../../applications/lorawan-example/src/lorawan-example.c ****   *    derived from this software without specific written permission.
+  27:../../applications/lorawan-example/src/lorawan-example.c ****   * 4. This software, including modifications and/or derivative works of this 
+  28:../../applications/lorawan-example/src/lorawan-example.c ****   *    software, must execute solely and exclusively on microcontroller or
+  29:../../applications/lorawan-example/src/lorawan-example.c ****   *    microprocessor devices manufactured by or for STMicroelectronics.
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 2
+
+
+  30:../../applications/lorawan-example/src/lorawan-example.c ****   * 5. Redistribution and use of this software other than as permitted under 
+  31:../../applications/lorawan-example/src/lorawan-example.c ****   *    this license is void and will automatically terminate your rights under 
+  32:../../applications/lorawan-example/src/lorawan-example.c ****   *    this license. 
+  33:../../applications/lorawan-example/src/lorawan-example.c ****   *
+  34:../../applications/lorawan-example/src/lorawan-example.c ****   * THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS IS" 
+  35:../../applications/lorawan-example/src/lorawan-example.c ****   * AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT 
+  36:../../applications/lorawan-example/src/lorawan-example.c ****   * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+  37:../../applications/lorawan-example/src/lorawan-example.c ****   * PARTICULAR PURPOSE AND NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY
+  38:../../applications/lorawan-example/src/lorawan-example.c ****   * RIGHTS ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT 
+  39:../../applications/lorawan-example/src/lorawan-example.c ****   * SHALL STMICROELECTRONICS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+  40:../../applications/lorawan-example/src/lorawan-example.c ****   * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  41:../../applications/lorawan-example/src/lorawan-example.c ****   * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
+  42:../../applications/lorawan-example/src/lorawan-example.c ****   * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+  43:../../applications/lorawan-example/src/lorawan-example.c ****   * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+  44:../../applications/lorawan-example/src/lorawan-example.c ****   * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+  45:../../applications/lorawan-example/src/lorawan-example.c ****   * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  46:../../applications/lorawan-example/src/lorawan-example.c ****   *
+  47:../../applications/lorawan-example/src/lorawan-example.c ****   ******************************************************************************
+  48:../../applications/lorawan-example/src/lorawan-example.c ****   */
+  49:../../applications/lorawan-example/src/lorawan-example.c **** /* USER CODE END Header */
+  50:../../applications/lorawan-example/src/lorawan-example.c **** 
+  51:../../applications/lorawan-example/src/lorawan-example.c **** /* Includes ------------------------------------------------------------------*/
+  52:../../applications/lorawan-example/src/lorawan-example.c **** #include "lorawan-example.h"
+  53:../../applications/lorawan-example/src/lorawan-example.c **** /* Private includes ----------------------------------------------------------*/
+  54:../../applications/lorawan-example/src/lorawan-example.c **** /* USER CODE BEGIN Includes */
+  55:../../applications/lorawan-example/src/lorawan-example.c **** #include "murata.h"
+  56:../../applications/lorawan-example/src/lorawan-example.c **** 
+  57:../../applications/lorawan-example/src/lorawan-example.c **** /* USER CODE END Includes */
+  58:../../applications/lorawan-example/src/lorawan-example.c **** 
+  59:../../applications/lorawan-example/src/lorawan-example.c **** /* Private typedef -----------------------------------------------------------*/
+  60:../../applications/lorawan-example/src/lorawan-example.c **** /* USER CODE BEGIN PTD */
+  61:../../applications/lorawan-example/src/lorawan-example.c **** 
+  62:../../applications/lorawan-example/src/lorawan-example.c **** /* USER CODE END PTD */
+  63:../../applications/lorawan-example/src/lorawan-example.c **** 
+  64:../../applications/lorawan-example/src/lorawan-example.c **** /* Private define ------------------------------------------------------------*/
+  65:../../applications/lorawan-example/src/lorawan-example.c **** /* USER CODE BEGIN PD */
+  66:../../applications/lorawan-example/src/lorawan-example.c **** #define IWDG_INTERVAL           5    //seconds
+  67:../../applications/lorawan-example/src/lorawan-example.c **** #define LORAWAN_INTERVAL        60   //seconds
+  68:../../applications/lorawan-example/src/lorawan-example.c **** #define MODULE_CHECK_INTERVAL   3600 //seconds
+  69:../../applications/lorawan-example/src/lorawan-example.c **** 
+  70:../../applications/lorawan-example/src/lorawan-example.c **** /* USER CODE END PD */
+  71:../../applications/lorawan-example/src/lorawan-example.c **** 
+  72:../../applications/lorawan-example/src/lorawan-example.c **** /* Private macro -------------------------------------------------------------*/
+  73:../../applications/lorawan-example/src/lorawan-example.c **** /* USER CODE BEGIN PM */
+  74:../../applications/lorawan-example/src/lorawan-example.c **** 
+  75:../../applications/lorawan-example/src/lorawan-example.c **** /* USER CODE END PM */
+  76:../../applications/lorawan-example/src/lorawan-example.c **** 
+  77:../../applications/lorawan-example/src/lorawan-example.c **** /* Private user code ---------------------------------------------------------*/
+  78:../../applications/lorawan-example/src/lorawan-example.c **** /* USER CODE BEGIN 0 */
+  79:../../applications/lorawan-example/src/lorawan-example.c **** uint16_t LoRaWAN_Counter = 0;
+  80:../../applications/lorawan-example/src/lorawan-example.c **** uint8_t lora_init = 0;
+  81:../../applications/lorawan-example/src/lorawan-example.c **** uint64_t short_UID;
+  82:../../applications/lorawan-example/src/lorawan-example.c **** /* USER CODE END 0 */
+  83:../../applications/lorawan-example/src/lorawan-example.c **** 
+  84:../../applications/lorawan-example/src/lorawan-example.c **** /**
+  85:../../applications/lorawan-example/src/lorawan-example.c ****   * @brief  The application entry point.
+  86:../../applications/lorawan-example/src/lorawan-example.c ****   * @retval int
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 3
+
+
+  87:../../applications/lorawan-example/src/lorawan-example.c ****   */
+  88:../../applications/lorawan-example/src/lorawan-example.c **** int main(void)
+  89:../../applications/lorawan-example/src/lorawan-example.c **** {
+  90:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE BEGIN 1 */
+  91:../../applications/lorawan-example/src/lorawan-example.c **** 
+  92:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE END 1 */
+  93:../../applications/lorawan-example/src/lorawan-example.c **** 
+  94:../../applications/lorawan-example/src/lorawan-example.c ****   /* MCU Configuration--------------------------------------------------------*/
+  95:../../applications/lorawan-example/src/lorawan-example.c **** 
+  96:../../applications/lorawan-example/src/lorawan-example.c ****   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  97:../../applications/lorawan-example/src/lorawan-example.c ****   HAL_Init();
+  98:../../applications/lorawan-example/src/lorawan-example.c **** 
+  99:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE BEGIN Init */
+ 100:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 101:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE END Init */
+ 102:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 103:../../applications/lorawan-example/src/lorawan-example.c ****   /* Configure the system clock */
+ 104:../../applications/lorawan-example/src/lorawan-example.c ****   SystemClock_Config();
+ 105:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 106:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE BEGIN SysInit */
+ 107:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 108:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE END SysInit */
+ 109:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 110:../../applications/lorawan-example/src/lorawan-example.c ****   /* Initialize the platform, OCTA in this case */
+ 111:../../applications/lorawan-example/src/lorawan-example.c ****   Initialize_Platform();
+ 112:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE BEGIN 2 */
+ 113:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 114:../../applications/lorawan-example/src/lorawan-example.c ****   // Get Unique ID of octa
+ 115:../../applications/lorawan-example/src/lorawan-example.c ****   short_UID = get_UID();
+ 116:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 117:../../applications/lorawan-example/src/lorawan-example.c ****   // Print Welcome Message
+ 118:../../applications/lorawan-example/src/lorawan-example.c ****   printWelcome();
+ 119:../../applications/lorawan-example/src/lorawan-example.c ****   
+ 120:../../applications/lorawan-example/src/lorawan-example.c ****   // LORAWAN
+ 121:../../applications/lorawan-example/src/lorawan-example.c ****   lora_init = Murata_Initialize(short_UID); //Should only happen once! 
+ 122:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 123:../../applications/lorawan-example/src/lorawan-example.c ****   if (lora_init)
+ 124:../../applications/lorawan-example/src/lorawan-example.c ****   {
+ 125:../../applications/lorawan-example/src/lorawan-example.c ****     printf("LoRaWAN module init OK\r\n\r\n");
+ 126:../../applications/lorawan-example/src/lorawan-example.c ****   }
+ 127:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE END 2 */
+ 128:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 129:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE BEGIN RTOS_MUTEX */
+ 130:../../applications/lorawan-example/src/lorawan-example.c ****   /* add mutexes, ... */
+ 131:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 132:../../applications/lorawan-example/src/lorawan-example.c ****   // TX MUTEX ensuring no transmits are happening at the same time
+ 133:../../applications/lorawan-example/src/lorawan-example.c ****   osMutexDef(txMutex);
+ 134:../../applications/lorawan-example/src/lorawan-example.c ****   txMutexId = osMutexCreate(osMutex(txMutex));
+ 135:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 136:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE END RTOS_MUTEX */
+ 137:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 138:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE BEGIN RTOS_SEMAPHORES */
+ 139:../../applications/lorawan-example/src/lorawan-example.c ****   /* add semaphores, ... */
+ 140:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE END RTOS_SEMAPHORES */
+ 141:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 142:../../applications/lorawan-example/src/lorawan-example.c ****   /* Create the thread(s) */
+ 143:../../applications/lorawan-example/src/lorawan-example.c **** 
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 4
+
+
+ 144:../../applications/lorawan-example/src/lorawan-example.c ****   osThreadDef(murata_rx_processing, murata_process_rx_response, osPriorityNormal, 0, 512);
+ 145:../../applications/lorawan-example/src/lorawan-example.c ****   murata_rx_processing_handle = osThreadCreate(osThread(murata_rx_processing), NULL);
+ 146:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 147:../../applications/lorawan-example/src/lorawan-example.c ****   // pass processing thread handle to murata driver
+ 148:../../applications/lorawan-example/src/lorawan-example.c ****   Murata_SetProcessingThread(murata_rx_processing_handle);
+ 149:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 150:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE BEGIN RTOS_TIMERS */
+ 151:../../applications/lorawan-example/src/lorawan-example.c ****   /* start timers, add new ones, ... */
+ 152:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 153:../../applications/lorawan-example/src/lorawan-example.c ****   //feed IWDG every 5 seconds
+ 154:../../applications/lorawan-example/src/lorawan-example.c ****   IWDG_feed(NULL);
+ 155:../../applications/lorawan-example/src/lorawan-example.c ****   osTimerDef(iwdgTim, IWDG_feed);
+ 156:../../applications/lorawan-example/src/lorawan-example.c ****   iwdgTimId = osTimerCreate(osTimer(iwdgTim), osTimerPeriodic, NULL);
+ 157:../../applications/lorawan-example/src/lorawan-example.c ****   osTimerStart(iwdgTimId, IWDG_INTERVAL * 1000);
+ 158:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 159:../../applications/lorawan-example/src/lorawan-example.c ****   osTimerDef(loraWANTim, LoRaWAN_send);
+ 160:../../applications/lorawan-example/src/lorawan-example.c ****   loraWANTimId = osTimerCreate(osTimer(loraWANTim), osTimerPeriodic, NULL);
+ 161:../../applications/lorawan-example/src/lorawan-example.c ****   osTimerStart(loraWANTimId, LORAWAN_INTERVAL * 1000);
+ 162:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 163:../../applications/lorawan-example/src/lorawan-example.c ****   osTimerDef(moduleCheckTim, check_modules);
+ 164:../../applications/lorawan-example/src/lorawan-example.c ****   moduleCheckTimId = osTimerCreate(osTimer(moduleCheckTim), osTimerPeriodic, NULL);
+ 165:../../applications/lorawan-example/src/lorawan-example.c ****   osTimerStart(moduleCheckTimId, MODULE_CHECK_INTERVAL * 1000);
+ 166:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 167:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE END RTOS_TIMERS */
+ 168:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 169:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE BEGIN RTOS_THREADS */
+ 170:../../applications/lorawan-example/src/lorawan-example.c ****   /* add threads, ... */
+ 171:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 172:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE END RTOS_THREADS */
+ 173:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 174:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE BEGIN RTOS_QUEUES */
+ 175:../../applications/lorawan-example/src/lorawan-example.c ****   /* add queues, ... */
+ 176:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE END RTOS_QUEUES */
+ 177:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 178:../../applications/lorawan-example/src/lorawan-example.c ****   /* Start scheduler */
+ 179:../../applications/lorawan-example/src/lorawan-example.c ****   printf("Starting RTOS Scheduler\r\n\r\n");
+ 180:../../applications/lorawan-example/src/lorawan-example.c ****   osKernelStart();
+ 181:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 182:../../applications/lorawan-example/src/lorawan-example.c ****   /* We should never get here as control is now taken by the scheduler */
+ 183:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 184:../../applications/lorawan-example/src/lorawan-example.c ****   /* Infinite loop */
+ 185:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE BEGIN WHILE */
+ 186:../../applications/lorawan-example/src/lorawan-example.c ****   while (1)
+ 187:../../applications/lorawan-example/src/lorawan-example.c ****   {
+ 188:../../applications/lorawan-example/src/lorawan-example.c ****     /* USER CODE END WHILE */
+ 189:../../applications/lorawan-example/src/lorawan-example.c ****     
+ 190:../../applications/lorawan-example/src/lorawan-example.c ****     /* USER CODE BEGIN 3 */
+ 191:../../applications/lorawan-example/src/lorawan-example.c ****   }
+ 192:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE END 3 */
+ 193:../../applications/lorawan-example/src/lorawan-example.c **** }
+ 194:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 195:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 196:../../applications/lorawan-example/src/lorawan-example.c **** void LoRaWAN_send(void const *argument)
+ 197:../../applications/lorawan-example/src/lorawan-example.c **** {
+  30              		.loc 1 197 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 8
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 5
+
+
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 197 1 is_stmt 0 view .LVU1
+  35 0000 00B5     		push	{lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 4
+  38              		.cfi_offset 14, -4
+  39 0002 83B0     		sub	sp, sp, #12
+  40              	.LCFI1:
+  41              		.cfi_def_cfa_offset 16
+ 198:../../applications/lorawan-example/src/lorawan-example.c ****   if (lora_init)
+  42              		.loc 1 198 3 is_stmt 1 view .LVU2
+  43              		.loc 1 198 7 is_stmt 0 view .LVU3
+  44 0004 194B     		ldr	r3, .L7
+  45 0006 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  46              		.loc 1 198 6 view .LVU4
+  47 0008 5BB3     		cbz	r3, .L2
+  48              	.LBB2:
+ 199:../../applications/lorawan-example/src/lorawan-example.c ****   {
+ 200:../../applications/lorawan-example/src/lorawan-example.c ****     uint8_t loraMessage[5];
+  49              		.loc 1 200 5 is_stmt 1 view .LVU5
+ 201:../../applications/lorawan-example/src/lorawan-example.c ****     uint8_t i = 0;
+  50              		.loc 1 201 5 view .LVU6
+  51              	.LVL1:
+ 202:../../applications/lorawan-example/src/lorawan-example.c ****     //uint16 counter to uint8 array (little endian)
+ 203:../../applications/lorawan-example/src/lorawan-example.c ****     //counter (large) type byte
+ 204:../../applications/lorawan-example/src/lorawan-example.c ****     loraMessage[i++] = 0x14;
+  52              		.loc 1 204 5 view .LVU7
+  53              		.loc 1 204 22 is_stmt 0 view .LVU8
+  54 000a 1423     		movs	r3, #20
+  55 000c 8DF80030 		strb	r3, [sp]
+ 205:../../applications/lorawan-example/src/lorawan-example.c ****     loraMessage[i++] = LoRaWAN_Counter;
+  56              		.loc 1 205 5 is_stmt 1 view .LVU9
+  57              		.loc 1 205 22 is_stmt 0 view .LVU10
+  58 0010 174B     		ldr	r3, .L7+4
+  59 0012 1B88     		ldrh	r3, [r3]
+  60              	.LVL2:
+  61              		.loc 1 205 22 view .LVU11
+  62 0014 8DF80130 		strb	r3, [sp, #1]
+ 206:../../applications/lorawan-example/src/lorawan-example.c ****     loraMessage[i++] = LoRaWAN_Counter >> 8;
+  63              		.loc 1 206 5 is_stmt 1 view .LVU12
+  64              	.LVL3:
+  65              		.loc 1 206 22 is_stmt 0 view .LVU13
+  66 0018 1B0A     		lsrs	r3, r3, #8
+  67 001a 8DF80230 		strb	r3, [sp, #2]
+ 207:../../applications/lorawan-example/src/lorawan-example.c ****     osMutexWait(txMutexId, osWaitForever);
+  68              		.loc 1 207 5 is_stmt 1 view .LVU14
+  69 001e 4FF0FF31 		mov	r1, #-1
+  70 0022 144B     		ldr	r3, .L7+8
+  71 0024 1868     		ldr	r0, [r3]
+  72              	.LVL4:
+  73              		.loc 1 207 5 is_stmt 0 view .LVU15
+  74 0026 FFF7FEFF 		bl	osMutexWait
+  75              	.LVL5:
+ 208:../../applications/lorawan-example/src/lorawan-example.c ****     if(!Murata_LoRaWAN_Send((uint8_t *)loraMessage, i))
+  76              		.loc 1 208 5 is_stmt 1 view .LVU16
+  77              		.loc 1 208 9 is_stmt 0 view .LVU17
+  78 002a 0321     		movs	r1, #3
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 6
+
+
+  79 002c 6846     		mov	r0, sp
+  80 002e FFF7FEFF 		bl	Murata_LoRaWAN_Send
+  81              	.LVL6:
+  82              		.loc 1 208 7 view .LVU18
+  83 0032 90B9     		cbnz	r0, .L3
+ 209:../../applications/lorawan-example/src/lorawan-example.c ****     {
+ 210:../../applications/lorawan-example/src/lorawan-example.c ****       lora_init++;
+  84              		.loc 1 210 7 is_stmt 1 view .LVU19
+  85              		.loc 1 210 16 is_stmt 0 view .LVU20
+  86 0034 0D4A     		ldr	r2, .L7
+  87 0036 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  88 0038 0133     		adds	r3, r3, #1
+  89 003a 1370     		strb	r3, [r2]
+ 211:../../applications/lorawan-example/src/lorawan-example.c ****       if(lora_init == 10)
+  90              		.loc 1 211 7 is_stmt 1 view .LVU21
+  91              	.L4:
+ 212:../../applications/lorawan-example/src/lorawan-example.c ****         lora_init == 0;
+ 213:../../applications/lorawan-example/src/lorawan-example.c ****     }
+ 214:../../applications/lorawan-example/src/lorawan-example.c ****     else
+ 215:../../applications/lorawan-example/src/lorawan-example.c ****     {
+ 216:../../applications/lorawan-example/src/lorawan-example.c ****       lora_init = 1;
+ 217:../../applications/lorawan-example/src/lorawan-example.c ****     }
+ 218:../../applications/lorawan-example/src/lorawan-example.c ****     //BLOCK TX MUTEX FOR 3s
+ 219:../../applications/lorawan-example/src/lorawan-example.c ****     osDelay(3000);
+  92              		.loc 1 219 5 discriminator 1 view .LVU22
+  93 003c 40F6B830 		movw	r0, #3000
+  94 0040 FFF7FEFF 		bl	osDelay
+  95              	.LVL7:
+ 220:../../applications/lorawan-example/src/lorawan-example.c ****     osMutexRelease(txMutexId);
+  96              		.loc 1 220 5 discriminator 1 view .LVU23
+  97 0044 0B4B     		ldr	r3, .L7+8
+  98 0046 1868     		ldr	r0, [r3]
+  99 0048 FFF7FEFF 		bl	osMutexRelease
+ 100              	.LVL8:
+ 221:../../applications/lorawan-example/src/lorawan-example.c ****     LoRaWAN_Counter++;
+ 101              		.loc 1 221 5 discriminator 1 view .LVU24
+ 102              		.loc 1 221 20 is_stmt 0 discriminator 1 view .LVU25
+ 103 004c 084A     		ldr	r2, .L7+4
+ 104 004e 1388     		ldrh	r3, [r2]
+ 105 0050 0133     		adds	r3, r3, #1
+ 106 0052 1380     		strh	r3, [r2]	@ movhi
+ 107              	.LVL9:
+ 108              	.L1:
+ 109              		.loc 1 221 20 discriminator 1 view .LVU26
+ 110              	.LBE2:
+ 222:../../applications/lorawan-example/src/lorawan-example.c ****   }
+ 223:../../applications/lorawan-example/src/lorawan-example.c ****   else{
+ 224:../../applications/lorawan-example/src/lorawan-example.c ****     printf("murata not initialized, not sending\r\n");
+ 225:../../applications/lorawan-example/src/lorawan-example.c ****   }
+ 226:../../applications/lorawan-example/src/lorawan-example.c **** }
+ 111              		.loc 1 226 1 view .LVU27
+ 112 0054 03B0     		add	sp, sp, #12
+ 113              	.LCFI2:
+ 114              		.cfi_remember_state
+ 115              		.cfi_def_cfa_offset 4
+ 116              		@ sp needed
+ 117 0056 5DF804FB 		ldr	pc, [sp], #4
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 7
+
+
+ 118              	.LVL10:
+ 119              	.L3:
+ 120              	.LCFI3:
+ 121              		.cfi_restore_state
+ 122              	.LBB3:
+ 216:../../applications/lorawan-example/src/lorawan-example.c ****     }
+ 123              		.loc 1 216 7 is_stmt 1 view .LVU28
+ 216:../../applications/lorawan-example/src/lorawan-example.c ****     }
+ 124              		.loc 1 216 17 is_stmt 0 view .LVU29
+ 125 005a 044B     		ldr	r3, .L7
+ 126 005c 0122     		movs	r2, #1
+ 127 005e 1A70     		strb	r2, [r3]
+ 128 0060 ECE7     		b	.L4
+ 129              	.LVL11:
+ 130              	.L2:
+ 216:../../applications/lorawan-example/src/lorawan-example.c ****     }
+ 131              		.loc 1 216 17 view .LVU30
+ 132              	.LBE3:
+ 133              	.LBB4:
+ 224:../../applications/lorawan-example/src/lorawan-example.c ****   }
+ 134              		.loc 1 224 5 is_stmt 1 view .LVU31
+ 135 0062 0548     		ldr	r0, .L7+12
+ 136              	.LVL12:
+ 224:../../applications/lorawan-example/src/lorawan-example.c ****   }
+ 137              		.loc 1 224 5 is_stmt 0 view .LVU32
+ 138 0064 FFF7FEFF 		bl	puts
+ 139              	.LVL13:
+ 140              	.LBE4:
+ 141              		.loc 1 226 1 view .LVU33
+ 142 0068 F4E7     		b	.L1
+ 143              	.L8:
+ 144 006a 00BF     		.align	2
+ 145              	.L7:
+ 146 006c 00000000 		.word	.LANCHOR0
+ 147 0070 00000000 		.word	.LANCHOR1
+ 148 0074 00000000 		.word	txMutexId
+ 149 0078 00000000 		.word	.LC2
+ 150              		.cfi_endproc
+ 151              	.LFE130:
+ 153              		.section	.text.check_modules,"ax",%progbits
+ 154              		.align	1
+ 155              		.global	check_modules
+ 156              		.syntax unified
+ 157              		.thumb
+ 158              		.thumb_func
+ 159              		.fpu fpv4-sp-d16
+ 161              	check_modules:
+ 162              	.LVL14:
+ 163              	.LFB131:
+ 227:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 228:../../applications/lorawan-example/src/lorawan-example.c **** void check_modules(void const *argument)
+ 229:../../applications/lorawan-example/src/lorawan-example.c **** {
+ 164              		.loc 1 229 1 is_stmt 1 view -0
+ 165              		.cfi_startproc
+ 166              		@ args = 0, pretend = 0, frame = 0
+ 167              		@ frame_needed = 0, uses_anonymous_args = 0
+ 168              		.loc 1 229 1 is_stmt 0 view .LVU35
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 8
+
+
+ 169 0000 08B5     		push	{r3, lr}
+ 170              	.LCFI4:
+ 171              		.cfi_def_cfa_offset 8
+ 172              		.cfi_offset 3, -8
+ 173              		.cfi_offset 14, -4
+ 230:../../applications/lorawan-example/src/lorawan-example.c ****   printf("checking the status of the modules\r\n");
+ 174              		.loc 1 230 3 is_stmt 1 view .LVU36
+ 175 0002 0848     		ldr	r0, .L13
+ 176              	.LVL15:
+ 177              		.loc 1 230 3 is_stmt 0 view .LVU37
+ 178 0004 FFF7FEFF 		bl	puts
+ 179              	.LVL16:
+ 231:../../applications/lorawan-example/src/lorawan-example.c ****   if (!lora_init)
+ 180              		.loc 1 231 3 is_stmt 1 view .LVU38
+ 181              		.loc 1 231 7 is_stmt 0 view .LVU39
+ 182 0008 074B     		ldr	r3, .L13+4
+ 183 000a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 184              		.loc 1 231 6 view .LVU40
+ 185 000c 03B1     		cbz	r3, .L12
+ 186              	.L9:
+ 232:../../applications/lorawan-example/src/lorawan-example.c ****   {
+ 233:../../applications/lorawan-example/src/lorawan-example.c ****     // LORAWAN
+ 234:../../applications/lorawan-example/src/lorawan-example.c ****     lora_init = Murata_Initialize(short_UID);
+ 235:../../applications/lorawan-example/src/lorawan-example.c ****     Murata_toggleResetPin();
+ 236:../../applications/lorawan-example/src/lorawan-example.c ****   }
+ 237:../../applications/lorawan-example/src/lorawan-example.c **** }
+ 187              		.loc 1 237 1 view .LVU41
+ 188 000e 08BD     		pop	{r3, pc}
+ 189              	.L12:
+ 234:../../applications/lorawan-example/src/lorawan-example.c ****     Murata_toggleResetPin();
+ 190              		.loc 1 234 5 is_stmt 1 view .LVU42
+ 234:../../applications/lorawan-example/src/lorawan-example.c ****     Murata_toggleResetPin();
+ 191              		.loc 1 234 17 is_stmt 0 view .LVU43
+ 192 0010 064B     		ldr	r3, .L13+8
+ 193 0012 D3E90001 		ldrd	r0, [r3]
+ 194 0016 FFF7FEFF 		bl	Murata_Initialize
+ 195              	.LVL17:
+ 234:../../applications/lorawan-example/src/lorawan-example.c ****     Murata_toggleResetPin();
+ 196              		.loc 1 234 15 view .LVU44
+ 197 001a 034B     		ldr	r3, .L13+4
+ 198 001c 1870     		strb	r0, [r3]
+ 235:../../applications/lorawan-example/src/lorawan-example.c ****   }
+ 199              		.loc 1 235 5 is_stmt 1 view .LVU45
+ 200 001e FFF7FEFF 		bl	Murata_toggleResetPin
+ 201              	.LVL18:
+ 202              		.loc 1 237 1 is_stmt 0 view .LVU46
+ 203 0022 F4E7     		b	.L9
+ 204              	.L14:
+ 205              		.align	2
+ 206              	.L13:
+ 207 0024 00000000 		.word	.LC3
+ 208 0028 00000000 		.word	.LANCHOR0
+ 209 002c 00000000 		.word	short_UID
+ 210              		.cfi_endproc
+ 211              	.LFE131:
+ 213              		.section	.text.murata_process_rx_response,"ax",%progbits
+ 214              		.align	1
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 9
+
+
+ 215              		.global	murata_process_rx_response
+ 216              		.syntax unified
+ 217              		.thumb
+ 218              		.thumb_func
+ 219              		.fpu fpv4-sp-d16
+ 221              	murata_process_rx_response:
+ 222              	.LFB132:
+ 238:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 239:../../applications/lorawan-example/src/lorawan-example.c **** void murata_process_rx_response(void const *argument)
+ 240:../../applications/lorawan-example/src/lorawan-example.c **** {
+ 223              		.loc 1 240 1 is_stmt 1 view -0
+ 224              		.cfi_startproc
+ 225              		@ args = 0, pretend = 0, frame = 0
+ 226              		@ frame_needed = 0, uses_anonymous_args = 0
+ 227              	.LVL19:
+ 228              		.loc 1 240 1 is_stmt 0 view .LVU48
+ 229 0000 08B5     		push	{r3, lr}
+ 230              	.LCFI5:
+ 231              		.cfi_def_cfa_offset 8
+ 232              		.cfi_offset 3, -8
+ 233              		.cfi_offset 14, -4
+ 234 0002 02E0     		b	.L17
+ 235              	.LVL20:
+ 236              	.L16:
+ 241:../../applications/lorawan-example/src/lorawan-example.c ****   uint32_t startProcessing;
+ 242:../../applications/lorawan-example/src/lorawan-example.c ****   while (1)
+ 243:../../applications/lorawan-example/src/lorawan-example.c ****   {
+ 244:../../applications/lorawan-example/src/lorawan-example.c ****     // Wait to be notified that the transmission is complete.  Note the first
+ 245:../../applications/lorawan-example/src/lorawan-example.c ****     //parameter is pdTRUE, which has the effect of clearing the task's notification
+ 246:../../applications/lorawan-example/src/lorawan-example.c ****     //value back to 0, making the notification value act like a binary (rather than
+ 247:../../applications/lorawan-example/src/lorawan-example.c ****     //a counting) semaphore.
+ 248:../../applications/lorawan-example/src/lorawan-example.c ****     startProcessing = ulTaskNotifyTake(pdTRUE, osWaitForever);
+ 249:../../applications/lorawan-example/src/lorawan-example.c ****     if (startProcessing == 1)
+ 250:../../applications/lorawan-example/src/lorawan-example.c ****     {
+ 251:../../applications/lorawan-example/src/lorawan-example.c ****       // The transmission ended as expected.
+ 252:../../applications/lorawan-example/src/lorawan-example.c ****       Murata_process_fifo();
+ 253:../../applications/lorawan-example/src/lorawan-example.c ****     }
+ 254:../../applications/lorawan-example/src/lorawan-example.c ****     else
+ 255:../../applications/lorawan-example/src/lorawan-example.c ****     {
+ 256:../../applications/lorawan-example/src/lorawan-example.c ****     }
+ 237              		.loc 1 256 5 is_stmt 1 view .LVU49
+ 257:../../applications/lorawan-example/src/lorawan-example.c ****     osDelay(1);
+ 238              		.loc 1 257 5 view .LVU50
+ 239 0004 0120     		movs	r0, #1
+ 240 0006 FFF7FEFF 		bl	osDelay
+ 241              	.LVL21:
+ 242              	.L17:
+ 241:../../applications/lorawan-example/src/lorawan-example.c ****   uint32_t startProcessing;
+ 243              		.loc 1 241 3 view .LVU51
+ 242:../../applications/lorawan-example/src/lorawan-example.c ****   {
+ 244              		.loc 1 242 3 view .LVU52
+ 248:../../applications/lorawan-example/src/lorawan-example.c ****     if (startProcessing == 1)
+ 245              		.loc 1 248 5 view .LVU53
+ 248:../../applications/lorawan-example/src/lorawan-example.c ****     if (startProcessing == 1)
+ 246              		.loc 1 248 23 is_stmt 0 view .LVU54
+ 247 000a 4FF0FF31 		mov	r1, #-1
+ 248 000e 0120     		movs	r0, #1
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 10
+
+
+ 249 0010 FFF7FEFF 		bl	ulTaskNotifyTake
+ 250              	.LVL22:
+ 249:../../applications/lorawan-example/src/lorawan-example.c ****     {
+ 251              		.loc 1 249 5 is_stmt 1 view .LVU55
+ 249:../../applications/lorawan-example/src/lorawan-example.c ****     {
+ 252              		.loc 1 249 8 is_stmt 0 view .LVU56
+ 253 0014 0128     		cmp	r0, #1
+ 254 0016 F5D1     		bne	.L16
+ 252:../../applications/lorawan-example/src/lorawan-example.c ****     }
+ 255              		.loc 1 252 7 is_stmt 1 view .LVU57
+ 256 0018 FFF7FEFF 		bl	Murata_process_fifo
+ 257              	.LVL23:
+ 252:../../applications/lorawan-example/src/lorawan-example.c ****     }
+ 258              		.loc 1 252 7 is_stmt 0 view .LVU58
+ 259 001c F2E7     		b	.L16
+ 260              		.cfi_endproc
+ 261              	.LFE132:
+ 263              		.section	.text.HAL_UART_RxCpltCallback,"ax",%progbits
+ 264              		.align	1
+ 265              		.global	HAL_UART_RxCpltCallback
+ 266              		.syntax unified
+ 267              		.thumb
+ 268              		.thumb_func
+ 269              		.fpu fpv4-sp-d16
+ 271              	HAL_UART_RxCpltCallback:
+ 272              	.LVL24:
+ 273              	.LFB133:
+ 258:../../applications/lorawan-example/src/lorawan-example.c ****   }
+ 259:../../applications/lorawan-example/src/lorawan-example.c ****   osThreadTerminate(NULL);
+ 260:../../applications/lorawan-example/src/lorawan-example.c **** }
+ 261:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 262:../../applications/lorawan-example/src/lorawan-example.c **** // UART RX CALLBACK
+ 263:../../applications/lorawan-example/src/lorawan-example.c **** void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+ 264:../../applications/lorawan-example/src/lorawan-example.c **** {
+ 274              		.loc 1 264 1 is_stmt 1 view -0
+ 275              		.cfi_startproc
+ 276              		@ args = 0, pretend = 0, frame = 0
+ 277              		@ frame_needed = 0, uses_anonymous_args = 0
+ 278              		.loc 1 264 1 is_stmt 0 view .LVU60
+ 279 0000 08B5     		push	{r3, lr}
+ 280              	.LCFI6:
+ 281              		.cfi_def_cfa_offset 8
+ 282              		.cfi_offset 3, -8
+ 283              		.cfi_offset 14, -4
+ 265:../../applications/lorawan-example/src/lorawan-example.c ****   if (huart == &P3_UART)
+ 284              		.loc 1 265 3 is_stmt 1 view .LVU61
+ 285              		.loc 1 265 6 is_stmt 0 view .LVU62
+ 286 0002 034B     		ldr	r3, .L23
+ 287 0004 8342     		cmp	r3, r0
+ 288 0006 00D0     		beq	.L22
+ 289              	.LVL25:
+ 290              	.L19:
+ 266:../../applications/lorawan-example/src/lorawan-example.c ****   {
+ 267:../../applications/lorawan-example/src/lorawan-example.c ****     Murata_rxCallback();
+ 268:../../applications/lorawan-example/src/lorawan-example.c ****   }
+ 269:../../applications/lorawan-example/src/lorawan-example.c **** }
+ 291              		.loc 1 269 1 view .LVU63
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 11
+
+
+ 292 0008 08BD     		pop	{r3, pc}
+ 293              	.LVL26:
+ 294              	.L22:
+ 267:../../applications/lorawan-example/src/lorawan-example.c ****   }
+ 295              		.loc 1 267 5 is_stmt 1 view .LVU64
+ 296 000a FFF7FEFF 		bl	Murata_rxCallback
+ 297              	.LVL27:
+ 298              		.loc 1 269 1 is_stmt 0 view .LVU65
+ 299 000e FBE7     		b	.L19
+ 300              	.L24:
+ 301              		.align	2
+ 302              	.L23:
+ 303 0010 00000000 		.word	P3_UART
+ 304              		.cfi_endproc
+ 305              	.LFE133:
+ 307              		.section	.text.vApplicationIdleHook,"ax",%progbits
+ 308              		.align	1
+ 309              		.global	vApplicationIdleHook
+ 310              		.syntax unified
+ 311              		.thumb
+ 312              		.thumb_func
+ 313              		.fpu fpv4-sp-d16
+ 315              	vApplicationIdleHook:
+ 316              	.LFB134:
+ 270:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 271:../../applications/lorawan-example/src/lorawan-example.c **** void vApplicationIdleHook(){
+ 317              		.loc 1 271 28 is_stmt 1 view -0
+ 318              		.cfi_startproc
+ 319              		@ args = 0, pretend = 0, frame = 0
+ 320              		@ frame_needed = 0, uses_anonymous_args = 0
+ 321              		@ link register save eliminated.
+ 272:../../applications/lorawan-example/src/lorawan-example.c ****   #if LOW_POWER
+ 273:../../applications/lorawan-example/src/lorawan-example.c ****     HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFE);
+ 274:../../applications/lorawan-example/src/lorawan-example.c ****   #endif
+ 275:../../applications/lorawan-example/src/lorawan-example.c **** }
+ 322              		.loc 1 275 1 view .LVU67
+ 323 0000 7047     		bx	lr
+ 324              		.cfi_endproc
+ 325              	.LFE134:
+ 327              		.section	.text.printWelcome,"ax",%progbits
+ 328              		.align	1
+ 329              		.global	printWelcome
+ 330              		.syntax unified
+ 331              		.thumb
+ 332              		.thumb_func
+ 333              		.fpu fpv4-sp-d16
+ 335              	printWelcome:
+ 336              	.LFB135:
+ 276:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 277:../../applications/lorawan-example/src/lorawan-example.c **** void printWelcome(void)
+ 278:../../applications/lorawan-example/src/lorawan-example.c **** {
+ 337              		.loc 1 278 1 view -0
+ 338              		.cfi_startproc
+ 339              		@ args = 0, pretend = 0, frame = 8
+ 340              		@ frame_needed = 0, uses_anonymous_args = 0
+ 341 0000 30B5     		push	{r4, r5, lr}
+ 342              	.LCFI7:
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 12
+
+
+ 343              		.cfi_def_cfa_offset 12
+ 344              		.cfi_offset 4, -12
+ 345              		.cfi_offset 5, -8
+ 346              		.cfi_offset 14, -4
+ 347 0002 83B0     		sub	sp, sp, #12
+ 348              	.LCFI8:
+ 349              		.cfi_def_cfa_offset 24
+ 279:../../applications/lorawan-example/src/lorawan-example.c ****   printf("\r\n");
+ 350              		.loc 1 279 3 view .LVU69
+ 351 0004 1A4C     		ldr	r4, .L31
+ 352 0006 2046     		mov	r0, r4
+ 353 0008 FFF7FEFF 		bl	puts
+ 354              	.LVL28:
+ 280:../../applications/lorawan-example/src/lorawan-example.c ****   printf("*****************************************\r\n");
+ 355              		.loc 1 280 3 view .LVU70
+ 356 000c 194D     		ldr	r5, .L31+4
+ 357 000e 2846     		mov	r0, r5
+ 358 0010 FFF7FEFF 		bl	puts
+ 359              	.LVL29:
+ 281:../../applications/lorawan-example/src/lorawan-example.c ****   printf("LoRaWAN example\r\n");
+ 360              		.loc 1 281 3 view .LVU71
+ 361 0014 1848     		ldr	r0, .L31+8
+ 362 0016 FFF7FEFF 		bl	puts
+ 363              	.LVL30:
+ 282:../../applications/lorawan-example/src/lorawan-example.c ****   printf("*****************************************\r\n");
+ 364              		.loc 1 282 3 view .LVU72
+ 365 001a 2846     		mov	r0, r5
+ 366 001c FFF7FEFF 		bl	puts
+ 367              	.LVL31:
+ 283:../../applications/lorawan-example/src/lorawan-example.c ****   printf("\r\n");
+ 368              		.loc 1 283 3 view .LVU73
+ 369 0020 2046     		mov	r0, r4
+ 370 0022 FFF7FEFF 		bl	puts
+ 371              	.LVL32:
+ 284:../../applications/lorawan-example/src/lorawan-example.c ****   char UIDString[sizeof(short_UID)];
+ 372              		.loc 1 284 3 view .LVU74
+ 285:../../applications/lorawan-example/src/lorawan-example.c ****   memcpy(UIDString, &short_UID, sizeof(short_UID));
+ 373              		.loc 1 285 3 view .LVU75
+ 374 0026 154B     		ldr	r3, .L31+12
+ 375 0028 6C46     		mov	r4, sp
+ 376 002a 93E80300 		ldm	r3, {r0, r1}
+ 377 002e 84E80300 		stm	r4, {r0, r1}
+ 286:../../applications/lorawan-example/src/lorawan-example.c ****   printf("octa ID: ");
+ 378              		.loc 1 286 3 view .LVU76
+ 379 0032 1348     		ldr	r0, .L31+16
+ 380 0034 FFF7FEFF 		bl	printf
+ 381              	.LVL33:
+ 287:../../applications/lorawan-example/src/lorawan-example.c ****   for (const char* p = UIDString; *p; ++p)
+ 382              		.loc 1 287 3 view .LVU77
+ 383              	.LBB5:
+ 384              		.loc 1 287 8 view .LVU78
+ 385              	.L27:
+ 386              		.loc 1 287 35 is_stmt 0 discriminator 1 view .LVU79
+ 387 0038 2178     		ldrb	r1, [r4]	@ zero_extendqisi2
+ 388              		.loc 1 287 3 discriminator 1 view .LVU80
+ 389 003a 21B1     		cbz	r1, .L30
+ 288:../../applications/lorawan-example/src/lorawan-example.c ****     {
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 13
+
+
+ 289:../../applications/lorawan-example/src/lorawan-example.c ****         printf("%02x", *p);
+ 390              		.loc 1 289 9 is_stmt 1 discriminator 3 view .LVU81
+ 391 003c 1148     		ldr	r0, .L31+20
+ 392 003e FFF7FEFF 		bl	printf
+ 393              	.LVL34:
+ 287:../../applications/lorawan-example/src/lorawan-example.c ****   for (const char* p = UIDString; *p; ++p)
+ 394              		.loc 1 287 39 is_stmt 0 discriminator 3 view .LVU82
+ 395 0042 0134     		adds	r4, r4, #1
+ 396              	.LVL35:
+ 287:../../applications/lorawan-example/src/lorawan-example.c ****   for (const char* p = UIDString; *p; ++p)
+ 397              		.loc 1 287 39 discriminator 3 view .LVU83
+ 398 0044 F8E7     		b	.L27
+ 399              	.L30:
+ 287:../../applications/lorawan-example/src/lorawan-example.c ****   for (const char* p = UIDString; *p; ++p)
+ 400              		.loc 1 287 39 discriminator 3 view .LVU84
+ 401              	.LBE5:
+ 290:../../applications/lorawan-example/src/lorawan-example.c ****     }
+ 291:../../applications/lorawan-example/src/lorawan-example.c ****   printf("\r\n\r\n");
+ 402              		.loc 1 291 3 is_stmt 1 view .LVU85
+ 403 0046 1048     		ldr	r0, .L31+24
+ 404 0048 FFF7FEFF 		bl	puts
+ 405              	.LVL36:
+ 292:../../applications/lorawan-example/src/lorawan-example.c ****   HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin);
+ 406              		.loc 1 292 3 view .LVU86
+ 407 004c 0F4C     		ldr	r4, .L31+28
+ 408              	.LVL37:
+ 409              		.loc 1 292 3 is_stmt 0 view .LVU87
+ 410 004e 4FF40041 		mov	r1, #32768
+ 411 0052 2046     		mov	r0, r4
+ 412 0054 FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 413              	.LVL38:
+ 293:../../applications/lorawan-example/src/lorawan-example.c ****   HAL_Delay(2000);
+ 414              		.loc 1 293 3 is_stmt 1 view .LVU88
+ 415 0058 4FF4FA60 		mov	r0, #2000
+ 416 005c FFF7FEFF 		bl	HAL_Delay
+ 417              	.LVL39:
+ 294:../../applications/lorawan-example/src/lorawan-example.c ****   HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin);
+ 418              		.loc 1 294 3 view .LVU89
+ 419 0060 4FF40041 		mov	r1, #32768
+ 420 0064 2046     		mov	r0, r4
+ 421 0066 FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 422              	.LVL40:
+ 295:../../applications/lorawan-example/src/lorawan-example.c **** }
+ 423              		.loc 1 295 1 is_stmt 0 view .LVU90
+ 424 006a 03B0     		add	sp, sp, #12
+ 425              	.LCFI9:
+ 426              		.cfi_def_cfa_offset 12
+ 427              		@ sp needed
+ 428 006c 30BD     		pop	{r4, r5, pc}
+ 429              	.L32:
+ 430 006e 00BF     		.align	2
+ 431              	.L31:
+ 432 0070 00000000 		.word	.LC4
+ 433 0074 04000000 		.word	.LC5
+ 434 0078 30000000 		.word	.LC6
+ 435 007c 00000000 		.word	short_UID
+ 436 0080 44000000 		.word	.LC7
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 14
+
+
+ 437 0084 50000000 		.word	.LC8
+ 438 0088 58000000 		.word	.LC9
+ 439 008c 000C0048 		.word	1207962624
+ 440              		.cfi_endproc
+ 441              	.LFE135:
+ 443              		.section	.text.main,"ax",%progbits
+ 444              		.align	1
+ 445              		.global	main
+ 446              		.syntax unified
+ 447              		.thumb
+ 448              		.thumb_func
+ 449              		.fpu fpv4-sp-d16
+ 451              	main:
+ 452              	.LFB129:
+  89:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE BEGIN 1 */
+ 453              		.loc 1 89 1 is_stmt 1 view -0
+ 454              		.cfi_startproc
+ 455              		@ Volatile: function does not return.
+ 456              		@ args = 0, pretend = 0, frame = 40
+ 457              		@ frame_needed = 0, uses_anonymous_args = 0
+ 458 0000 00B5     		push	{lr}
+ 459              	.LCFI10:
+ 460              		.cfi_def_cfa_offset 4
+ 461              		.cfi_offset 14, -4
+ 462 0002 8BB0     		sub	sp, sp, #44
+ 463              	.LCFI11:
+ 464              		.cfi_def_cfa_offset 48
+  97:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 465              		.loc 1 97 3 view .LVU92
+ 466 0004 FFF7FEFF 		bl	HAL_Init
+ 467              	.LVL41:
+ 104:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 468              		.loc 1 104 3 view .LVU93
+ 469 0008 FFF7FEFF 		bl	SystemClock_Config
+ 470              	.LVL42:
+ 111:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE BEGIN 2 */
+ 471              		.loc 1 111 3 view .LVU94
+ 472 000c FFF7FEFF 		bl	Initialize_Platform
+ 473              	.LVL43:
+ 115:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 474              		.loc 1 115 3 view .LVU95
+ 115:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 475              		.loc 1 115 15 is_stmt 0 view .LVU96
+ 476 0010 FFF7FEFF 		bl	get_UID
+ 477              	.LVL44:
+ 115:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 478              		.loc 1 115 13 view .LVU97
+ 479 0014 2A4C     		ldr	r4, .L38
+ 480 0016 C4E90001 		strd	r0, [r4]
+ 118:../../applications/lorawan-example/src/lorawan-example.c ****   
+ 481              		.loc 1 118 3 is_stmt 1 view .LVU98
+ 482 001a FFF7FEFF 		bl	printWelcome
+ 483              	.LVL45:
+ 121:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 484              		.loc 1 121 3 view .LVU99
+ 121:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 485              		.loc 1 121 15 is_stmt 0 view .LVU100
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 15
+
+
+ 486 001e D4E90001 		ldrd	r0, [r4]
+ 487 0022 FFF7FEFF 		bl	Murata_Initialize
+ 488              	.LVL46:
+ 121:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 489              		.loc 1 121 13 view .LVU101
+ 490 0026 274B     		ldr	r3, .L38+4
+ 491 0028 1870     		strb	r0, [r3]
+ 123:../../applications/lorawan-example/src/lorawan-example.c ****   {
+ 492              		.loc 1 123 3 is_stmt 1 view .LVU102
+ 123:../../applications/lorawan-example/src/lorawan-example.c ****   {
+ 493              		.loc 1 123 6 is_stmt 0 view .LVU103
+ 494 002a 0028     		cmp	r0, #0
+ 495 002c 43D1     		bne	.L37
+ 496              	.L34:
+ 133:../../applications/lorawan-example/src/lorawan-example.c ****   txMutexId = osMutexCreate(osMutex(txMutex));
+ 497              		.loc 1 133 3 is_stmt 1 view .LVU104
+ 498 002e 0026     		movs	r6, #0
+ 499 0030 0996     		str	r6, [sp, #36]
+ 134:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 500              		.loc 1 134 3 view .LVU105
+ 134:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 501              		.loc 1 134 15 is_stmt 0 view .LVU106
+ 502 0032 09A8     		add	r0, sp, #36
+ 503 0034 FFF7FEFF 		bl	osMutexCreate
+ 504              	.LVL47:
+ 134:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 505              		.loc 1 134 13 view .LVU107
+ 506 0038 234B     		ldr	r3, .L38+8
+ 507 003a 1860     		str	r0, [r3]
+ 144:../../applications/lorawan-example/src/lorawan-example.c ****   murata_rx_processing_handle = osThreadCreate(osThread(murata_rx_processing), NULL);
+ 508              		.loc 1 144 3 is_stmt 1 view .LVU108
+ 509 003c 04AC     		add	r4, sp, #16
+ 510 003e 234D     		ldr	r5, .L38+12
+ 511 0040 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 512 0042 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 513 0044 2B68     		ldr	r3, [r5]
+ 514 0046 2360     		str	r3, [r4]
+ 145:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 515              		.loc 1 145 3 view .LVU109
+ 145:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 516              		.loc 1 145 33 is_stmt 0 view .LVU110
+ 517 0048 3146     		mov	r1, r6
+ 518 004a 04A8     		add	r0, sp, #16
+ 519 004c FFF7FEFF 		bl	osThreadCreate
+ 520              	.LVL48:
+ 145:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 521              		.loc 1 145 31 view .LVU111
+ 522 0050 1F4B     		ldr	r3, .L38+16
+ 523 0052 1860     		str	r0, [r3]
+ 148:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 524              		.loc 1 148 3 is_stmt 1 view .LVU112
+ 525 0054 FFF7FEFF 		bl	Murata_SetProcessingThread
+ 526              	.LVL49:
+ 154:../../applications/lorawan-example/src/lorawan-example.c ****   osTimerDef(iwdgTim, IWDG_feed);
+ 527              		.loc 1 154 3 view .LVU113
+ 528 0058 3046     		mov	r0, r6
+ 529 005a FFF7FEFF 		bl	IWDG_feed
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 16
+
+
+ 530              	.LVL50:
+ 155:../../applications/lorawan-example/src/lorawan-example.c ****   iwdgTimId = osTimerCreate(osTimer(iwdgTim), osTimerPeriodic, NULL);
+ 531              		.loc 1 155 3 view .LVU114
+ 532 005e 1D4B     		ldr	r3, .L38+20
+ 533 0060 0393     		str	r3, [sp, #12]
+ 156:../../applications/lorawan-example/src/lorawan-example.c ****   osTimerStart(iwdgTimId, IWDG_INTERVAL * 1000);
+ 534              		.loc 1 156 3 view .LVU115
+ 156:../../applications/lorawan-example/src/lorawan-example.c ****   osTimerStart(iwdgTimId, IWDG_INTERVAL * 1000);
+ 535              		.loc 1 156 15 is_stmt 0 view .LVU116
+ 536 0062 3246     		mov	r2, r6
+ 537 0064 0121     		movs	r1, #1
+ 538 0066 03A8     		add	r0, sp, #12
+ 539 0068 FFF7FEFF 		bl	osTimerCreate
+ 540              	.LVL51:
+ 156:../../applications/lorawan-example/src/lorawan-example.c ****   osTimerStart(iwdgTimId, IWDG_INTERVAL * 1000);
+ 541              		.loc 1 156 13 view .LVU117
+ 542 006c 1A4B     		ldr	r3, .L38+24
+ 543 006e 1860     		str	r0, [r3]
+ 157:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 544              		.loc 1 157 3 is_stmt 1 view .LVU118
+ 545 0070 41F28831 		movw	r1, #5000
+ 546 0074 FFF7FEFF 		bl	osTimerStart
+ 547              	.LVL52:
+ 159:../../applications/lorawan-example/src/lorawan-example.c ****   loraWANTimId = osTimerCreate(osTimer(loraWANTim), osTimerPeriodic, NULL);
+ 548              		.loc 1 159 3 view .LVU119
+ 549 0078 184B     		ldr	r3, .L38+28
+ 550 007a 0293     		str	r3, [sp, #8]
+ 160:../../applications/lorawan-example/src/lorawan-example.c ****   osTimerStart(loraWANTimId, LORAWAN_INTERVAL * 1000);
+ 551              		.loc 1 160 3 view .LVU120
+ 160:../../applications/lorawan-example/src/lorawan-example.c ****   osTimerStart(loraWANTimId, LORAWAN_INTERVAL * 1000);
+ 552              		.loc 1 160 18 is_stmt 0 view .LVU121
+ 553 007c 3246     		mov	r2, r6
+ 554 007e 0121     		movs	r1, #1
+ 555 0080 02A8     		add	r0, sp, #8
+ 556 0082 FFF7FEFF 		bl	osTimerCreate
+ 557              	.LVL53:
+ 160:../../applications/lorawan-example/src/lorawan-example.c ****   osTimerStart(loraWANTimId, LORAWAN_INTERVAL * 1000);
+ 558              		.loc 1 160 16 view .LVU122
+ 559 0086 164B     		ldr	r3, .L38+32
+ 560 0088 1860     		str	r0, [r3]
+ 161:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 561              		.loc 1 161 3 is_stmt 1 view .LVU123
+ 562 008a 4EF66021 		movw	r1, #60000
+ 563 008e FFF7FEFF 		bl	osTimerStart
+ 564              	.LVL54:
+ 163:../../applications/lorawan-example/src/lorawan-example.c ****   moduleCheckTimId = osTimerCreate(osTimer(moduleCheckTim), osTimerPeriodic, NULL);
+ 565              		.loc 1 163 3 view .LVU124
+ 566 0092 144B     		ldr	r3, .L38+36
+ 567 0094 0193     		str	r3, [sp, #4]
+ 164:../../applications/lorawan-example/src/lorawan-example.c ****   osTimerStart(moduleCheckTimId, MODULE_CHECK_INTERVAL * 1000);
+ 568              		.loc 1 164 3 view .LVU125
+ 164:../../applications/lorawan-example/src/lorawan-example.c ****   osTimerStart(moduleCheckTimId, MODULE_CHECK_INTERVAL * 1000);
+ 569              		.loc 1 164 22 is_stmt 0 view .LVU126
+ 570 0096 3246     		mov	r2, r6
+ 571 0098 0121     		movs	r1, #1
+ 572 009a 01A8     		add	r0, sp, #4
+ 573 009c FFF7FEFF 		bl	osTimerCreate
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 17
+
+
+ 574              	.LVL55:
+ 164:../../applications/lorawan-example/src/lorawan-example.c ****   osTimerStart(moduleCheckTimId, MODULE_CHECK_INTERVAL * 1000);
+ 575              		.loc 1 164 20 view .LVU127
+ 576 00a0 114B     		ldr	r3, .L38+40
+ 577 00a2 1860     		str	r0, [r3]
+ 165:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 578              		.loc 1 165 3 is_stmt 1 view .LVU128
+ 579 00a4 1149     		ldr	r1, .L38+44
+ 580 00a6 FFF7FEFF 		bl	osTimerStart
+ 581              	.LVL56:
+ 179:../../applications/lorawan-example/src/lorawan-example.c ****   osKernelStart();
+ 582              		.loc 1 179 3 view .LVU129
+ 583 00aa 1148     		ldr	r0, .L38+48
+ 584 00ac FFF7FEFF 		bl	puts
+ 585              	.LVL57:
+ 180:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 586              		.loc 1 180 3 view .LVU130
+ 587 00b0 FFF7FEFF 		bl	osKernelStart
+ 588              	.LVL58:
+ 589              	.L35:
+ 186:../../applications/lorawan-example/src/lorawan-example.c ****   {
+ 590              		.loc 1 186 3 discriminator 1 view .LVU131
+ 191:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE END 3 */
+ 591              		.loc 1 191 3 discriminator 1 view .LVU132
+ 592 00b4 FEE7     		b	.L35
+ 593              	.L37:
+ 594              	.LBB6:
+ 125:../../applications/lorawan-example/src/lorawan-example.c ****   }
+ 595              		.loc 1 125 5 view .LVU133
+ 596 00b6 0F48     		ldr	r0, .L38+52
+ 597 00b8 FFF7FEFF 		bl	puts
+ 598              	.LVL59:
+ 599 00bc B7E7     		b	.L34
+ 600              	.L39:
+ 601 00be 00BF     		.align	2
+ 602              	.L38:
+ 603 00c0 00000000 		.word	short_UID
+ 604 00c4 00000000 		.word	.LANCHOR0
+ 605 00c8 00000000 		.word	txMutexId
+ 606 00cc 00000000 		.word	.LANCHOR2
+ 607 00d0 00000000 		.word	murata_rx_processing_handle
+ 608 00d4 00000000 		.word	IWDG_feed
+ 609 00d8 00000000 		.word	iwdgTimId
+ 610 00dc 00000000 		.word	LoRaWAN_send
+ 611 00e0 00000000 		.word	loraWANTimId
+ 612 00e4 00000000 		.word	check_modules
+ 613 00e8 00000000 		.word	moduleCheckTimId
+ 614 00ec 80EE3600 		.word	3600000
+ 615 00f0 1C000000 		.word	.LC12
+ 616 00f4 00000000 		.word	.LC10
+ 617              	.LBE6:
+ 618              		.cfi_endproc
+ 619              	.LFE129:
+ 621              		.section	.text.HAL_TIM_PeriodElapsedCallback,"ax",%progbits
+ 622              		.align	1
+ 623              		.global	HAL_TIM_PeriodElapsedCallback
+ 624              		.syntax unified
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 18
+
+
+ 625              		.thumb
+ 626              		.thumb_func
+ 627              		.fpu fpv4-sp-d16
+ 629              	HAL_TIM_PeriodElapsedCallback:
+ 630              	.LVL60:
+ 631              	.LFB136:
+ 296:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 297:../../applications/lorawan-example/src/lorawan-example.c **** /* USER CODE END 4 */
+ 298:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 299:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 300:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 301:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 302:../../applications/lorawan-example/src/lorawan-example.c **** /**
+ 303:../../applications/lorawan-example/src/lorawan-example.c ****   * @brief  Period elapsed callback in non blocking mode
+ 304:../../applications/lorawan-example/src/lorawan-example.c ****   * @note   This function is called  when TIM1 interrupt took place, inside
+ 305:../../applications/lorawan-example/src/lorawan-example.c ****   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+ 306:../../applications/lorawan-example/src/lorawan-example.c ****   * a global variable "uwTick" used as application time base.
+ 307:../../applications/lorawan-example/src/lorawan-example.c ****   * @param  htim : TIM handle
+ 308:../../applications/lorawan-example/src/lorawan-example.c ****   * @retval None
+ 309:../../applications/lorawan-example/src/lorawan-example.c ****   */
+ 310:../../applications/lorawan-example/src/lorawan-example.c **** void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+ 311:../../applications/lorawan-example/src/lorawan-example.c **** {
+ 632              		.loc 1 311 1 view -0
+ 633              		.cfi_startproc
+ 634              		@ args = 0, pretend = 0, frame = 0
+ 635              		@ frame_needed = 0, uses_anonymous_args = 0
+ 636              		.loc 1 311 1 is_stmt 0 view .LVU135
+ 637 0000 08B5     		push	{r3, lr}
+ 638              	.LCFI12:
+ 639              		.cfi_def_cfa_offset 8
+ 640              		.cfi_offset 3, -8
+ 641              		.cfi_offset 14, -4
+ 312:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE BEGIN Callback 0 */
+ 313:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 314:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE END Callback 0 */
+ 315:../../applications/lorawan-example/src/lorawan-example.c ****   if (htim->Instance == TIM1)
+ 642              		.loc 1 315 3 is_stmt 1 view .LVU136
+ 643              		.loc 1 315 11 is_stmt 0 view .LVU137
+ 644 0002 0268     		ldr	r2, [r0]
+ 645              		.loc 1 315 6 view .LVU138
+ 646 0004 034B     		ldr	r3, .L44
+ 647 0006 9A42     		cmp	r2, r3
+ 648 0008 00D0     		beq	.L43
+ 649              	.LVL61:
+ 650              	.L40:
+ 316:../../applications/lorawan-example/src/lorawan-example.c ****   {
+ 317:../../applications/lorawan-example/src/lorawan-example.c ****     HAL_IncTick();
+ 318:../../applications/lorawan-example/src/lorawan-example.c ****   }
+ 319:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE BEGIN Callback 1 */
+ 320:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 321:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE END Callback 1 */
+ 322:../../applications/lorawan-example/src/lorawan-example.c **** }
+ 651              		.loc 1 322 1 view .LVU139
+ 652 000a 08BD     		pop	{r3, pc}
+ 653              	.LVL62:
+ 654              	.L43:
+ 317:../../applications/lorawan-example/src/lorawan-example.c ****   }
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 19
+
+
+ 655              		.loc 1 317 5 is_stmt 1 view .LVU140
+ 656 000c FFF7FEFF 		bl	HAL_IncTick
+ 657              	.LVL63:
+ 658              		.loc 1 322 1 is_stmt 0 view .LVU141
+ 659 0010 FBE7     		b	.L40
+ 660              	.L45:
+ 661 0012 00BF     		.align	2
+ 662              	.L44:
+ 663 0014 002C0140 		.word	1073818624
+ 664              		.cfi_endproc
+ 665              	.LFE136:
+ 667              		.section	.text.Error_Handler,"ax",%progbits
+ 668              		.align	1
+ 669              		.global	Error_Handler
+ 670              		.syntax unified
+ 671              		.thumb
+ 672              		.thumb_func
+ 673              		.fpu fpv4-sp-d16
+ 675              	Error_Handler:
+ 676              	.LFB137:
+ 323:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 324:../../applications/lorawan-example/src/lorawan-example.c **** /**
+ 325:../../applications/lorawan-example/src/lorawan-example.c ****   * @brief  This function is executed in case of error occurrence.
+ 326:../../applications/lorawan-example/src/lorawan-example.c ****   * @retval None
+ 327:../../applications/lorawan-example/src/lorawan-example.c ****   */
+ 328:../../applications/lorawan-example/src/lorawan-example.c **** void Error_Handler(void)
+ 329:../../applications/lorawan-example/src/lorawan-example.c **** {
+ 677              		.loc 1 329 1 is_stmt 1 view -0
+ 678              		.cfi_startproc
+ 679              		@ args = 0, pretend = 0, frame = 0
+ 680              		@ frame_needed = 0, uses_anonymous_args = 0
+ 681              		@ link register save eliminated.
+ 330:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE BEGIN Error_Handler_Debug */
+ 331:../../applications/lorawan-example/src/lorawan-example.c ****   /* User can add his own implementation to report the HAL error return state */
+ 332:../../applications/lorawan-example/src/lorawan-example.c **** 
+ 333:../../applications/lorawan-example/src/lorawan-example.c ****   /* USER CODE END Error_Handler_Debug */
+ 334:../../applications/lorawan-example/src/lorawan-example.c **** }
+ 682              		.loc 1 334 1 view .LVU143
+ 683 0000 7047     		bx	lr
+ 684              		.cfi_endproc
+ 685              	.LFE137:
+ 687              		.comm	short_UID,8,8
+ 688              		.global	lora_init
+ 689              		.global	LoRaWAN_Counter
+ 690              		.comm	threadToNotify,4,4
+ 691              		.comm	murata_reset_pin,4,4
+ 692              		.comm	murata_wakeup_pin,4,4
+ 693              		.comm	murata_rx_process_mutex_id,4,4
+ 694              		.comm	txMutexId,4,4
+ 695              		.comm	moduleCheckTimId,4,4
+ 696              		.comm	loraWANTimId,4,4
+ 697              		.comm	iwdgTimId,4,4
+ 698              		.comm	murata_rx_processing_handle,4,4
+ 699              		.comm	defaultTaskHandle,4,4
+ 700              		.comm	P3_header,44,4
+ 701              		.comm	P2_header,44,4
+ 702              		.comm	P1_header,44,4
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 20
+
+
+ 703              		.comm	FLASH_SPI,100,4
+ 704              		.comm	P3_SPI,100,4
+ 705              		.comm	P2_SPI,100,4
+ 706              		.comm	P1_SPI,100,4
+ 707              		.comm	P3_I2C,76,4
+ 708              		.comm	P2_I2C,76,4
+ 709              		.comm	P1_I2C,76,4
+ 710              		.comm	common_I2C,76,4
+ 711              		.comm	P3_UART,120,4
+ 712              		.comm	P2_UART,120,4
+ 713              		.comm	P1_UART,120,4
+ 714              		.comm	BLE_UART,120,4
+ 715              		.comm	USB_UART,120,4
+ 716              		.comm	hiwdg,16,4
+ 717              		.comm	P3_DIO6,8,4
+ 718              		.comm	P3_DIO5,8,4
+ 719              		.comm	P3_DIO4,8,4
+ 720              		.comm	P3_DIO3,8,4
+ 721              		.comm	P3_DIO2,8,4
+ 722              		.comm	P3_DIO1,8,4
+ 723              		.comm	P2_DIO6,8,4
+ 724              		.comm	P2_DIO5,8,4
+ 725              		.comm	P2_DIO4,8,4
+ 726              		.comm	P2_DIO3,8,4
+ 727              		.comm	P2_DIO2,8,4
+ 728              		.comm	P2_DIO1,8,4
+ 729              		.comm	P1_DIO6,8,4
+ 730              		.comm	P1_DIO5,8,4
+ 731              		.comm	P1_DIO4,8,4
+ 732              		.comm	P1_DIO3,8,4
+ 733              		.comm	P1_DIO2,8,4
+ 734              		.comm	P1_DIO1,8,4
+ 735              		.section	.rodata
+ 736              		.align	2
+ 737              		.set	.LANCHOR2,. + 0
+ 738              	.LC11:
+ 739 0000 00000000 		.word	.LC0
+ 740 0004 00000000 		.word	murata_process_rx_response
+ 741 0008 0000     		.short	0
+ 742 000a 0000     		.space	2
+ 743 000c 00000000 		.word	0
+ 744 0010 00020000 		.word	512
+ 745              		.section	.bss.LoRaWAN_Counter,"aw",%nobits
+ 746              		.align	1
+ 747              		.set	.LANCHOR1,. + 0
+ 750              	LoRaWAN_Counter:
+ 751 0000 0000     		.space	2
+ 752              		.section	.bss.lora_init,"aw",%nobits
+ 753              		.set	.LANCHOR0,. + 0
+ 756              	lora_init:
+ 757 0000 00       		.space	1
+ 758              		.section	.rodata.LoRaWAN_send.str1.4,"aMS",%progbits,1
+ 759              		.align	2
+ 760              	.LC2:
+ 761 0000 6D757261 		.ascii	"murata not initialized, not sending\015\000"
+ 761      7461206E 
+ 761      6F742069 
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 21
+
+
+ 761      6E697469 
+ 761      616C697A 
+ 762              		.section	.rodata.check_modules.str1.4,"aMS",%progbits,1
+ 763              		.align	2
+ 764              	.LC3:
+ 765 0000 63686563 		.ascii	"checking the status of the modules\015\000"
+ 765      6B696E67 
+ 765      20746865 
+ 765      20737461 
+ 765      74757320 
+ 766              		.section	.rodata.main.str1.4,"aMS",%progbits,1
+ 767              		.align	2
+ 768              	.LC10:
+ 769 0000 4C6F5261 		.ascii	"LoRaWAN module init OK\015\012\015\000"
+ 769      57414E20 
+ 769      6D6F6475 
+ 769      6C652069 
+ 769      6E697420 
+ 770 001a 0000     		.space	2
+ 771              	.LC12:
+ 772 001c 53746172 		.ascii	"Starting RTOS Scheduler\015\012\015\000"
+ 772      74696E67 
+ 772      2052544F 
+ 772      53205363 
+ 772      68656475 
+ 773              		.section	.rodata.printWelcome.str1.4,"aMS",%progbits,1
+ 774              		.align	2
+ 775              	.LC4:
+ 776 0000 0D00     		.ascii	"\015\000"
+ 777 0002 0000     		.space	2
+ 778              	.LC5:
+ 779 0004 2A2A2A2A 		.ascii	"*****************************************\015\000"
+ 779      2A2A2A2A 
+ 779      2A2A2A2A 
+ 779      2A2A2A2A 
+ 779      2A2A2A2A 
+ 780 002f 00       		.space	1
+ 781              	.LC6:
+ 782 0030 4C6F5261 		.ascii	"LoRaWAN example\015\000"
+ 782      57414E20 
+ 782      6578616D 
+ 782      706C650D 
+ 782      00
+ 783 0041 000000   		.space	3
+ 784              	.LC7:
+ 785 0044 6F637461 		.ascii	"octa ID: \000"
+ 785      2049443A 
+ 785      2000
+ 786 004e 0000     		.space	2
+ 787              	.LC8:
+ 788 0050 25303278 		.ascii	"%02x\000"
+ 788      00
+ 789 0055 000000   		.space	3
+ 790              	.LC9:
+ 791 0058 0D0A0D00 		.ascii	"\015\012\015\000"
+ 792              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 793              		.align	2
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 22
+
+
+ 794              	.LC0:
+ 795 0000 6D757261 		.ascii	"murata_rx_processing\000"
+ 795      74615F72 
+ 795      785F7072 
+ 795      6F636573 
+ 795      73696E67 
+ 796              		.weak	SystemClock_Config
+ 797              		.text
+ 798              	.Letext0:
+ 799              		.file 2 "d:\\softwareunif\\toolchainkit\\8 2019-q3-update\\arm-none-eabi\\include\\machine\\_defau
+ 800              		.file 3 "d:\\softwareunif\\toolchainkit\\8 2019-q3-update\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 801              		.file 4 "../../core/ST/CMSIS/Include/core_cm4.h"
+ 802              		.file 5 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/system_stm32l4xx.h"
+ 803              		.file 6 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/stm32l496xx.h"
+ 804              		.file 7 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h"
+ 805              		.file 8 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dma.h"
+ 806              		.file 9 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_i2c.h"
+ 807              		.file 10 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_iwdg.h"
+ 808              		.file 11 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h"
+ 809              		.file 12 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h"
+ 810              		.file 13 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h"
+ 811              		.file 14 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h"
+ 812              		.file 15 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 813              		.file 16 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
+ 814              		.file 17 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/include/timers.h"
+ 815              		.file 18 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
+ 816              		.file 19 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h"
+ 817              		.file 20 "../../core/ST/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h"
+ 818              		.file 21 "../../core/platform/octa/inc/gpio.h"
+ 819              		.file 22 "../../core/platform/octa/inc/iwdg.h"
+ 820              		.file 23 "../../core/platform/octa/inc/uart.h"
+ 821              		.file 24 "../../core/platform/octa/inc/i2c.h"
+ 822              		.file 25 "../../core/platform/octa/inc/spi.h"
+ 823              		.file 26 "../../core/platform/octa/inc/octa.h"
+ 824              		.file 27 "../../applications/lorawan-example/inc/lorawan-example.h"
+ 825              		.file 28 "../../shields/Murata/inc/murata.h"
+ 826              		.file 29 "<built-in>"
+ 827              		.file 30 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio.h"
+ 828              		.file 31 "../../core/platform/octa/inc/sysclock.h"
+ 829              		.file 32 "../../core/platform/common/inc/platform.h"
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 23
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 lorawan-example.c
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:18     .text.LoRaWAN_send:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:26     .text.LoRaWAN_send:00000000 LoRaWAN_send
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:146    .text.LoRaWAN_send:0000006c $d
+                            *COM*:00000004 txMutexId
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:154    .text.check_modules:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:161    .text.check_modules:00000000 check_modules
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:207    .text.check_modules:00000024 $d
+                            *COM*:00000008 short_UID
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:214    .text.murata_process_rx_response:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:221    .text.murata_process_rx_response:00000000 murata_process_rx_response
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:264    .text.HAL_UART_RxCpltCallback:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:271    .text.HAL_UART_RxCpltCallback:00000000 HAL_UART_RxCpltCallback
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:303    .text.HAL_UART_RxCpltCallback:00000010 $d
+                            *COM*:00000078 P3_UART
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:308    .text.vApplicationIdleHook:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:315    .text.vApplicationIdleHook:00000000 vApplicationIdleHook
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:328    .text.printWelcome:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:335    .text.printWelcome:00000000 printWelcome
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:432    .text.printWelcome:00000070 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:444    .text.main:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:451    .text.main:00000000 main
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:603    .text.main:000000c0 $d
+                            *COM*:00000004 murata_rx_processing_handle
+                            *COM*:00000004 iwdgTimId
+                            *COM*:00000004 loraWANTimId
+                            *COM*:00000004 moduleCheckTimId
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:622    .text.HAL_TIM_PeriodElapsedCallback:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:629    .text.HAL_TIM_PeriodElapsedCallback:00000000 HAL_TIM_PeriodElapsedCallback
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:663    .text.HAL_TIM_PeriodElapsedCallback:00000014 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:668    .text.Error_Handler:00000000 $t
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:675    .text.Error_Handler:00000000 Error_Handler
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:756    .bss.lora_init:00000000 lora_init
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:750    .bss.LoRaWAN_Counter:00000000 LoRaWAN_Counter
+                            *COM*:00000004 threadToNotify
+                            *COM*:00000004 murata_reset_pin
+                            *COM*:00000004 murata_wakeup_pin
+                            *COM*:00000004 murata_rx_process_mutex_id
+                            *COM*:00000004 defaultTaskHandle
+                            *COM*:0000002c P3_header
+                            *COM*:0000002c P2_header
+                            *COM*:0000002c P1_header
+                            *COM*:00000064 FLASH_SPI
+                            *COM*:00000064 P3_SPI
+                            *COM*:00000064 P2_SPI
+                            *COM*:00000064 P1_SPI
+                            *COM*:0000004c P3_I2C
+                            *COM*:0000004c P2_I2C
+                            *COM*:0000004c P1_I2C
+                            *COM*:0000004c common_I2C
+                            *COM*:00000078 P2_UART
+                            *COM*:00000078 P1_UART
+                            *COM*:00000078 BLE_UART
+                            *COM*:00000078 USB_UART
+                            *COM*:00000010 hiwdg
+                            *COM*:00000008 P3_DIO6
+ARM GAS  C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s 			page 24
+
+
+                            *COM*:00000008 P3_DIO5
+                            *COM*:00000008 P3_DIO4
+                            *COM*:00000008 P3_DIO3
+                            *COM*:00000008 P3_DIO2
+                            *COM*:00000008 P3_DIO1
+                            *COM*:00000008 P2_DIO6
+                            *COM*:00000008 P2_DIO5
+                            *COM*:00000008 P2_DIO4
+                            *COM*:00000008 P2_DIO3
+                            *COM*:00000008 P2_DIO2
+                            *COM*:00000008 P2_DIO1
+                            *COM*:00000008 P1_DIO6
+                            *COM*:00000008 P1_DIO5
+                            *COM*:00000008 P1_DIO4
+                            *COM*:00000008 P1_DIO3
+                            *COM*:00000008 P1_DIO2
+                            *COM*:00000008 P1_DIO1
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:736    .rodata:00000000 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:746    .bss.LoRaWAN_Counter:00000000 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:757    .bss.lora_init:00000000 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:759    .rodata.LoRaWAN_send.str1.4:00000000 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:763    .rodata.check_modules.str1.4:00000000 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:767    .rodata.main.str1.4:00000000 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:774    .rodata.printWelcome.str1.4:00000000 $d
+C:\Users\WILKOM~1\AppData\Local\Temp\ccFNINpa.s:793    .rodata.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+osMutexWait
+Murata_LoRaWAN_Send
+osDelay
+osMutexRelease
+puts
+Murata_Initialize
+Murata_toggleResetPin
+ulTaskNotifyTake
+Murata_process_fifo
+Murata_rxCallback
+printf
+HAL_GPIO_TogglePin
+HAL_Delay
+HAL_Init
+SystemClock_Config
+Initialize_Platform
+get_UID
+osMutexCreate
+osThreadCreate
+Murata_SetProcessingThread
+IWDG_feed
+osTimerCreate
+osTimerStart
+osKernelStart
+HAL_IncTick

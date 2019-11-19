@@ -1,0 +1,160 @@
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccEgAIXo.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"platform.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.Initialize_Platform,"ax",%progbits
+  18              		.align	1
+  19              		.global	Initialize_Platform
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	Initialize_Platform:
+  27              	.LFB128:
+  28              		.file 1 "../../core/platform/common/src/platform.c"
+   1:../../core/platform/common/src/platform.c **** #include "platform.h"
+   2:../../core/platform/common/src/platform.c **** 
+   3:../../core/platform/common/src/platform.c **** void Initialize_Platform(void)
+   4:../../core/platform/common/src/platform.c **** {
+  29              		.loc 1 4 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+   5:../../core/platform/common/src/platform.c ****     #ifdef platform_octa
+   6:../../core/platform/common/src/platform.c ****         OCTA_Initialize_Platform();
+  38              		.loc 1 6 9 view .LVU1
+  39 0002 FFF7FEFF 		bl	OCTA_Initialize_Platform
+  40              	.LVL0:
+   7:../../core/platform/common/src/platform.c ****     #endif
+   8:../../core/platform/common/src/platform.c ****     #ifdef platform_octa_mini
+   9:../../core/platform/common/src/platform.c ****         printf("octa mini not yet implemented \r\n");
+  10:../../core/platform/common/src/platform.c ****     #endif
+  11:../../core/platform/common/src/platform.c **** }
+  41              		.loc 1 11 1 is_stmt 0 view .LVU2
+  42 0006 08BD     		pop	{r3, pc}
+  43              		.cfi_endproc
+  44              	.LFE128:
+  46              		.comm	P3_header,44,4
+  47              		.comm	P2_header,44,4
+  48              		.comm	P1_header,44,4
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccEgAIXo.s 			page 2
+
+
+  49              		.comm	FLASH_SPI,100,4
+  50              		.comm	P3_SPI,100,4
+  51              		.comm	P2_SPI,100,4
+  52              		.comm	P1_SPI,100,4
+  53              		.comm	P3_I2C,76,4
+  54              		.comm	P2_I2C,76,4
+  55              		.comm	P1_I2C,76,4
+  56              		.comm	common_I2C,76,4
+  57              		.comm	P3_UART,120,4
+  58              		.comm	P2_UART,120,4
+  59              		.comm	P1_UART,120,4
+  60              		.comm	BLE_UART,120,4
+  61              		.comm	USB_UART,120,4
+  62              		.comm	hiwdg,16,4
+  63              		.comm	P3_DIO6,8,4
+  64              		.comm	P3_DIO5,8,4
+  65              		.comm	P3_DIO4,8,4
+  66              		.comm	P3_DIO3,8,4
+  67              		.comm	P3_DIO2,8,4
+  68              		.comm	P3_DIO1,8,4
+  69              		.comm	P2_DIO6,8,4
+  70              		.comm	P2_DIO5,8,4
+  71              		.comm	P2_DIO4,8,4
+  72              		.comm	P2_DIO3,8,4
+  73              		.comm	P2_DIO2,8,4
+  74              		.comm	P2_DIO1,8,4
+  75              		.comm	P1_DIO6,8,4
+  76              		.comm	P1_DIO5,8,4
+  77              		.comm	P1_DIO4,8,4
+  78              		.comm	P1_DIO3,8,4
+  79              		.comm	P1_DIO2,8,4
+  80              		.comm	P1_DIO1,8,4
+  81              		.text
+  82              	.Letext0:
+  83              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+  84              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+  85              		.file 4 "../../core/ST/CMSIS/Include/core_cm4.h"
+  86              		.file 5 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/system_stm32l4xx.h"
+  87              		.file 6 "../../core/ST/CMSIS/Device/ST/STM32L4xx/Include/stm32l496xx.h"
+  88              		.file 7 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h"
+  89              		.file 8 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_dma.h"
+  90              		.file 9 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_i2c.h"
+  91              		.file 10 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_iwdg.h"
+  92              		.file 11 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h"
+  93              		.file 12 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h"
+  94              		.file 13 "../../core/ST/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h"
+  95              		.file 14 "../../core/platform/octa/inc/gpio.h"
+  96              		.file 15 "../../core/platform/octa/inc/iwdg.h"
+  97              		.file 16 "../../core/platform/octa/inc/uart.h"
+  98              		.file 17 "../../core/platform/octa/inc/i2c.h"
+  99              		.file 18 "../../core/platform/octa/inc/spi.h"
+ 100              		.file 19 "../../core/platform/octa/inc/octa.h"
+ARM GAS  C:\Users\yvesk\AppData\Local\Temp\ccEgAIXo.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 platform.c
+C:\Users\yvesk\AppData\Local\Temp\ccEgAIXo.s:18     .text.Initialize_Platform:00000000 $t
+C:\Users\yvesk\AppData\Local\Temp\ccEgAIXo.s:26     .text.Initialize_Platform:00000000 Initialize_Platform
+                            *COM*:0000002c P3_header
+                            *COM*:0000002c P2_header
+                            *COM*:0000002c P1_header
+                            *COM*:00000064 FLASH_SPI
+                            *COM*:00000064 P3_SPI
+                            *COM*:00000064 P2_SPI
+                            *COM*:00000064 P1_SPI
+                            *COM*:0000004c P3_I2C
+                            *COM*:0000004c P2_I2C
+                            *COM*:0000004c P1_I2C
+                            *COM*:0000004c common_I2C
+                            *COM*:00000078 P3_UART
+                            *COM*:00000078 P2_UART
+                            *COM*:00000078 P1_UART
+                            *COM*:00000078 BLE_UART
+                            *COM*:00000078 USB_UART
+                            *COM*:00000010 hiwdg
+                            *COM*:00000008 P3_DIO6
+                            *COM*:00000008 P3_DIO5
+                            *COM*:00000008 P3_DIO4
+                            *COM*:00000008 P3_DIO3
+                            *COM*:00000008 P3_DIO2
+                            *COM*:00000008 P3_DIO1
+                            *COM*:00000008 P2_DIO6
+                            *COM*:00000008 P2_DIO5
+                            *COM*:00000008 P2_DIO4
+                            *COM*:00000008 P2_DIO3
+                            *COM*:00000008 P2_DIO2
+                            *COM*:00000008 P2_DIO1
+                            *COM*:00000008 P1_DIO6
+                            *COM*:00000008 P1_DIO5
+                            *COM*:00000008 P1_DIO4
+                            *COM*:00000008 P1_DIO3
+                            *COM*:00000008 P1_DIO2
+                            *COM*:00000008 P1_DIO1
+
+UNDEFINED SYMBOLS
+OCTA_Initialize_Platform
