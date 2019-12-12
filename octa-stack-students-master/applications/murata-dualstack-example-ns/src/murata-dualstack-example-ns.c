@@ -177,7 +177,7 @@ int main(void)
 
     //Initial setup to recieve bluetooth setup:
     HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin); //As long as setup is running: Blue led is on! 
-   /*  while(!init_flag)
+     while(!init_flag)
     {
       //Wait till the bluetooth config is completed. 
       if(bleflag==1){ //We received an interrupt from the BLE. 
@@ -185,7 +185,7 @@ int main(void)
       ble_callback();
       }
       isAsleep = 1; //You may go to sleep after handling the setup 
-    } */
+    } 
     HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin); //As long as setup is running: Blue led is on! 
     temp_hum_measurement(); //measure the temperature of the room
     //Dash7_send(NULL); //Send the desired temperature + measured temperature! 
@@ -210,7 +210,7 @@ int main(void)
 
      while(isActiveSending){
       IWDG_feed(NULL);
-      if(!sendflag){
+      if(!sendFlag){
       HAL_Delay(LORAWAN_INTERVAL);
       }
       //Wacht tot hij klaar is
@@ -230,7 +230,7 @@ int main(void)
       sendFlag=0; //Lora
     }else{
       murataSucces++;
-      sendFlag=0; //Dash //VERGEET DIT NIET AAN TE PASSEN !!!
+      sendFlag=1; //Dash //VERGEET DIT NIET AAN TE PASSEN !!!
     }
 
      if(isAsleep){ //De interrupts zijn handled, je mag gaan slapen
@@ -299,11 +299,10 @@ void sendMessage(){
   {
     LoRaWAN_send(NULL);
   }
-  
+  isAsleep=1;
 }
 
-void handleTemperature(){
-      temperatureflag=0; 
+void handleTemperature(){ 
       temp_hum_measurement();
       sendMessage();
       HAL_GPIO_TogglePin(OCTA_RLED_GPIO_Port, OCTA_RLED_Pin);
@@ -313,14 +312,15 @@ void handleTemperature(){
 
 void handleButton(){
       //We will allow the user to set a new desired temperature after pressing this button
-      init_flag = 0; 
-
+      /* init_flag = 0; 
+      sendMessage();
+ */
       //Routine for fingerprinting
-      /* temp_hum_measurement();
+       temp_hum_measurement();
       Dash7_send(NULL);
       HAL_GPIO_TogglePin(OCTA_RLED_GPIO_Port, OCTA_RLED_Pin);
       HAL_Delay(1000);
-      HAL_GPIO_TogglePin(OCTA_RLED_GPIO_Port, OCTA_RLED_Pin); */
+      HAL_GPIO_TogglePin(OCTA_RLED_GPIO_Port, OCTA_RLED_Pin); 
 
       //The device will be able to sleep AFTER completion of Bluetooth communication
 }
@@ -459,9 +459,10 @@ void ble_callback(){
     if(ble_counter==2){
       ble_counter=0; //If we recieved two bytes, we can set it back to zero. 
       init_flag=1; //Initialise is complete. 
+      flag=3;
       }
     } 
-    flag=3;  //Write to flash flag
+    //Write to flash flag
     //Bluetooth call back complete so we will write to flash
 }
 
