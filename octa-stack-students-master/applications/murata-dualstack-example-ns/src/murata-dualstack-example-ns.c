@@ -419,7 +419,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   }
   if(huart == &BLE_UART)
   {
-    bleflag=1;
+    bleflag=1; //flag for ble
   }
 }
 
