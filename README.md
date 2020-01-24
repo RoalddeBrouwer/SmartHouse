@@ -38,6 +38,7 @@ Grafana
 
 HOW CAN WE LOCALIZE (ALGO):
 
+
  
 
 
