@@ -175,22 +175,7 @@ int main(void)
   {
     IWDG_feed(NULL); //dont forget feeding the watchdog
     //Initial setup to recieve bluetooth setup:
-    HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin); //As long as setup is running: Blue led is on!
-    while (!init_flag)
-    {
-      IWDG_feed(NULL);
-      //Wait till the bluetooth config is completed.
-      if (bleflag == 1)
-      { //We received an interrupt from the BLE.
-        bleflag = 0;
-        ble_callback();
-      }
-      isAsleep = 1; //You may go to sleep after handling the setup
-    }
-    HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin); //As long as setup is running: Blue led is on!
-    temp_hum_measurement();                                 //measure the temperature of the room
-    //Dash7_send(NULL); //Send the desired temperature + measured temperature!
-    //Interrupt flag handler
+    
     switch (flag)
     {
     case 1:
@@ -241,7 +226,7 @@ int main(void)
       sendFlag=0; //Lora
     }else{
       murataSucces++;
-      sendFlag=1; //Dash 
+      sendFlag=1; //Dash  //VERANDER DIT TERUG
     }
 
      if(isAsleep){ //De interrupts zijn handled, je mag gaan slapen
@@ -272,6 +257,25 @@ void enterStop(){
 
   printf("Waking up :'c \r\n");
 
+}
+
+void bluetoothSetup(){
+  HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin); //As long as setup is running: Blue led is on!
+    while (!init_flag)
+    {
+      IWDG_feed(NULL);
+      //Wait till the bluetooth config is completed.
+      if (bleflag == 1)
+      { //We received an interrupt from the BLE.
+        bleflag = 0;
+        ble_callback();
+      }
+      isAsleep = 1; //You may go to sleep after handling the setup
+    }
+    HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin); //As long as setup is running: Blue led is on!
+    temp_hum_measurement();                                 //measure the temperature of the room
+    //Dash7_send(NULL); //Send the desired temperature + measured temperature!
+    //Interrupt flag handler
 }
 
 /**
@@ -319,9 +323,7 @@ void handleButton1(){
 void handleButton2(){
       //We will allow the user to set a new desired temperature after pressing this button
       init_flag = 0; 
-      HAL_GPIO_TogglePin(OCTA_GLED_GPIO_Port, OCTA_GLED_Pin);
-      HAL_Delay(1000);
-      HAL_GPIO_TogglePin(OCTA_GLED_GPIO_Port, OCTA_GLED_Pin); 
+      bluetoothSetup();
 }
 
 /**
@@ -350,7 +352,8 @@ void readOldTemperature(){
   S25FL256_open(BLOCK_ID);
   S25FL256_read((uint8_t *)flashBuf, SIZE);
   printf("Previous desired temperature: %d%d\r\n",flashBuf[0],flashBuf[1]); //Print the previously desired temperatures. 
-
+  buffer[0]=flashBuf[0];
+  buffer[1]=flashBuf[1];
 }
 
 /**
@@ -375,7 +378,7 @@ void LoRaWAN_send(void const *argument)
     {
       murata_init++;
       if(murata_init == 10)
-        murata_init == 0;
+        murata_init = 0;
     }
     else
     {
@@ -387,7 +390,6 @@ void LoRaWAN_send(void const *argument)
     printf("murata not initialized, not sending\r\n"); 
   }
 }
-
 /**
   * @brief This function will send the data over dash7. 
   */	
