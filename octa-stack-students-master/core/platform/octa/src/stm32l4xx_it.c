@@ -280,8 +280,12 @@ void EXTI15_10_IRQHandler(void) {
   //we zeggen hier dat als interrupt zich op een van de pinnen voordoet, dan roepen we onze handler op en geven we de pin 13 (B13 is de interruptpin van de accelerometer)
 }
 
-void EXTI0_IRQHandler(void){
+void EXTI0_IRQHandler(void){ //For button 1
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
+}
+
+void EXTI1_IRQHandler(void){ //For button 2 
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1); 
 }
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

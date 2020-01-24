@@ -1,0 +1,216 @@
+This repo contains the octa-\/stack with some example applications.
+
+
+\begin{DoxyItemize}
+\item \href{\#architecture}{\texttt{ Architecture}}
+\begin{DoxyItemize}
+\item \href{\#core}{\texttt{ core}}
+\begin{DoxyItemize}
+\item \href{\#drivers}{\texttt{ drivers}}
+\item \href{\#platform}{\texttt{ platform}}
+\begin{DoxyItemize}
+\item \href{\#common}{\texttt{ common}}
+\item \href{\#octa}{\texttt{ octa}}
+\end{DoxyItemize}
+\item \href{\#st}{\texttt{ ST}}
+\end{DoxyItemize}
+\item \href{\#shields}{\texttt{ shields}}
+\item \href{\#applications}{\texttt{ applications}}
+\end{DoxyItemize}
+\item \href{\#makefiles}{\texttt{ Makefiles}}
+\begin{DoxyItemize}
+\item \href{\#application-makefile}{\texttt{ Application Makefile}}
+\begin{DoxyItemize}
+\item \href{\#application-name}{\texttt{ Application Name}}
+\item \href{\#platform}{\texttt{ Platform}}
+\item \href{\#float-support}{\texttt{ Float Support}}
+\item \href{\#shield-definitions}{\texttt{ Shield Definitions}}
+\item \href{\#bootloader}{\texttt{ Bootloader}}
+\item \href{\#step-up-pin}{\texttt{ Step Up Pin}}
+\item \href{\#link-to-core-makefile}{\texttt{ Link to core makefile}}
+\end{DoxyItemize}
+\item \href{\#makefilecore}{\texttt{ Makefile.\+core}}
+\item \href{\#makefileplatform}{\texttt{ Makefile.\+platform}}
+\item \href{\#makefiledrivers}{\texttt{ Makefile.\+drivers}}
+\item \href{\#makefileshields}{\texttt{ Makefile.\+shields}}
+\end{DoxyItemize}
+\item \href{\#getting-started}{\texttt{ Getting Started}}
+\begin{DoxyItemize}
+\item \href{\#compiling}{\texttt{ Compiling}}
+\begin{DoxyItemize}
+\item \href{\#arm-none-eabi-gcc}{\texttt{ arm-\/none-\/eabi-\/gcc}}
+\item \href{\#gnu-make}{\texttt{ G\+NU Make}}
+\end{DoxyItemize}
+\item \href{\#flashing}{\texttt{ Flashing}}
+\begin{DoxyItemize}
+\item \href{\#st-link}{\texttt{ S\+T-\/\+Link}}
+\item \href{\#switching-between-st-link-and-j-link}{\texttt{ Switching between S\+T-\/\+Link and J-\/\+Link}}
+\item \href{\#j-link}{\texttt{ J-\/\+Link}}
+\end{DoxyItemize}
+\item \href{\#make-command-overview}{\texttt{ Make Command Overview}}
+\item \href{\#vscode-support}{\texttt{ vscode support}}
+\begin{DoxyItemize}
+\item \href{\#tasksjson}{\texttt{ tasks.\+json}}
+\item \href{\#cortex-debug-extension}{\texttt{ cortex-\/debug extension}}
+\item \href{\#launchjson}{\texttt{ launch.\+json}}
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md1}{}\doxysection{Architecture}\label{md__r_e_a_d_m_e_autotoc_md1}
+The architecture of the octa-\/stack consists of three main parts being the \href{\#core}{\texttt{ core}}, \href{\#shields}{\texttt{ shields}} and \href{\#applications}{\texttt{ applications}}.
+
+\textbackslash{} {\itshape octa-\/stack architecture}\hypertarget{md__r_e_a_d_m_e_autotoc_md2}{}\doxysubsection{core}\label{md__r_e_a_d_m_e_autotoc_md2}
+The core of the stack consists of some common \href{\#drivers}{\texttt{ drivers}}, support for different \href{\#platforms}{\texttt{ platforms}} and platform independent \href{\#st}{\texttt{ ST}} code.\hypertarget{md__r_e_a_d_m_e_autotoc_md3}{}\doxysubsubsection{drivers}\label{md__r_e_a_d_m_e_autotoc_md3}
+The drivers in this folder are common, and for the current octa platform always onboard and available.\hypertarget{md__r_e_a_d_m_e_autotoc_md4}{}\doxysubsubsection{platform}\label{md__r_e_a_d_m_e_autotoc_md4}
+The platform sections consists of a common part and a part for each supported platform.\hypertarget{md__r_e_a_d_m_e_autotoc_md5}{}\doxyparagraph{common}\label{md__r_e_a_d_m_e_autotoc_md5}
+The common platform has some common functions such as {\ttfamily Initialize\+\_\+\+Platform()}. This will in turn call the platform initialize function of the selected platform. For now, this common part is rather limited.\hypertarget{md__r_e_a_d_m_e_autotoc_md6}{}\doxyparagraph{octa}\label{md__r_e_a_d_m_e_autotoc_md6}
+This is the original platform, consisting of a {\ttfamily Nucleo\+L496\+Z\+G-\/P} board, and the {\ttfamily octa-\/connect} expansion shield.\textbackslash{} Platform specific code for G\+P\+IO, U\+A\+RT, S\+PI, I2C, Watchdog Timers, Interrupts, Free\+R\+T\+OS schedulers, etc is found here. Furthermore, the platform specific startup files and linker scripts are here.\hypertarget{md__r_e_a_d_m_e_autotoc_md7}{}\doxysubsubsection{ST}\label{md__r_e_a_d_m_e_autotoc_md7}
+This section is for platform independent ST code\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{S\+T\+M32\+L4xx\+\_\+\+H\+A\+L\+\_\+\+Driver\+:}} The low level code of S\+T\+M32\+L4 boards
+\item {\bfseries{Middlewares\+:}} The ST middlewares, mainly used for Free\+R\+T\+OS low level code
+\item {\bfseries{C\+M\+S\+IS\+:}} The C\+M\+S\+I\+S-\/\+Free\+R\+T\+OS A\+PI
+\item {\bfseries{S\+B\+S\+FU, S\+E\+Core\+Bin, S\+T\+M32\+\_\+\+Cryptographic, S\+T\+M32\+\_\+\+Secure\+\_\+\+Engine\+:}} Low level Secure Boot and Secure Firmware Update code of ST, used for the F\+O\+TA bootloader
+\item {\bfseries{S\+T\+M32\+Cube\+Programmer\+:}} Binaries to flash an S\+T-\/\+Link device from the commandline, used for the {\ttfamily make flash-\/st} command
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md8}{}\doxysubsection{shields}\label{md__r_e_a_d_m_e_autotoc_md8}
+The shields folder contains drivers for all kinds of pluggable shields such as sensor shields, communication shields etc.\textbackslash{} Every shield requires a header to be defined for it in the application makefile, as described in the \href{\#shield-definitions}{\texttt{ shield definitions}} section.\hypertarget{md__r_e_a_d_m_e_autotoc_md9}{}\doxysubsection{applications}\label{md__r_e_a_d_m_e_autotoc_md9}
+Some example applications are provided in this repo\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{hello-\/world}}\+: basic application, mainly to test the development environment setup.
+\item {\bfseries{acc-\/mag-\/sensor}}\+: application using the accelerometer and magnetometer sensor on the octa.
+\item {\bfseries{lightsensor}}\+: application using the lightsensor on the octa.
+\item {\bfseries{temperature-\/humidity}}\+: application using the temperature \& humidity sensor on the octa.
+\item {\bfseries{bootloader-\/minimal-\/example}}\+: application showing the minimal requirements for an application to be compatible with the S\+B\+S\+FU bootloader.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md10}{}\doxysection{Makefiles}\label{md__r_e_a_d_m_e_autotoc_md10}
+The stack uses Makefiles, with each application having a {\ttfamily Makefile} for the application settings.\textbackslash{} This Makefile links to the {\ttfamily Makefile.\+core}, which will link to all the required makefiles of the drivers, shields and platforms.
+
+The end user should only come into contact with the \href{\#application-makefile}{\texttt{ Application Makefile}}. If this file is set up correctly, the rest should be automated.\hypertarget{md__r_e_a_d_m_e_autotoc_md11}{}\doxysubsection{Application Makefile}\label{md__r_e_a_d_m_e_autotoc_md11}
+This file contains the high level settings of the application, such as the name, platform and the required shields.\hypertarget{md__r_e_a_d_m_e_autotoc_md12}{}\doxysubsubsection{Application Name}\label{md__r_e_a_d_m_e_autotoc_md12}
+The application name is defined as follows, and will end up being the name of the target binary.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\# name of your application}
+\DoxyCodeLine{APPLICATION = hello-\/world}
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md13}{}\doxysubsubsection{Platform}\label{md__r_e_a_d_m_e_autotoc_md13}
+The platform is defined as follows, with currently only the main octa platform being supported.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\# platform for which the application will be built}
+\DoxyCodeLine{PLATFORM ?= octa}
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md14}{}\doxysubsubsection{Float Support}\label{md__r_e_a_d_m_e_autotoc_md14}
+If floats have to be printed of sprinted, some extra libraries have to be included. To do this, {\ttfamily P\+R\+I\+N\+T\+\_\+\+F\+L\+O\+A\+TS} has to be set to 1.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\# Set PRINT\_FLOATS to 1 to enable linker flags enabling float printf \& sprintf}
+\DoxyCodeLine{PRINT\_FLOATS = 1}
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md15}{}\doxysubsubsection{Shield Definitions}\label{md__r_e_a_d_m_e_autotoc_md15}
+To use a shield in the application, the user has to define the name of the shield and a header connector in the application makefile. This connector number is passed to the code as a define using a -\/D parameter when compiling.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\# SigFox}
+\DoxyCodeLine{SHIELDS += SigFox}
+\DoxyCodeLine{SIGFOX\_CONNECTOR = 1}
+\end{DoxyCode}
+
+
+An {\itshape O\+C\+T\+A\+\_\+header} struct will to be passed to the driver. This struct contains U\+A\+RT, I2C, S\+PI and G\+P\+IO Handles.\textbackslash{} These structs are defined during the platform initalization e.\+g. P1\+\_\+header, P2\+\_\+header, ...\textbackslash{} It is up to the shield driver to initialize the required handle with the driver\textquotesingle{}s specific settings.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{struct }OCTA\_header\{}
+\DoxyCodeLine{    uint8\_t                     number;}
+\DoxyCodeLine{    UART\_HandleTypeDef          *uartHandle;}
+\DoxyCodeLine{    I2C\_HandleTypeDef           *i2cHandle;}
+\DoxyCodeLine{    SPI\_HandleTypeDef           *spiHandle;}
+\DoxyCodeLine{    \textcolor{keyword}{struct }OCTA\_GPIO            *DIO1;}
+\DoxyCodeLine{    \textcolor{keyword}{struct }OCTA\_GPIO            *DIO2;}
+\DoxyCodeLine{    \textcolor{keyword}{struct }OCTA\_GPIO            *DIO3;}
+\DoxyCodeLine{    \textcolor{keyword}{struct }OCTA\_GPIO            *DIO4;}
+\DoxyCodeLine{    \textcolor{keyword}{struct }OCTA\_GPIO            *DIO5;}
+\DoxyCodeLine{    \textcolor{keyword}{struct }OCTA\_GPIO            *DIO6;}
+\DoxyCodeLine{    uint8\_t                     active;}
+\DoxyCodeLine{\};}
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md16}{}\doxysubsubsection{Bootloader}\label{md__r_e_a_d_m_e_autotoc_md16}
+To use the F\+O\+TA S\+B\+S\+FU bootloader in the application, this has to be set in the {\ttfamily Makefile} as follows.\textbackslash{} Some bootloader specific code also has to be implemented in the application, shown in the {\itshape bootloader-\/minimal-\/example} application.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\# use the SBSFU bootloader}
+\DoxyCodeLine{BOOTLOADER ?= 1}
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md17}{}\doxysubsubsection{Step Up Pin}\label{md__r_e_a_d_m_e_autotoc_md17}
+To enable or disable the step up pin, the {\ttfamily E\+N\+A\+B\+L\+E\+\_\+\+S\+T\+E\+P\+UP} variable has to be set to 1 or zero respectively. This will step up the battery voltage to 5V to the octa headers.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\# enable the stepup pin}
+\DoxyCodeLine{ENABLE\_STEPUP ?= 1}
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md18}{}\doxysubsubsection{Link to core makefile}\label{md__r_e_a_d_m_e_autotoc_md18}
+Finally, the link to the {\ttfamily Makefile.\+core} has to be made.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\# Path to the octa-\/stack base directory:}
+\DoxyCodeLine{STACKBASE ?= ../..}
+\DoxyCodeLine{}
+\DoxyCodeLine{include \$(STACKBASE)/core/Makefile.core}
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md19}{}\doxysubsection{Makefile.\+core}\label{md__r_e_a_d_m_e_autotoc_md19}
+The {\ttfamily Makefile.\+core} file is, as the name suggests, the core of every application.\textbackslash{} First of all, the link to the selected platform, drivers and shields makefiles made.\textbackslash{} After the source files, header files, startup files and linker script are defined, the code is compiled to {\ttfamily application-\/name.\+hex,bin,elf}.
+
+Furthermore, {\ttfamily make flash} support is provided.\textbackslash{} Both {\ttfamily J-\/\+Link} and {\ttfamily S\+T-\/\+Link} are \href{\#make-command-overview}{\texttt{ supported}} by using {\itshape make flash-\/jlink} and {\itshape make flash-\/st} respectively.\hypertarget{md__r_e_a_d_m_e_autotoc_md20}{}\doxysubsection{Makefile.\+platform}\label{md__r_e_a_d_m_e_autotoc_md20}
+In the {\ttfamily Makefile.\+platform} file, a check is done on the platform name of the application Makefile. If not valid, the make command will throw an error. If valid, the {\ttfamily Makefile.\+include} file of the common platform folder is included as well as the {\ttfamily Makefile.\+include} of said platform.\textbackslash{} This file sets some platform specific setting such as the {\itshape C\+PU} type, platform specific source and header files, startup file and linker scripts.
+
+A {\itshape P\+L\+A\+T\+F\+O\+R\+M\+\_\+\+D\+E\+F\+I\+NE} define is also created, which is passed to the code in the {\ttfamily Makefile.\+core} file.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\# platform define var, passed to code when compiling in Makefile.core}
+\DoxyCodeLine{PLATFORM\_DEFINE += -\/D\$(addprefix platform\_,\$(PLATFORM))}
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md21}{}\doxysubsection{Makefile.\+drivers}\label{md__r_e_a_d_m_e_autotoc_md21}
+The purpose of this file is to include every source and header file in the {\ttfamily core/drivers/$\ast$} folder.\hypertarget{md__r_e_a_d_m_e_autotoc_md22}{}\doxysubsection{Makefile.\+shields}\label{md__r_e_a_d_m_e_autotoc_md22}
+This file will make sure that for every shield defined in the application {\ttfamily Makefile}, its {\ttfamily Makefile.\+include} file is included.\textbackslash{} These files contain the source and header files of each shield respectively. It also serves as a way to not having to include every shield driver in every application.
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md23}{}\doxysection{Getting Started}\label{md__r_e_a_d_m_e_autotoc_md23}
+This section will help you get started with compiling and flashing the code to the octa boards.\hypertarget{md__r_e_a_d_m_e_autotoc_md24}{}\doxysubsection{Compiling}\label{md__r_e_a_d_m_e_autotoc_md24}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md25}{}\doxysubsubsection{arm-\/none-\/eabi-\/gcc}\label{md__r_e_a_d_m_e_autotoc_md25}
+The \href{https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads}{\texttt{ arm-\/none-\/eabi-\/compiler}} has to be installed. For it to work in every folder, it has to be added to the P\+A\+TH variable.\textbackslash{} On linux, an {\itshape arm-\/none-\/eabi-\/gcc} package is also available. Once installed, the code can be compiled using the \href{\#\#Make-Command-Overview}{\texttt{ make commands}}.\hypertarget{md__r_e_a_d_m_e_autotoc_md26}{}\doxysubsubsection{G\+N\+U Make}\label{md__r_e_a_d_m_e_autotoc_md26}
+To support the \href{\#make-command-overview}{\texttt{ make commands}} on Windows, the \href{http://gnuwin32.sourceforge.net/packages/make.htm}{\texttt{ gnuwin32}} package has to be installed.\textbackslash{} This binary folder also has to be added to the P\+A\+TH variable.\textbackslash{} On Linux, Make should work as is.\hypertarget{md__r_e_a_d_m_e_autotoc_md27}{}\doxysubsection{Flashing}\label{md__r_e_a_d_m_e_autotoc_md27}
+With the on board debugger of the {\ttfamily Nucleo} board supporting both {\ttfamily S\+T-\/\+Link} and {\ttfamily J-\/\+Link} firmware, both are supported in the octa-\/stack.\hypertarget{md__r_e_a_d_m_e_autotoc_md28}{}\doxysubsubsection{S\+T-\/\+Link}\label{md__r_e_a_d_m_e_autotoc_md28}
+Out of the box, the on board debugger of the {\ttfamily Nucleo} board comes with {\ttfamily S\+T-\/\+Link} installed on it.\textbackslash{} To flash with the {\ttfamily S\+T-\/\+Link} debugger, the {\ttfamily S\+T\+M32\+Cube\+Programmer\+C\+LI} binaries are provided with the octa-\/stack.\textbackslash{} Make sure the \href{https://www.st.com/en/development-tools/stsw-link009.html}{\texttt{ S\+T-\/\+Link usb drivers}} are installed.\hypertarget{md__r_e_a_d_m_e_autotoc_md29}{}\doxysubsubsection{Switching between S\+T-\/\+Link and J-\/\+Link}\label{md__r_e_a_d_m_e_autotoc_md29}
+To switch between {\ttfamily S\+T-\/\+Link} and {\ttfamily J-\/\+Link} and vice versa, a \href{https://www.segger.com/products/debug-probes/j-link/models/other-j-links/st-link-on-board/}{\texttt{ S\+T-\/\+Link Reflash Utility}} is provided by Segger.\textbackslash{} This tool does only work on Windows, but can be used in a Windows Virtual Machine on linux as well.\hypertarget{md__r_e_a_d_m_e_autotoc_md30}{}\doxysubsubsection{J-\/\+Link}\label{md__r_e_a_d_m_e_autotoc_md30}
+Once switched to {\ttfamily J-\/\+Link} tools from the \href{https://www.segger.com/downloads/jlink\#J-LinkSoftwareAndDocumentationPack}{\texttt{ J-\/\+Link Software and Documentation Pack}} can be used with the onboard debugger.\textbackslash{} This is particularly useful for debugging in \href{\#cortex-debug-extension}{\texttt{ vscode}}.\hypertarget{md__r_e_a_d_m_e_autotoc_md31}{}\doxysubsection{Make Command Overview}\label{md__r_e_a_d_m_e_autotoc_md31}
+Every make command has to be run from the folder of the target application.\textbackslash{} {\ttfamily make flash} support is provided for both {\ttfamily S\+T-\/\+Link} and {\ttfamily J-\/\+Link}, allowing for independency of editor/\+I\+DE and the option to work entirely in the C\+LI.
+
+
+\begin{DoxyItemize}
+\item {\bfseries{make}}\+: this command will compile the code to a binary
+\item {\bfseries{make clean}}\+: this command cleans up the build folder
+\item {\bfseries{make clean all}}\+: this command cleans up the build folder, as well as recompile everything
+\item {\bfseries{make flash-\/st}}\+: this command compiles the code and flashes the binary using \href{\#ST-Link}{\texttt{ S\+T-\/\+Link}}
+\item {\bfseries{make flash-\/jlink}}\+: this command compiles the code and flashes the binary using \href{\#J-Link}{\texttt{ J-\/\+Link}}
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md32}{}\doxysubsection{vscode support}\label{md__r_e_a_d_m_e_autotoc_md32}
+Due to its flexibility, \href{https://code.visualstudio.com/}{\texttt{ vscode}} is suggested as I\+DE.\textbackslash{} A {\ttfamily .vscode} folder is provided for building and flashing/debugging support.\hypertarget{md__r_e_a_d_m_e_autotoc_md33}{}\doxysubsubsection{tasks.\+json}\label{md__r_e_a_d_m_e_autotoc_md33}
+This file contains make and make clean all tasks for every application in the stack. These tasks can be ran by using the {\ttfamily ctrl+\+Shift+B} keyboard shortcut.\hypertarget{md__r_e_a_d_m_e_autotoc_md34}{}\doxysubsubsection{cortex-\/debug extension}\label{md__r_e_a_d_m_e_autotoc_md34}
+The \href{https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug}{\texttt{ cortex-\/debug}} extension is particularly useful for debugging applications. It allows the user to set breakpoints, watch variables, registers, memory etc. This extension only works with \href{\#J-Link}{\texttt{ J-\/\+Link}} installed on the onboard debugger.\hypertarget{md__r_e_a_d_m_e_autotoc_md35}{}\doxysubsubsection{launch.\+json}\label{md__r_e_a_d_m_e_autotoc_md35}
+This file contains a launch tasks for every application in the octa-\/stack. After compiling the binary, it can be flashed and debugged by pressing the {\ttfamily F5} button and selecting the correct binary. 

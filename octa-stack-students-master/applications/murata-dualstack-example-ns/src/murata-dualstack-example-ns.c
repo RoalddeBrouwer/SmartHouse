@@ -66,10 +66,10 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define IWDG_INTERVAL           5    //seconds
-#define LORAWAN_INTERVAL        60   //seconds
-#define DASH7_INTERVAL          20  //seconds
-#define MODULE_CHECK_INTERVAL   3600 //seconds
+#define IWDG_INTERVAL 5            //seconds
+#define LORAWAN_INTERVAL 60        //seconds
+#define DASH7_INTERVAL 20          //seconds
+#define MODULE_CHECK_INTERVAL 3600 //seconds
 #define SIZE 256
 #define BLOCK_ID 0
 #define SPI_WAIT 50
@@ -90,24 +90,23 @@ uint64_t short_UID;
 uint8_t murata_data_ready = 0;
 uint8_t Data[20];
 float SHTData[2];
-volatile _Bool temperatureflag=0; 
-volatile _Bool buttonFlag=0;
-volatile _Bool sendFlag=0;
-volatile _Bool bleflag=0;
-volatile _Bool init_flag=0;
-_Bool isAsleep=0;
-volatile uint8_t ble_counter=0;
+volatile _Bool temperatureflag = 0;
+volatile _Bool buttonFlag = 0;
+volatile _Bool sendFlag = 0;
+volatile _Bool bleflag = 0;
+volatile _Bool init_flag = 0;
+_Bool isAsleep = 0;
+volatile uint8_t ble_counter = 0;
 uint8_t tmpbuf_ble[1];
-uint8_t buffer[5]; 
+uint8_t buffer[5];
 uint8_t payload[6];
 uint8_t flag;
 
-
-static uint8_t flashBuf[SIZE]; //read & write buffer (save some memory) 
-extern volatile failedMessage=0;
-volatile isActiveSending=0;
-volatile uint8_t murataSucces=0;
-volatile isCommandActive=0;
+static uint8_t flashBuf[SIZE]; //read & write buffer (save some memory)
+extern volatile failedMessage = 0;
+volatile isActiveSending = 0;
+volatile uint8_t murataSucces = 0;
+volatile isCommandActive = 0;
 
 /* USER CODE END 0 */
 
@@ -147,12 +146,12 @@ int main(void)
   // Print Welcome Message & set all the sensors
   LSM303AGR_setI2CInterface(&common_I2C);
   setI2CInterface_SHT31(&common_I2C);
-  SHT31_begin(); 
+  SHT31_begin();
   LSM303AGR_init();
   printWelcome();
-  HAL_UART_Receive_IT(&BLE_UART,tmpbuf_ble, sizeof(tmpbuf_ble));
+  HAL_UART_Receive_IT(&BLE_UART, tmpbuf_ble, sizeof(tmpbuf_ble));
   S25FL256_Initialize(&FLASH_SPI); //Initialise the flash
-  readOldTemperature(); //Read old temperature from flash
+  readOldTemperature();            //Read old temperature from flash
 
   // LORAWAN
   murata_init = Murata_Initialize(short_UID, 0);
@@ -170,46 +169,54 @@ int main(void)
   uint8_t counter = 0;
   uint8_t use_lora = 1;
   /* USER CODE BEGIN WHILE */
-  temperatureflag=1;  //measure the temperature once and blink red led. 
+  temperatureflag = 1; //measure the temperature once and blink red led.
 
   while (1)
-  { 
-
+  {
+    IWDG_feed(NULL); //dont forget feeding the watchdog
     //Initial setup to recieve bluetooth setup:
-    HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin); //As long as setup is running: Blue led is on! 
-     while(!init_flag)
+    HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin); //As long as setup is running: Blue led is on!
+    while (!init_flag)
     {
-      //Wait till the bluetooth config is completed. 
-      if(bleflag==1){ //We received an interrupt from the BLE. 
-      bleflag=0;
-      ble_callback();
+      IWDG_feed(NULL);
+      //Wait till the bluetooth config is completed.
+      if (bleflag == 1)
+      { //We received an interrupt from the BLE.
+        bleflag = 0;
+        ble_callback();
       }
-      isAsleep = 1; //You may go to sleep after handling the setup 
-    } 
-    HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin); //As long as setup is running: Blue led is on! 
-    temp_hum_measurement(); //measure the temperature of the room
-    //Dash7_send(NULL); //Send the desired temperature + measured temperature! 
-    //Interrupt flag handler 
+      isAsleep = 1; //You may go to sleep after handling the setup
+    }
+    HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin); //As long as setup is running: Blue led is on!
+    temp_hum_measurement();                                 //measure the temperature of the room
+    //Dash7_send(NULL); //Send the desired temperature + measured temperature!
+    //Interrupt flag handler
     switch (flag)
     {
-      case 1 : handleTemperature(); //flag = temperature
-        flag = 0;
-        isAsleep = 1; //Temperatuur meting is gebeurt, je mag gaan slapen
-        break;
-      case 2: handleButton(); //flag = button1
-        flag = 0;
-        sendMessage();
-        isAsleep = 1; //Button afhandeling is gebeurt, je mag gaan slapen
-        break;  
-      case 3: writeToFlash();
-        flag=0;
-        isAsleep =1;
-        init_flag =1; 
-        break; 
+    case 1:
+      handleTemperature(); //flag = temperature
+      flag = 0;
+      isAsleep = 1; //Temperatuur meting is gebeurt, je mag gaan slapen
+      break;
+    case 2:
+      handleButton1(); //flag = button1
+      flag = 0;
+      isAsleep = 1; //Button afhandeling is gebeurt, je mag gaan slapen
+      break;
+    case 3:
+      writeToFlash();
+      flag = 0;
+      isAsleep = 1;
+      init_flag = 1;
+      break;
+    case 4:
+      handleButton2();
+      flag = 0;
+      isAsleep = 0; //Stay awake to handle the bluetooth request
+      break;
     }
-
      while(isActiveSending){
-      IWDG_feed(NULL);
+      IWDG_feed(NULL); //dont forget feeding the watchdog
       if(!sendFlag){
       HAL_Delay(LORAWAN_INTERVAL);
       }
@@ -220,54 +227,26 @@ int main(void)
       murata_data_ready = !Murata_process_fifo();
       }
     }
-    if(murata_data_ready)
-    {
-      printf("processing murata fifo\r\n");
-      murata_data_ready = !Murata_process_fifo();
-    } 
 
-    if(failedMessage>0){ //Dash7 or Lora 
+    if(failedMessage==0){
+      isAsleep=1;
+    }
+    if(failedMessage==1){
+      sendMessage();
+      isAsleep=0;
+      failedMessage=0;
+    }
+
+    if(failedMessage>2){ //Dash7 or Lora 
       sendFlag=0; //Lora
     }else{
       murataSucces++;
-      sendFlag=1; //Dash //VERGEET DIT NIET AAN TE PASSEN !!!
+      sendFlag=1; //Dash 
     }
 
      if(isAsleep){ //De interrupts zijn handled, je mag gaan slapen
-        if(!isCommandActive){ //Data versturen is gebeurt, je mag gaan slapen
         enterStop();
-        }
     }   
-    
-    // SEND 5 D7 messages, every 10 sec.
-    // Afterwards, send 3 LoRaWAN messages, every minute
-    /* if(DASH7_Counter<5)
-    {
-      if(counter==DASH7_INTERVAL)
-      {
-        Dash7_send(NULL);
-        counter = 0;
-      }
-    }
-    else
-    { 
-      if(LoRaWAN_Counter == 0)
-        Murata_LoRaWAN_Join();
-      if(LoRaWAN_Counter<3)
-      {
-        if (counter == LORAWAN_INTERVAL)
-        {
-          LoRaWAN_send(NULL);
-          counter = 0;
-        }
-      }
-      if(LoRaWAN_Counter == 3)
-      {
-        //reset counters to restart flow
-        DASH7_Counter = 0;
-        LoRaWAN_Counter = 0;
-      }
-    } */    
 
     /* USER CODE END WHILE */
     
@@ -277,6 +256,10 @@ int main(void)
   /* USER CODE END 3 */
 }
 
+/**
+  * @brief The CPU will be put to sleep here. 
+  * @warning Only enter once comfirmation of sending is received. 
+  */
 void enterStop(){
   //In this function we safely enter the stop function. 
   printf("Going to sleep c: \r\n");
@@ -291,6 +274,12 @@ void enterStop(){
 
 }
 
+/**
+  * @brief This is used to call in other functions to send a message. 
+  *        It automatically decides to send over Dash or Lora
+  * @attention It will send the currently available buffer with it.
+  * @see LoRaWAN_send(void const *argument) Dash7_send(void const *argument)
+  */
 void sendMessage(){
   if(sendFlag){
     Dash7_send(NULL);
@@ -302,6 +291,10 @@ void sendMessage(){
   isAsleep=1;
 }
 
+/**
+  * @brief This function will measure the temperate, send the temperature and comfirm with leds. 
+  * @see LoRaWAN_send(void const *argument) Dash7_send(void const *argument)
+  */
 void handleTemperature(){ 
       temp_hum_measurement();
       sendMessage();
@@ -310,27 +303,39 @@ void handleTemperature(){
       HAL_GPIO_TogglePin(OCTA_RLED_GPIO_Port, OCTA_RLED_Pin);
 }
 
-void handleButton(){
-      //We will allow the user to set a new desired temperature after pressing this button
-      /* init_flag = 0; 
-      sendMessage();
- */
+/**
+  * @brief "Template" function used for a routine after pressing button 1.  
+  *        Currently used to build a database. 
+  */
+void handleButton1(){
       //Routine for fingerprinting
-       temp_hum_measurement();
-      Dash7_send(NULL);
-      HAL_GPIO_TogglePin(OCTA_RLED_GPIO_Port, OCTA_RLED_Pin);
-      HAL_Delay(1000);
-      HAL_GPIO_TogglePin(OCTA_RLED_GPIO_Port, OCTA_RLED_Pin); 
-
+      handleTemperature();
       //The device will be able to sleep AFTER completion of Bluetooth communication
 }
 
-	
+/**
+  * @brief This function is called after pressing button 2. This allows the user to change the desired temperature.
+  */
+void handleButton2(){
+      //We will allow the user to set a new desired temperature after pressing this button
+      init_flag = 0; 
+      HAL_GPIO_TogglePin(OCTA_GLED_GPIO_Port, OCTA_GLED_Pin);
+      HAL_Delay(1000);
+      HAL_GPIO_TogglePin(OCTA_GLED_GPIO_Port, OCTA_GLED_Pin); 
+}
+
+/**
+  * @brief This function does a simple measurement and prints data to console.
+  * @see  print_temp_hum()
+  */	
 void temp_hum_measurement(void){
   SHT31_get_temp_hum(SHTData);
   print_temp_hum();
 }
 
+/**
+  * @brief This function will gather the temperature and humidity data and print it to the console.  
+  */	
 void print_temp_hum(void){
   printf("\r\n");
   printf("Temperature: %.2f °C  \r\n", SHTData[0]);
@@ -338,6 +343,9 @@ void print_temp_hum(void){
   printf("\r\n");
 }
 
+/**
+  * @brief This function will gather the temperature and humidity data from the flash memory.
+  */	
 void readOldTemperature(){
   S25FL256_open(BLOCK_ID);
   S25FL256_read((uint8_t *)flashBuf, SIZE);
@@ -345,6 +353,9 @@ void readOldTemperature(){
 
 }
 
+/**
+  * @brief This function will send the data over LoraWan. 
+  */	
 void LoRaWAN_send(void const *argument)
 {
   if (murata_init)
@@ -377,6 +388,9 @@ void LoRaWAN_send(void const *argument)
   }
 }
 
+/**
+  * @brief This function will send the data over dash7. 
+  */	
 void Dash7_send(void const *argument)
 {
   if (murata_init)
@@ -409,7 +423,9 @@ void Dash7_send(void const *argument)
   }
 }
 
-// UART RX CALLBACK
+/**
+  * @brief Callback function for UART RX. 
+  */	
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   if (huart == &P1_UART)
@@ -423,6 +439,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   }
 }
 
+/**
+  * @brief This function will overwrite the existing bluetooth data in flash memory. 
+  */	
 void writeToFlash(){
         //Write it to flash: 
         
@@ -450,7 +469,7 @@ void writeToFlash(){
 
 
 void ble_callback(){
-
+  
     if(tmpbuf_ble[0]!=0){
     buffer[ble_counter]=tmpbuf_ble[0];
     HAL_UART_Receive_IT(&BLE_UART,tmpbuf_ble, sizeof(tmpbuf_ble));
@@ -467,9 +486,9 @@ void ble_callback(){
 }
 
 void vApplicationIdleHook(){
-  #if LOW_POWER
+#if LOW_POWER
     HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFE);
-  #endif
+#endif
 }
 
 void printWelcome(void)
@@ -502,6 +521,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
   } 
   if(GPIO_Pin==OCTA_BTN1_Pin){
   flag = 2;
+  }
+
+  if(GPIO_Pin==OCTA_BTN2_Pin){
+  flag = 4;
   }
 }
 
@@ -558,4 +581,4 @@ void assert_failed(char *file, uint32_t line)
 }
 #endif /* USE_FULL_ASSERT */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+  /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

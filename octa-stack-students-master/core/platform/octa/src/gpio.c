@@ -180,10 +180,13 @@ void OCTA_GPIO_Init(void)
   P3_DIO6.PIN = P3_DIO6_Pin;
 
 //Enable IRQ handler for the correct lines & set the priorities
-HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 1);
 HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 //IRQ for BTN1
-HAL_NVIC_SetPriority(EXTI0_IRQn,0 ,0);
+HAL_NVIC_SetPriority(EXTI0_IRQn,1 ,0);
 HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+//IRQ for BTN2
+HAL_NVIC_SetPriority(EXTI1_IRQn,0 ,0);
+HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 
 }
