@@ -1,5 +1,4 @@
 # SmartHouse
-Smart house
 
 What is the application:
 (Satish, Roald, Stevie, Sam)
@@ -26,8 +25,23 @@ Lightsensor: TCS34725
 Lora: Murata
 Dash7: Murata
 
-1. Embedded software( low powering):
-(satish)
+# Embedded software( low powering):
+by satish
+
+Most of these steps are documenten and are in the "documenten_embedded" folder. 
+To summarize the steps taken:
+- Enable stopmode
+- problem encountered, watchdog freeze in stopmode
+- Configure accelerometer to work in low power mode and with double click recognition to mimick the walking.
+- Configuring dash7, and lora. Figuring out the way to make payloads.
+- Setting interrupts for the buttons (on the octa) and writing code for ease of localisation 
+- Setting up the BLE-chip (research+stack) and enabling uart to communicate with the chip.
+- Correctly seting up the BLE-stack (uart-lines) and writing code to achieve communication between BLE chip and device.
+Future improvements:
+- Using standby mode instead of stopmode
+- Disabling all the unused hardware
+- lowering clock frequency
+- Improving flow for lora communication. 
 
 2. Localisation:
 (Sam)
@@ -38,8 +52,10 @@ Dash7: Murata
 4. Thingsboard: 
 (Roald)
 
-5. Energieprofiling:
+# Energieprofiling:
 (satish)
+
+For energy profiling the steps taken were mostly with an energy consumption 
 
 
  
