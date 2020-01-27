@@ -28,7 +28,7 @@ Dash7: Murata
 # Embedded software(low powering):
 by satish
 
-Most of these steps are documenten and are in the "documenten_embedded" folder. 
+Most of these steps are documenten and are in the 'Embedded' folder. 
 To summarize the steps taken:
 - Enable stopmode
 - problem encountered, watchdog freeze in stopmode
