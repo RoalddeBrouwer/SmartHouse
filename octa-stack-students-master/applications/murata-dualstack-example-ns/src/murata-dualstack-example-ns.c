@@ -149,6 +149,7 @@ int main(void)
   setI2CInterface_SHT31(&common_I2C);
   SHT31_begin();
   LSM303AGR_init();
+  LSM303AGR_powerDownMagnetometer();
   printWelcome();
   HAL_UART_Receive_IT(&BLE_UART, tmpbuf_ble, sizeof(tmpbuf_ble)); //Ready up a buffer to recieve a bluetooth byte.
   S25FL256_Initialize(&FLASH_SPI); //Initialise the flash
@@ -352,7 +353,6 @@ void temp_hum_measurement(void){
 void print_temp_hum(void){
   printf("\r\n");
   printf("Temperature: %.2f °C  \r\n", SHTData[0]);
-  printf("Humidity: %.2f %% \r\n", SHTData[1]);
   printf("\r\n");
 }
 
@@ -362,7 +362,7 @@ void print_temp_hum(void){
 void readOldTemperature(){
   S25FL256_open(BLOCK_ID);
   S25FL256_read((uint8_t *)flashBuf, SIZE);
-  printf("Previous desired temperature: %d%d\r\n",flashBuf[0],flashBuf[1]); //Print the previously desired temperatures. 
+  printf("Previous desired temperature: %d%d\r\n",flashBuf[0]-48,flashBuf[1]-48); //Print the previously desired temperatures. 
   buffer[0]=flashBuf[0];
   buffer[1]=flashBuf[1];
 }
@@ -376,8 +376,8 @@ void LoRaWAN_send(void const *argument)
   {
     isActiveSending = 1;
     //Load the BLE data into the payload
-    payloadLora[0]=buffer[0];
-    payloadLora[1]=buffer[1];
+    payloadLora[0]=buffer[0]-48;
+    payloadLora[1]=buffer[1]-48;
     if(!Murata_LoRaWAN_Send((uint8_t *)payloadLora, sizeof(payloadLora)))
     {
       murata_init++;
@@ -402,8 +402,8 @@ void Dash7_send(void const *argument)
   {
     isActiveSending = 1;
     //Load the BLE data into the payload
-    payload[0]=buffer[0]+48;
-    payload[1]=buffer[1]+48;
+    payload[0]=buffer[0];
+    payload[1]=buffer[1];
 
     //Load the temperature data into the payload.
     uint8_t* byte = (uint8_t*)&SHTData[0]; //We make a pointer to look at the floating point number
@@ -453,8 +453,8 @@ void writeToFlash(){
       S25FL256_eraseSectorFromBlock(0); // first we delete block nr 0 
 
       //fill the flash array to write data to block 0 
-      flashBuf[0] = buffer[0]-48;
-      flashBuf[1] = buffer[1]-48;
+      flashBuf[0] = buffer[0];
+      flashBuf[1] = buffer[1];
         for (int n = 0; n < SIZE; n++)
         {
           flashBuf[n+2] = 0; //fill the rest of the 256bytes with 0's 
