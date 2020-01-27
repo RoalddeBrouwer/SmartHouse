@@ -1,43 +1,49 @@
 # SmartHouse
 Smart house
 
-WHAT IS THE APPLICATION:
+What is the application:
+(Satish, Roald, Stevie, Sam)
 
-benodigdheden:
+The goal of the project is to create a smarthouse which tracks the person inside the house and will maximize energy efficiency. 
 
-– 4 nucleos; 1 mobiel, 3 statisch
-– Sensors: Temperatuur, luchtkwaliteit, (lichtsensor, accelerator)
+To achieve this goal we have an end device which should be on the user at all times. This end device will trigger an interrupt everytime the user moves a certain period of time. This interrupt then wakes up the device, which then tries to send a dash7 message (containg desired temperature and current temperature). This data is processed by the back-end which will extract these temperatures and send them to a visualisation platform. The back-end will also localise the device and send this data to the visualisation platform. In case the dash7 messages fail, our system will opt for LoraWan. It will send a lora packet (without receiving an ack), this happens when the person is outside of his house (far from dash7 gateways). 
 
-Indoor localisation: Dash 7 om te zien waar de persoon zich bevindt in et huis.
-Outdoor localisation: Als de persoon in de buurt komt dan nodige stappen ondernemen voor energie efficiencty.
+The implementation is done on different levels: Embedded software(1), back-end(2), localisation(3) and visualisation(4). Confirmed afterwards using energie profiling(5). 
 
-→ Localisatie gebeurt pas bij interrupt generatie van accelerometer. 
+Neccesity:
 
-De persoon wandelt rond in de 3 kamers en het is de bedoeling dat de temperatuur, licht,... regeling ideaal is als de persoon zich bevindt in 1 kamer. 
+– Nucleos; 1 or more mobile
+– Sensors: temperature, acceleratoreter
+- localisation: Dash 7.
 
-→ Als de persoon zich buiten de kamers bevindt dan moet hij geloclaiseerd worden om dan de regeling thuis zo efficient mogelijk te krijgen. 
-
-
- WHICH HARDWARE: 
-
-STML4xx
-
-OCTA Connect: 
+HARDWARE: 
+- STML4xx
+- OCTA Connect: 
 Temperatuur: SHT31
 Accelerometer: LSM303AGR
 Lightsensor: TCS34725
-
-SHIELDS:
+- SHIELDS:
 Luchtkwalitiet: SGP30
 Lora: Murata
-Dash7: 
+Dash7: Murata
 
-HOW DO WE VISUALIZE: 
+1. Embedded software( low powering):
+(satish)
 
-Grafana
+2. Localisation:
+(Sam)
 
-HOW CAN WE LOCALIZE (ALGO):
+3. Back-end:
+(Stevie)
 
+4. Thingsboard: 
+(Roald)
+
+5. Energieprofiling:
+(satish)
+
+
+ 
 
  
 
