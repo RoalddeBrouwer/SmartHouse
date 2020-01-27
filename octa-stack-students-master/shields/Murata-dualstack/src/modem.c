@@ -156,7 +156,6 @@ bool modem_execute_raw_alp(uint8_t* alp, uint8_t len) {
 
 bool alloc_command() {
   if(command.is_active) {
-    isCommandActive=1; 
     printf("prev command still active");
     return false;
   }
@@ -167,7 +166,6 @@ bool alloc_command() {
   next_tag_id++;
 
   alp_append_tag_request_action(&command.fifo, command.tag_id, true);
-  isCommandActive=0;
   return true;
 }
 
