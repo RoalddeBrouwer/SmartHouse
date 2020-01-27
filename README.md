@@ -25,7 +25,7 @@ Lightsensor: TCS34725
 Lora: Murata
 Dash7: Murata
 
-# Embedded software( low powering):
+# Embedded software(low powering):
 by satish
 
 Most of these steps are documenten and are in the "documenten_embedded" folder. 
@@ -35,6 +35,7 @@ To summarize the steps taken:
 - Configure accelerometer to work in low power mode and with double click recognition to mimick the walking.
 - Configuring dash7, and lora. Figuring out the way to make payloads.
 - Setting interrupts for the buttons (on the octa) and writing code for ease of localisation 
+- NVIC priorities for buttons
 - Setting up the BLE-chip (research+stack) and enabling uart to communicate with the chip.
 - Correctly seting up the BLE-stack (uart-lines) and writing code to achieve communication between BLE chip and device.
 Future improvements:
@@ -43,13 +44,15 @@ Future improvements:
 - lowering clock frequency
 - Improving flow for lora communication. 
 
-2. Localisation:
-(Sam)
+# Localisation:
+by sam
 
-3. Back-end:
+The requiremen
+
+# Back-end:
 (Stevie)
 
-4. Thingsboard: 
+# Thingsboard: 
 (Roald)
 
 # Energy profiling:
