@@ -52,10 +52,12 @@ Future improvements:
 4. Thingsboard: 
 (Roald)
 
-# Energieprofiling:
+# Energy profiling:
 (satish)
 
-For energy profiling the steps taken were mostly with an energy consumption 
+For energy profiling the steps taken were mostly with "HARDWARE".
+
+This is all taken up in the "energy" folder. 
 
 
  
