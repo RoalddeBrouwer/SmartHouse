@@ -69,7 +69,7 @@ The two fases of fingerprinting consist of:
 ![databasebuilder](databasebuilderv4.jpg)
 
 ## Localisation
-![localisation](localisationv4.jpg) | height=100
+![localisation](localisationv4.jpg | height=100) 
 
 # Back-end:
 (Stevie)
