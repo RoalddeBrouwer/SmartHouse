@@ -362,9 +362,9 @@ void print_temp_hum(void){
 void readOldTemperature(){
   S25FL256_open(BLOCK_ID);
   S25FL256_read((uint8_t *)flashBuf, SIZE);
-  printf("Previous desired temperature: %d%d\r\n",flashBuf[0]-48,flashBuf[1]-48); //Print the previously desired temperatures. 
-  buffer[0]=flashBuf[0];
-  buffer[1]=flashBuf[1];
+  printf("Previous desired temperature: %d%d\r\n",flashBuf[0],flashBuf[1]); //Print the previously desired temperatures. 
+  buffer[0]=flashBuf[0]+48;
+  buffer[1]=flashBuf[1]+48;
 }
 
 /**
@@ -453,8 +453,8 @@ void writeToFlash(){
       S25FL256_eraseSectorFromBlock(0); // first we delete block nr 0 
 
       //fill the flash array to write data to block 0 
-      flashBuf[0] = buffer[0];
-      flashBuf[1] = buffer[1];
+      flashBuf[0] = buffer[0]-48;
+      flashBuf[1] = buffer[1]-48;
         for (int n = 0; n < SIZE; n++)
         {
           flashBuf[n+2] = 0; //fill the rest of the 256bytes with 0's 
