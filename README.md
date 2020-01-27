@@ -47,8 +47,37 @@ Future improvements:
 # Localisation:
 by sam
 
-The requiremen
 
+The indoor localisation for the project is realised by using a localisation method based on signal strength. 
+From D7 messages the signal strengths are extracted, which are received by the gateways which are setup in the area. 
+
+## Fingerprinting
+Fingerprinting is used to achieve the ability to locate the active device in the area. 
+The two fases of fingerprinting consist of:
+### 1. Offline fase
+ In the offline fase the database is build, which is used in the second fase. 
+ Below an overview is presented of all the points of intrest (purple points) where measurements are conducted.
+<img src="u014_d7_gateway_map.png" width="600">
+ 
+ To perform the measurements the databasebuilder.py script is used. A flowchart of the databasebuilder program can be seen     at the end of the localisation section. 
+ For each point of interest the user just needs to give the coordinates of the point and the DB will be build automatically.
+ 
+### 2. Online fase
+ In the online fase a measurements is conducted. This sample is compared against the training database.
+ The euclidean distance is calculated againts all samples of the DB. 
+ kNN is used to find the most appropriate locations. 
+ The total flow of the active localisation proces can be seen in the flowgraph below. 
+ The code that is used in the active fase of the localisation proces can be found in localisation_final.py
+ 
+ The final result is a location which can be visualized. An example of the location visualized in the specific environment can be seen in the image below. 
+ 
+ <img src="localisationDone.png" width="600">
+
+## Database builder
+![databasebuilder](databasebuilderv4.jpg)
+
+## Localisation
+<img src="localisationv4.jpg" width="350">
 # Back-end:
 (Stevie)
 
