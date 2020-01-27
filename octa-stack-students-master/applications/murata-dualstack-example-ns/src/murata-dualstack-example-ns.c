@@ -188,6 +188,7 @@ int main(void)
       handleButton2();
        if(buffer[0]-48==9 && buffer[0]-48==9){
           printf("sending mode changed \r\n"); //dont write to flash if the number is 99. 
+          readOldTemperature();
         }else
         {
           writeToFlash();
@@ -375,8 +376,8 @@ void LoRaWAN_send(void const *argument)
   {
     isActiveSending = 1;
     //Load the BLE data into the payload
-    payloadLora[0]=buffer[0]+48;
-    payloadLora[1]=buffer[1]+48;
+    payloadLora[0]=buffer[0];
+    payloadLora[1]=buffer[1];
     if(!Murata_LoRaWAN_Send((uint8_t *)payloadLora, sizeof(payloadLora)))
     {
       murata_init++;
