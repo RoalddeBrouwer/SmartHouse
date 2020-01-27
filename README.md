@@ -48,17 +48,19 @@ Future improvements:
 by sam
 The indoor localisation for the project is realised by using a localisation method based on signal strength. 
 From D7 messages the signal strengths are extracted, which are received by the gateways which are setup in the area. 
+
+## Fingerprinting
 Fingerprinting is used to achieve the ability to locate the active device in the area. 
 The two fases of fingerprinting consist of:
-## 1. Offline fase
+### 1. Offline fase
  In the offline fase the database is build, which is used in the second fase. 
  Below an overview is presented of all the points of intrest (purple points) where measurements are conducted.
  IMAGE TOEVOEGEN 
  
- To perform the measurements the databasebuilder.py script is used. An flowchart of the databasebuilder program can be seen     at the end of the localisation section. 
+ To perform the measurements the databasebuilder.py script is used. A flowchart of the databasebuilder program can be seen     at the end of the localisation section. 
  For each point of interest the user just needs to give the coordinates of the point and the DB will be build automatically.
  
-## 2. Online fase
+### 2. Online fase
  In the online fase a measurements is conducted. This sample is compared against the training database.
  The euclidean distance is calculated againts all samples of the DB. 
  kNN is used to find the most appropriate locations. 
