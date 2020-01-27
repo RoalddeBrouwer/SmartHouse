@@ -194,7 +194,6 @@ int main(void)
         {
           writeToFlash();
         }
-        
       flag = 0;
       break;
     }
@@ -209,6 +208,7 @@ int main(void)
       printf("processing murata fifo\r\n");
       murata_data_ready = !Murata_process_fifo(); 
       }
+      
       if(modemRebooted){
         isActiveSending=0;
         modemRebooted=0;
@@ -234,14 +234,11 @@ int main(void)
       isAsleep=0;
       sendMessage();
       }else{ //We are sending in Lora
-        if(loraRetries>=1){ //Too many sent. 
+        //if(loraRetries>=1){ //Too many sent. 
         isAsleep=1; //We tried twice Dash7 and Lora, both failed twice. wake up later and try both again. 
         loraRetries=0;
         sendFlag=1; //Set back to Dash7 
-        }else{ //If we haven't tried twice, try lora once more. (second lora message)
-       // HAL_Delay(2000);
-       // sendMessage();
-        }
+        //}
       }
     }
 
