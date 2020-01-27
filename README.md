@@ -55,7 +55,7 @@ The two fases of fingerprinting consist of:
 ### 1. Offline fase
  In the offline fase the database is build, which is used in the second fase. 
  Below an overview is presented of all the points of intrest (purple points) where measurements are conducted.
- IMAGE TOEVOEGEN 
+<img src="u014_d7_gateway_map.png" width="400">
  
  To perform the measurements the databasebuilder.py script is used. A flowchart of the databasebuilder program can be seen     at the end of the localisation section. 
  For each point of interest the user just needs to give the coordinates of the point and the DB will be build automatically.
