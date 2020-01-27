@@ -68,6 +68,9 @@ The two fases of fingerprinting consist of:
  kNN is used to find the most appropriate locations. 
  The total flow of the active localisation proces can be seen in the flowgraph below. 
  The code that is used in the active fase of the localisation proces can be found in localisation_final.py
+ 
+ The final result is a location which can be visualized. An example of the location visualized in the specific environment can be seen in the image below. 
+ <img src="localisationDone.png" width="600">
 
 ## Database builder
 ![databasebuilder](databasebuilderv4.jpg)
