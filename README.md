@@ -23,7 +23,6 @@ Temperatuur: SHT31
 Accelerometer: LSM303AGR
 Lightsensor: TCS34725
 - SHIELDS:
-Luchtkwalitiet: SGP30
 Lora: Murata
 Dash7: Murata
 
