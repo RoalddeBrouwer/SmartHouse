@@ -70,6 +70,7 @@ The two fases of fingerprinting consist of:
  The code that is used in the active fase of the localisation proces can be found in localisation_final.py
  
  The final result is a location which can be visualized. An example of the location visualized in the specific environment can be seen in the image below. 
+ 
  <img src="localisationDone.png" width="600">
 
 ## Database builder
