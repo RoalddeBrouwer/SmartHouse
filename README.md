@@ -46,6 +46,8 @@ Future improvements:
 
 # Localisation:
 by sam
+
+
 The indoor localisation for the project is realised by using a localisation method based on signal strength. 
 From D7 messages the signal strengths are extracted, which are received by the gateways which are setup in the area. 
 
