@@ -131,6 +131,7 @@ Steps tested:
 -Calculating the led usage
 -Checking sleep mode of BLE Chip (confirmed) 
 
+Also, in the Energy folder there is an interactive Excel file. The green cells are changeable. 
 
 
  
