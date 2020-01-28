@@ -66,13 +66,11 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define IWDG_INTERVAL 5            //seconds
-#define LORAWAN_INTERVAL 60        //seconds
-#define DASH7_INTERVAL 20          //seconds
-#define MODULE_CHECK_INTERVAL 3600 //seconds
-#define SIZE 256
-#define BLOCK_ID 0
-#define SPI_WAIT 50
+#define LORAWAN_INTERVAL 20        //ms
+#define DASH7_INTERVAL 20          //ms
+#define SIZE 256 //FLASH
+#define BLOCK_ID 0 //FLASH
+#define SPI_WAIT 50 //FLASH
 
 /* USER CODE END PD */
 
@@ -83,30 +81,33 @@
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint16_t LoRaWAN_Counter = 0;
-uint16_t DASH7_Counter = 0;
+
+//8 bit integers: 
 uint8_t murata_init = 0;
-uint64_t short_UID;
-uint8_t murata_data_ready = 0;
-uint8_t Data[20];
-float SHTData[2];
-volatile _Bool temperatureflag = 0;
-volatile _Bool buttonFlag = 0;
-volatile _Bool sendFlag = 0;
-volatile _Bool bleflag = 0;
-volatile _Bool init_flag = 0;
-_Bool isAsleep = 0;
-volatile uint8_t ble_counter = 0;
 uint8_t tmpbuf_ble[1];
 uint8_t buffer[5];
 uint8_t payload[6];
+uint8_t payloadLora[2];
 uint8_t flag;
-
-static uint8_t flashBuf[SIZE]; //read & write buffer (save some memory)
-extern volatile failedMessage = 0;
+uint8_t loraRetries = 0;
+uint8_t murata_data_ready = 0;
+//64 bit integers: 
+uint64_t short_UID;
+//Booleans:
+_Bool isAsleep = 0;
+//floats:
+float SHTData[2];
+//volatiles:
+volatile _Bool sendFlag = 1; //default is Dash7
+volatile _Bool bleflag = 0;
+volatile _Bool init_flag = 0;
+volatile uint8_t ble_counter = 0;
 volatile isActiveSending = 0;
-volatile uint8_t murataSucces = 0;
-volatile isCommandActive = 0;
+volatile modemRebooted = 0;
+//Static & externs
+static uint8_t flashBuf[SIZE]; //read & write buffer (save some memory)
+extern volatile failedMessage = 0; //The 
+
 
 /* USER CODE END 0 */
 
@@ -148,12 +149,13 @@ int main(void)
   setI2CInterface_SHT31(&common_I2C);
   SHT31_begin();
   LSM303AGR_init();
+  LSM303AGR_powerDownMagnetometer();
   printWelcome();
-  HAL_UART_Receive_IT(&BLE_UART, tmpbuf_ble, sizeof(tmpbuf_ble));
+  HAL_UART_Receive_IT(&BLE_UART, tmpbuf_ble, sizeof(tmpbuf_ble)); //Ready up a buffer to recieve a bluetooth byte.
   S25FL256_Initialize(&FLASH_SPI); //Initialise the flash
   readOldTemperature();            //Read old temperature from flash
 
-  // LORAWAN
+  // Initialise the Modem:
   murata_init = Murata_Initialize(short_UID, 0);
 
   if (murata_init)
@@ -166,10 +168,7 @@ int main(void)
   IWDG_feed(NULL);
 
   /* Infinite loop */
-  uint8_t counter = 0;
-  uint8_t use_lora = 1;
   /* USER CODE BEGIN WHILE */
-  temperatureflag = 1; //measure the temperature once and blink red led.
 
   while (1)
   {
@@ -181,62 +180,75 @@ int main(void)
     case 1:
       handleTemperature(); //flag = temperature
       flag = 0;
-      isAsleep = 1; //Temperatuur meting is gebeurt, je mag gaan slapen
       break;
     case 2:
       handleButton1(); //flag = button1
       flag = 0;
-      isAsleep = 1; //Button afhandeling is gebeurt, je mag gaan slapen
       break;
     case 3:
-      writeToFlash();
-      flag = 0;
-      isAsleep = 1;
-      init_flag = 1;
-      break;
-    case 4:
       handleButton2();
+       if(buffer[0]-48==9 && buffer[0]-48==9){
+          printf("sending mode changed \r\n"); //dont write to flash if the number is 99. 
+          readOldTemperature();
+        }else
+        {
+          writeToFlash();
+        }
       flag = 0;
-      isAsleep = 0; //Stay awake to handle the bluetooth request
       break;
     }
      while(isActiveSending){
       IWDG_feed(NULL); //dont forget feeding the watchdog
-      if(!sendFlag){
-      HAL_Delay(LORAWAN_INTERVAL);
+      if(!sendFlag){ //If using LORA
+        loraRetries++;
       }
       //Wacht tot hij klaar is
-      if(murata_data_ready)
+      if(murata_data_ready) 
       {
       printf("processing murata fifo\r\n");
-      murata_data_ready = !Murata_process_fifo();
+      murata_data_ready = !Murata_process_fifo(); 
       }
+      
+      if(modemRebooted){
+        isActiveSending=0;
+        modemRebooted=0;
+        sendMessage();
+      }
+      //isActiveSending is set to 0 in murata.c line 62
     }
 
-    if(failedMessage==0){
-      isAsleep=1;
-    }
-    if(failedMessage==1){
-      sendMessage();
-      isAsleep=0;
-      failedMessage=0;
+    if(failedMessage==0){ //This is the IF-statement putting the device to sleep if the transmissions went well.
+      isAsleep=1; 
     }
 
-    if(failedMessage>2){ //Dash7 or Lora 
+    if(failedMessage==1){ //First message failed, try again.
+      sendMessage(); //retry once more.
+      isAsleep=0; //We cannot go to sleep yet. 
+    }
+
+    if(failedMessage>=2){ //Twice failure, switch sending mode. 
+
+      //Assuming Dash7 is our main method of sending. 
+      if(sendFlag==1){ //Too many failed in Dash7
       sendFlag=0; //Lora
-    }else{
-      murataSucces++;
-      sendFlag=1; //Dash  //VERANDER DIT TERUG
+      isAsleep=0;
+      sendMessage();
+      }else{ //We are sending in Lora
+        //if(loraRetries>=1){ //Too many sent. 
+        isAsleep=1; //We tried twice Dash7 and Lora, both failed twice. wake up later and try both again. 
+        loraRetries=0;
+        sendFlag=1; //Set back to Dash7 
+        //}
+      }
     }
 
      if(isAsleep){ //De interrupts zijn handled, je mag gaan slapen
-        enterStop();
+        enterStop(); //We can go to sleep here. 
     }   
 
     /* USER CODE END WHILE */
     
     /* USER CODE BEGIN 3 */
-    HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }
@@ -247,20 +259,21 @@ int main(void)
   */
 void enterStop(){
   //In this function we safely enter the stop function. 
-  printf("Going to sleep c: \r\n");
+  printf("ENTER STOP-MODE \r\n");
 
   HAL_SuspendTick();
-  HAL_PWR_EnterSTOPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI); //Hush now... go to sleep 
+  HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI); //Hush now... go to sleep 
   HAL_ResumeTick();
   SystemClock_Config(); //BS vermijden met putty
   isAsleep=0;
 
-  printf("Waking up :'c \r\n");
+  printf("EXIT STOP-MODE \r\n");
 
 }
 
 void bluetoothSetup(){
   HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin); //As long as setup is running: Blue led is on!
+  printf("Send the new desired temperature or 99 to change sending mode \r\n");
     while (!init_flag)
     {
       IWDG_feed(NULL);
@@ -270,12 +283,9 @@ void bluetoothSetup(){
         bleflag = 0;
         ble_callback();
       }
-      isAsleep = 1; //You may go to sleep after handling the setup
     }
     HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin); //As long as setup is running: Blue led is on!
-    temp_hum_measurement();                                 //measure the temperature of the room
-    //Dash7_send(NULL); //Send the desired temperature + measured temperature!
-    //Interrupt flag handler
+  printf("Receiving complete! \r\n");
 }
 
 /**
@@ -292,7 +302,6 @@ void sendMessage(){
   {
     LoRaWAN_send(NULL);
   }
-  isAsleep=1;
 }
 
 /**
@@ -341,7 +350,6 @@ void temp_hum_measurement(void){
 void print_temp_hum(void){
   printf("\r\n");
   printf("Temperature: %.2f °C  \r\n", SHTData[0]);
-  printf("Humidity: %.2f %% \r\n", SHTData[1]);
   printf("\r\n");
 }
 
@@ -352,8 +360,8 @@ void readOldTemperature(){
   S25FL256_open(BLOCK_ID);
   S25FL256_read((uint8_t *)flashBuf, SIZE);
   printf("Previous desired temperature: %d%d\r\n",flashBuf[0],flashBuf[1]); //Print the previously desired temperatures. 
-  buffer[0]=flashBuf[0];
-  buffer[1]=flashBuf[1];
+  buffer[0]=flashBuf[0]+48;
+  buffer[1]=flashBuf[1]+48;
 }
 
 /**
@@ -365,16 +373,9 @@ void LoRaWAN_send(void const *argument)
   {
     isActiveSending = 1;
     //Load the BLE data into the payload
-    payload[0]=buffer[0];
-    payload[1]=buffer[1];
-
-    //Load the temperature data into the payload.
-    uint8_t* byte = (uint8_t*)&SHTData[0]; //We make a pointer to look at the floating point number
-    for(int i=2; i<sizeof(payload); i++){
-      payload[i]=byte[i-2]; //load the payload from place 2 to size. 
-    }
-
-    if(!Murata_LoRaWAN_Send((uint8_t *)payload, sizeof(payload)))
+    payloadLora[0]=buffer[0]-48;
+    payloadLora[1]=buffer[1]-48;
+    if(!Murata_LoRaWAN_Send((uint8_t *)payloadLora, sizeof(payloadLora)))
     {
       murata_init++;
       if(murata_init == 10)
@@ -384,7 +385,6 @@ void LoRaWAN_send(void const *argument)
     {
       murata_init = 1;
     }
-    LoRaWAN_Counter++;
   }
   else{
     printf("murata not initialized, not sending\r\n"); 
@@ -418,7 +418,6 @@ void Dash7_send(void const *argument)
     {
       murata_init = 1;
     }
-    DASH7_Counter++;
   }
   else{
     printf("murata not initialized, not sending\r\n");
@@ -467,6 +466,8 @@ void writeToFlash(){
       {
         HAL_Delay(SPI_WAIT);
       }
+
+      printf("Write to flash complete.\r\n");
 }
 
 
@@ -475,16 +476,16 @@ void ble_callback(){
     if(tmpbuf_ble[0]!=0){
     buffer[ble_counter]=tmpbuf_ble[0];
     HAL_UART_Receive_IT(&BLE_UART,tmpbuf_ble, sizeof(tmpbuf_ble));
-    printf("Callback succesfully handled %d\r\n",buffer[ble_counter]);
+    printf("Callback succesfully handled, received: %d\r\n",buffer[ble_counter]-48);
     ble_counter++;
     if(ble_counter==2){
       ble_counter=0; //If we recieved two bytes, we can set it back to zero. 
-      init_flag=1; //Initialise is complete. 
-      flag=3;
+      init_flag=1;
+      if(buffer[0]-48==9 && buffer[0]-48==9){
+        sendFlag=!sendFlag;
       }
     } 
-    //Write to flash flag
-    //Bluetooth call back complete so we will write to flash
+  }
 }
 
 void vApplicationIdleHook(){
@@ -502,15 +503,15 @@ void printWelcome(void)
   printf("\r\n");
   char UIDString[sizeof(short_UID)];
   memcpy(UIDString, &short_UID, sizeof(short_UID));
-  printf("octa ID: ");
+ /*  printf("octa ID: ");
   for (const char* p = UIDString; *p; ++p)
     {
         printf("%02x", *p);
     }
-  printf("\r\n\r\n");
-  HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin);
+  printf("\r\n\r\n"); */ //No need to print it out. Still in here incase we add new devices. 
+  HAL_GPIO_TogglePin(OCTA_GLED_GPIO_Port, OCTA_GLED_Pin);
   HAL_Delay(2000);
-  HAL_GPIO_TogglePin(OCTA_BLED_GPIO_Port, OCTA_BLED_Pin);
+  HAL_GPIO_TogglePin(OCTA_GLED_GPIO_Port, OCTA_GLED_Pin);
 }
 
 /* USER CODE END 4 */
@@ -526,7 +527,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
   }
 
   if(GPIO_Pin==OCTA_BTN2_Pin){
-  flag = 4;
+  flag = 3;
   }
 }
 

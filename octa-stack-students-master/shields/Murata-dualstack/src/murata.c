@@ -5,6 +5,7 @@ uint8_t use_scheduler = 0;
 struct OCTA_header murataHeader;
 extern volatile uint8_t failedMessage; //Extern so we can access from 'Main' and volatile to check the value every time!! 
 extern volatile _Bool isActiveSending;
+extern volatile _Bool modemRebooted;
 
 session_config_t session_config_lora =
     {
@@ -103,6 +104,7 @@ void on_modem_reboot_callback(void)
 {
     printf("Murata murata-dual modem has rebooted \r\n");
     modem_reinit();
+    modemRebooted = 1;
 }
 
 //TODO: use_scheduler in makefiles
