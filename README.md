@@ -83,21 +83,22 @@ The two fases of fingerprinting consist of:
 
 By Stevie
 
-For our back-end we are using a Ubuntu (18.04.3) server. On this server we are running three python scripts, one for each device. To run all our python scripts we use a bash script for ease of use. In our python scripts we use three clients : one mqtt client to receive the DASH7 messages, one ttn client to receive the Lora messages from the things network and one to paho client to publish to the thingsboard. When we receive a message the data is extracted from the payload. The data is written to a JSON file and the JSON file is then published to the thingsboard. You can see the flow of the program in the graphs. 
+For our back-end we are using a Ubuntu (18.04.3) server. On this server we are running three python scripts, one for each device. To run all our python scripts we use a bash script for ease of use. In our python scripts we use three clients : one mqtt client to receive the DASH7 messages, one ttn client to receive the Lora messages from the things network and one to paho client to publish to the thingsboard. When we receive a message the data is extracted from the payload. The data is written to a JSON file and the JSON file is then published to the thingsboard. You can see the flow of the program in the flow charts. 
 
-
-![Alt text](SmartHouse/tree/master/Backend/main_loop.jpg?raw=true "Main Loop")
+## Main loop
+<img src="https://github.com/RoalddeBrouwer/SmartHouse/blob/master/Backend/main_loop.jpg" width="350">
 
 ## DASH7 loop
-<img src="/SmartHouse/tree/master/Backend/DASH7_loop.png" width="600">
+<img src="https://github.com/RoalddeBrouwer/SmartHouse/blob/master/Backend/DASH7_loop.jpg" width="350">
 
 ## Lora loop
-<img src="/SmartHouse/tree/master/Backend/Lora_loop.png" width="600">
+<img src="https://github.com/RoalddeBrouwer/SmartHouse/blob/master/Backend/Lora_loop.jpg" width="350">
 
 ## data loop
-![Image of data loop]https://github.com/RoalddeBrouwer/SmartHouse/blob/master/Backend/data_loop.jpg
+<img src="https://github.com/RoalddeBrouwer/SmartHouse/blob/master/Backend/data_loop.jpg" width="350">
+
 ## JSON loop
-<img src="/SmartHouse/tree/master/Backend/JSON_loop.png" width="600">
+<img src="https://github.com/RoalddeBrouwer/SmartHouse/blob/master/Backend/JSON_loop.jpg" width="350">
 
 # Thingsboard: 
 First we made three devices named, DeviceRoald, DeviceSam and DeviceSatish. Every device has an accesstoken so the server can forward data to the visualization platform. Next we made a dashboard named SmartHouse Dashboard. Where u can find the location of the SmartHouse with its address. If u click on the marker or on the address the map of SmartHouse A opens.
