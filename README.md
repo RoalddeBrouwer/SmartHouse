@@ -115,7 +115,22 @@ We discovered that using this board on a lower sampling frequency resulted in lo
 1. Measuring in normal mode with a write to flash:
 <img src="https://github.com/RoalddeBrouwer/SmartHouse/blob/master/Energy/Measurement_highf_NORMAL.png">
 
-This is all taken up in the "energy" folder. 
+2. Measuring the bluetooth setup period and consumption:
+<img src="https://github.com/RoalddeBrouwer/SmartHouse/blob/master/Energy/Measurement_highf_BT.png">
+
+3. Measuring the write to flash and sleep mode aftewards:
+<img src="https://github.com/RoalddeBrouwer/SmartHouse/blob/master/Energy/Measurement_highf_velen.png">
+
+4. Measuring setup: 
+<img src="https://github.com/RoalddeBrouwer/SmartHouse/blob/master/Energy/energymeasurment.jpg" width="600">
+
+In the energy folder the proof can be found in differences of measuring with higher and lower frequency. 
+
+Steps tested:
+-Trying to unlink ST-link circuit (set JP6 to Vin) 
+-Calculating the led usage
+-Checking sleep mode of BLE Chip (confirmed) 
+
 
 
  
