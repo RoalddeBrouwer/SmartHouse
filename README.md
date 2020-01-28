@@ -80,6 +80,8 @@ The two fases of fingerprinting consist of:
 <img src="localisationv4.jpg" width="350">
 # Back-end:
 (Stevie)
+For our back-end we are using a Ubuntu (18.04.3) server. On this server we are running three python scripts, one for each device. To run all our python scripts we use a bash script for ease of use. In our python scripts we use three clients : one mqtt client to receive the DASH7 messages, one ttn client to receive the Lora messages from the things network and one to paho client to publish to the thingsboard. When we receive a message the data is extracted from the payload. The data is written to a JSON file and the JSON file is then published to the thingsboard. You can see the flow of the program in the graphs. 
+
 
 # Thingsboard: 
 First we made three devices named, DeviceRoald, DeviceSam and DeviceSatish. Every device has an accesstoken so the server can forward data to the visualization platform. Next we made a dashboard named SmartHouse Dashboard. Where u can find the location of the SmartHouse with its address. If u click on the marker or on the address the map of SmartHouse A opens.
