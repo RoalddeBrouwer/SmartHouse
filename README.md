@@ -109,7 +109,11 @@ U can find a json-file in the thingsboard map so u can import this by yourself.
 # Energy profiling:
 (satish)
 
-For energy profiling the steps taken were mostly with "HARDWARE".
+For energy profiling the steps we made use of a energy measurement board. 
+We discovered that using this board on a lower sampling frequency resulted in lower consumption. This is a false discovery because the measurements are done with a Rsense scenario. So the higher the frequency, the more accurate the end result:
+
+1. Measuring in normal mode with a write to flash:
+<img src="https://github.com/RoalddeBrouwer/SmartHouse/blob/master/Energy/Measurement_highf_NORMAL.png">
 
 This is all taken up in the "energy" folder. 
 
