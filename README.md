@@ -82,7 +82,9 @@ The two fases of fingerprinting consist of:
 (Stevie)
 
 # Thingsboard: 
-(Roald)
+First we made three devices named, DeviceRoald, DeviceSam and DeviceSatish. Every device has an accesstoken so the server can forward data to the visualization platform. Next we made a dashboard named SmartHouse Dashboard. Where u can find the location of the SmartHouse with its address. If u click on the marker or on the address the map of SmartHouse A opens.
+In this part of the SmartHouse dashboard u can find the location of the three devices in SmartHouse A. The other thing u see is a table with all the devices and there temperature measurement, the desired temperature, the amount of used D7 gateways and via what there is send. The color indication of the markers depends on the received D7 gateways. Green = 4 gateways, Blue = 3 gateways and red = 1 or 2 gateways. 
+Now u can click on the marker of a device or on the device name on thingsboard. Now opens the personal info of a device. 
 
 # Energy profiling:
 (satish)
